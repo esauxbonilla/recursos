@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EB · Prospectos</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --border: #1e1e1e;
+    --accent: #c8f135;
+    --accent2: #f13535;
+    --text: #f0f0f0;
+    --muted: #555;
+    --muted2: #333;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* NAV */
+  nav {
+    padding: 28px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .nav-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 80px 0 60px;
+  }
+
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-size: clamp(56px, 8vw, 100px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 32px;
+  }
+
+  .hero h1 span.dim {
+    color: var(--muted2);
+    display: block;
+  }
+
+  .hero-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 440px;
+    margin-bottom: 48px;
+  }
+
+  /* STATS */
+  .stats {
+    display: flex;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stat-num {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 4px;
+  }
+
+  /* SEARCH */
+  .search-wrap {
+    margin: 40px 0 32px;
+  }
+
+  .search-box {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-box::placeholder { color: var(--muted); }
+  .search-box:focus { border-color: var(--accent); }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 80px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(200,241,53,0.03) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .card:hover { border-color: #333; transform: translateY(-2px); }
+  .card:hover::after { opacity: 1; }
+
+  .card-niche {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .card-name {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .card-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+
+  .card-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .card-arrow {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--muted);
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .card:hover .card-arrow {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* STATUS BADGES */
+  .badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    align-self: flex-start;
+  }
+
+  .badge-live { background: rgba(200,241,53,0.12); color: var(--accent); }
+  .badge-draft { background: rgba(255,255,255,0.06); color: var(--muted); }
+  .badge-sent { background: rgba(241,53,53,0.12); color: var(--accent2); }
+
+  /* CARD PLACEHOLDER */
+  .card-placeholder {
+    background: transparent;
+    border: 1px dashed var(--muted2);
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 180px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-align: center;
+  }
+
+  .card-placeholder:hover { border-color: #444; color: #666; }
+
+  .plus-icon {
+    font-size: 22px;
+    color: var(--muted2);
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 36px;
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+  }
+
+  .modal h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .modal-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .form-input, .form-select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input:focus, .form-select:focus { border-color: var(--accent); }
+  .form-select option { background: #111; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    padding: 13px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: opacity 0.2s;
+  }
+
+  .btn-primary:hover { opacity: 0.85; }
+
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s;
+  }
+
+  .modal-close:hover { border-color: #555; }
+
+  /* EMPTY STATE */
+  .empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero { animation: fadeUp 0.5s ease both; }
+  .stats { animation: fadeUp 0.5s 0.1s ease both; }
+  .search-wrap { animation: fadeUp 0.5s 0.15s ease both; }
+  .grid { animation: fadeUp 0.5s 0.2s ease both; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <nav>
+    <span class="nav-logo">EB · Prospectos</span>
+    <span class="nav-tag">Uso interno</span>
+  </nav>
+
+  <div class="hero">
+    <p class="hero-label">Banco de recursos</p>
+    <h1>
+      Mis<br>
+      <span class="dim">Prospectos</span>
+    </h1>
+    <p class="hero-desc">Páginas y quizzes construidos para cada influencer.<br>Organiza, rastrea y accede rápido.</p>
+  </div>
+
+  <div class="stats">
+    <div>
+      <div class="stat-num" id="stat-total">0</div>
+      <div class="stat-label">Páginas creadas</div>
+    </div>
+    <div>
+      <div class="stat-num" id="stat-live">0</div>
+      <div class="stat-label">En vivo</div>
+    </div>
+    <div>
+      <div class="stat-num" id="stat-sent">0</div>
+      <div class="stat-label">Enviadas</div>
+    </div>
+  </div>
+
+  <div class="search-wrap">
+    <input class="search-box" type="text" id="searchInput" placeholder="🔍  Busca por nombre o nicho...">
+  </div>
+
+  <p class="section-label">Todas las páginas</p>
+
+  <div class="grid" id="grid">
+    <!-- Cards se renderizan aquí -->
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2>Nueva página</h2>
+    <p class="modal-sub">Agrega un recurso para un prospecto</p>
+
+    <div class="form-group">
+      <label class="form-label">Nombre del influencer / handle</label>
+      <input class="form-input" type="text" id="f-name" placeholder="@josuepxl">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Nicho</label>
+        <select class="form-select" id="f-niche">
+          <option value="FITNESS">Fitness</option>
+          <option value="FINANZAS">Finanzas</option>
+          <option value="TRADING">Trading</option>
+          <option value="MARCA PERSONAL">Marca Personal</option>
+          <option value="IA">IA</option>
+          <option value="LIFESTYLE">Lifestyle</option>
+          <option value="OTRO">Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tipo</label>
+        <select class="form-select" id="f-type">
+          <option value="Quiz">Quiz</option>
+          <option value="Landing page">Landing page</option>
+          <option value="Guía">Guía</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Descripción corta</label>
+      <input class="form-input" type="text" id="f-desc" placeholder="Quiz de calificación para leads de fitness">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">URL de la página (Vercel)</label>
+      <input class="form-input" type="text" id="f-url" placeholder="https://quiz-josuepxl.vercel.app">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Estado</label>
+      <select class="form-select" id="f-status">
+        <option value="draft">Borrador</option>
+        <option value="live">En vivo</option>
+        <option value="sent">Enviada</option>
+      </select>
+    </div>
+
+    <button class="btn-primary" onclick="addCard()">Agregar recurso →</button>
+  </div>
+</div>
+
+<script>
+  let recursos = JSON.parse(localStorage.getItem('eb-prospectos') || '[]');
+
+  function saveData() {
+    localStorage.setItem('eb-prospectos', JSON.stringify(recursos));
+  }
+
+  function formatDate(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('es-MX', { month: 'short', year: 'numeric' });
+  }
+
+  function badgeHTML(status) {
+    const map = {
+      live: ['badge-live', 'En vivo'],
+      draft: ['badge-draft', 'Borrador'],
+      sent: ['badge-sent', 'Enviada']
+    };
+    const [cls, label] = map[status] || ['badge-draft', status];
+    return `<span class="badge ${cls}">${label}</span>`;
+  }
+
+  function renderGrid(filter = '') {
+    const grid = document.getElementById('grid');
+    const filtered = recursos.filter(r =>
+      r.name.toLowerCase().includes(filter.toLowerCase()) ||
+      r.niche.toLowerCase().includes(filter.toLowerCase())
+    );
+
+    // Stats
+    document.getElementById('stat-total').textContent = recursos.length;
+    document.getElementById('stat-live').textContent = recursos.filter(r => r.status === 'live').length;
+    document.getElementById('stat-sent').textContent = recursos.filter(r => r.status === 'sent').length;
+
+    let html = '';
+
+    if (filtered.length === 0 && filter === '') {
+      html += `<div class="empty">Aún no hay páginas. Agrega la primera.</div>`;
+    } else if (filtered.length === 0) {
+      html += `<div class="empty">Sin resultados para "${filter}".</div>`;
+    } else {
+      filtered.forEach((r, i) => {
+        const url = r.url ? `href="${r.url}" target="_blank"` : '';
+        html += `
+          <a class="card" ${url}>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <span class="card-niche">${r.niche} · ${r.type}</span>
+              ${badgeHTML(r.status)}
+            </div>
+            <div class="card-name">${r.name}</div>
+            <div class="card-desc">${r.desc}</div>
+            <div class="card-footer">
+              <span class="card-date">${formatDate(r.date)}</span>
+              <span class="card-arrow">→</span>
+            </div>
+          </a>`;
+      });
+    }
+
+    // Siempre agregar placeholder al final
+    html += `
+      <div class="card-placeholder" onclick="openModal()">
+        <span class="plus-icon">+</span>
+        <span>Nueva página</span>
+      </div>`;
+
+    grid.innerHTML = html;
+  }
+
+  function openModal() {
+    document.getElementById('modalOverlay').classList.add('active');
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+    ['f-name','f-desc','f-url'].forEach(id => document.getElementById(id).value = '');
+  }
+
+  function addCard() {
+    const name = document.getElementById('f-name').value.trim();
+    const desc = document.getElementById('f-desc').value.trim();
+    const url = document.getElementById('f-url').value.trim();
+    const niche = document.getElementById('f-niche').value;
+    const type = document.getElementById('f-type').value;
+    const status = document.getElementById('f-status').value;
+
+    if (!name) { document.getElementById('f-name').focus(); return; }
+
+    recursos.unshift({ name, desc, url, niche, type, status, date: new Date().toISOString() });
+    saveData();
+    closeModal();
+    renderGrid();
+  }
+
+  document.getElementById('searchInput').addEventListener('input', e => {
+    renderGrid(e.target.value);
+  });
+
+  document.getElementById('modalOverlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+  });
+
+  renderGrid();
+</script>
+</body>
+</html>
