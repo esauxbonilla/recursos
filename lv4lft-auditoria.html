@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LV4LFT — Diagnóstico de Crecimiento</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red:       #E8003D;
+  --red-d:     #C0002E;
+  --red-pale:  rgba(232,0,61,0.07);
+  --red-line:  rgba(232,0,61,0.22);
+  --crit:      #FF4444;
+  --gold:      #F5A623;
+  --black:     #0A0A0A;
+  --dark:      #111111;
+  --dark2:     #1A1A1A;
+  --gray:      rgba(255,255,255,0.38);
+  --line:      rgba(255,255,255,0.09);
+  --white:     #FFFFFF;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(10,10,10,0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  padding: 0 5vw; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 800;
+  letter-spacing: 0.04em; color: var(--white);
+}
+.nav-brand svg { width: 28px; height: 28px; }
+.nav-pill {
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--red); background: var(--red-pale);
+  border: 1px solid var(--red-line);
+  padding: 5px 12px; border-radius: 100px;
+}
+
+/* ─── HERO ─── */
+.hero {
+  padding: 120px 5vw 80px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  max-width: 1200px; margin: 0 auto;
+}
+@media(max-width:768px){ .hero { grid-template-columns: 1fr; gap: 40px; padding: 100px 5vw 60px; } }
+
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--red);
+  margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+  opacity: 0; animation: up 0.5s ease forwards 0.1s;
+}
+.hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--red); }
+
+.hero-headline {
+  font-family: 'Inter', sans-serif; font-weight: 800;
+  font-size: clamp(42px, 5.5vw, 72px); line-height: 1.0;
+  letter-spacing: -0.015em; color: var(--white); margin-bottom: 24px;
+  opacity: 0; animation: up 0.6s ease forwards 0.2s;
+}
+.hero-headline .red    { color: var(--red); }
+.hero-headline .accent { color: var(--red); opacity: 0.7; }
+
+.hero-sub {
+  font-size: 16px; font-weight: 300; color: var(--gray);
+  line-height: 1.7; margin-bottom: 36px;
+  opacity: 0; animation: up 0.6s ease forwards 0.3s;
+}
+.hero-sub strong { color: var(--white); font-weight: 500; }
+
+.hero-metrics {
+  display: flex; gap: 0;
+  border: 1px solid var(--line); width: fit-content;
+  opacity: 0; animation: up 0.6s ease forwards 0.4s;
+}
+.h-metric { padding: 16px 28px; border-right: 1px solid var(--line); text-align: center; }
+.h-metric:last-child { border-right: none; }
+.h-metric-val {
+  font-family: 'Inter', sans-serif; font-size: 28px; font-weight: 800;
+  color: var(--red); display: block; line-height: 1;
+}
+.h-metric-val.ok  { color: rgba(255,255,255,0.85); }
+.h-metric-val.bad { color: var(--crit); }
+.h-metric-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); margin-top: 4px; display: block; }
+
+.hero-right { opacity: 0; animation: up 0.7s ease forwards 0.35s; }
+.hero-visual {
+  background: var(--dark); border: 1px solid var(--line);
+  padding: 36px; position: relative;
+}
+.hero-visual::before {
+  content: 'Diagnóstico detectado';
+  position: absolute; top: -1px; left: 32px;
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--white); background: var(--red); padding: 4px 12px;
+}
+.vis-fuga {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0; border-bottom: 1px solid var(--line);
+  font-size: 14px; font-weight: 400;
+}
+.vis-fuga:last-child { border-bottom: none; }
+.vis-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-right: 14px; }
+.vis-dot.red  { background: var(--crit); box-shadow: 0 0 8px rgba(255,68,68,0.5); }
+.vis-dot.gold { background: var(--gold); box-shadow: 0 0 8px rgba(245,166,35,0.5); }
+.vis-label  { flex: 1; color: rgba(255,255,255,0.65); }
+.vis-status { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--crit); letter-spacing: 0.06em; }
+.vis-status.warn { color: var(--gold); }
+
+/* ─── SECCIONES ─── */
+.section { padding: 80px 5vw; max-width: 1200px; margin: 0 auto; }
+.section-full { padding: 80px 5vw; background: var(--dark); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.section-full .inner { max-width: 1200px; margin: 0 auto; }
+
+.tag {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--red); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+}
+.tag::before { content: ''; width: 20px; height: 1px; background: var(--red); }
+.tag.gold-tag { color: var(--gold); }
+.tag.gold-tag::before { background: var(--gold); }
+
+.section-h {
+  font-family: 'Inter', sans-serif; font-weight: 800;
+  font-size: clamp(30px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.05;
+  margin-bottom: 12px; color: var(--white);
+}
+.section-h .red  { color: var(--red); }
+.section-h .gold { color: var(--gold); }
+
+.section-sub {
+  font-size: 15px; font-weight: 300; color: var(--gray);
+  line-height: 1.7; margin-bottom: 48px; max-width: 560px;
+}
+
+/* ─── PROBLEMA CENTRAL ─── */
+.cubeta-2col {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--line); margin-bottom: 24px;
+}
+@media(max-width:640px){ .cubeta-2col { grid-template-columns: 1fr; } }
+
+.c-card { background: var(--dark2); padding: 36px 32px; }
+.c-card.bad  { border-top: 3px solid var(--crit); }
+.c-card.good { border-top: 3px solid var(--red); }
+.c-card-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 12px; display: block; }
+.c-card.bad  .c-card-label { color: var(--crit); }
+.c-card.good .c-card-label { color: var(--red); }
+.c-card-title { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 10px; color: var(--white); }
+.c-card-body { font-size: 14px; color: var(--gray); line-height: 1.7; font-weight: 300; }
+.c-card-body strong { color: var(--white); font-weight: 500; }
+
+.cubeta-quote {
+  background: var(--red-pale); border-left: 3px solid var(--red);
+  padding: 20px 28px; font-size: 15px; color: rgba(255,255,255,0.55); line-height: 1.7; font-weight: 300;
+}
+.cubeta-quote strong { color: var(--red); font-weight: 600; }
+
+/* ─── FUGAS ─── */
+.fugas-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1px; background: var(--line);
+}
+.fuga-card {
+  background: var(--dark); padding: 32px 28px;
+  position: relative; overflow: hidden; transition: background 0.2s;
+}
+.fuga-card:hover { background: var(--dark2); }
+.fuga-card.main {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+  background: #141414; border-top: 3px solid var(--red);
+}
+@media(max-width:640px){ .fuga-card.main { grid-template-columns: 1fr; } }
+.fuga-card.main .fuga-body { color: var(--gray); }
+.fuga-card.main .fuga-body strong { color: var(--red); font-weight: 500; }
+
+.fuga-num {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(232,0,61,0.5); margin-bottom: 12px; display: block;
+}
+.fuga-num.main-num { color: rgba(232,0,61,0.8); }
+
+.fuga-title { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 10px; color: var(--white); }
+.fuga-body { font-size: 13.5px; color: var(--gray); line-height: 1.7; font-weight: 300; }
+.fuga-body strong { color: var(--white); font-weight: 500; }
+
+.fuga-cost {
+  margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line);
+  font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gray); letter-spacing: 0.04em;
+}
+.fuga-cost b { color: var(--crit); }
+.fuga-card.main .fuga-cost { border-color: rgba(255,255,255,0.07); }
+.fuga-card.main .fuga-cost b { color: rgba(232,0,61,0.9); }
+
+.fuga-list { margin-top: 8px; }
+.fuga-list-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 13px; color: var(--gray); line-height: 1.5; font-weight: 300;
+}
+.fuga-list-item:last-child { border-bottom: none; }
+.fli-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); flex-shrink: 0; margin-top: 5px; }
+.fli-dot.no { background: var(--crit); }
+.fuga-list-item strong { color: var(--white); font-weight: 500; }
+
+/* ─── HOT SALE ─── */
+.hotsale-wrap { padding: 80px 5vw; background: #0D0D0D; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.hotsale-inner { max-width: 1200px; margin: 0 auto; }
+
+.hs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(255,255,255,0.06); margin: 40px 0 24px; }
+@media(max-width:640px){ .hs-grid { grid-template-columns: 1fr; } }
+
+.hs-card { background: #141414; padding: 32px; }
+.hs-card.gold-bg { background: rgba(245,166,35,0.05); border: 1px solid rgba(245,166,35,0.2); }
+.hs-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 10px; display: block; }
+.hs-val { font-family: 'Inter', sans-serif; font-size: 52px; font-weight: 800; line-height: 1; color: var(--gold); margin-bottom: 8px; }
+.hs-desc { font-size: 13.5px; color: rgba(255,255,255,0.45); line-height: 1.65; font-weight: 300; }
+.hs-desc strong { color: rgba(255,255,255,0.8); font-weight: 500; }
+.hs-card.gold-bg .hs-desc { color: rgba(245,166,35,0.65); }
+.hs-card.gold-bg .hs-desc strong { color: var(--gold); }
+
+.hs-quote { border-left: 3px solid var(--gold); padding: 20px 28px; background: rgba(245,166,35,0.04); font-size: 15px; color: rgba(255,255,255,0.55); line-height: 1.7; font-weight: 300; margin-bottom: 20px; }
+.hs-quote strong { color: var(--gold); font-weight: 600; }
+
+.hs-alert { display: flex; align-items: center; gap: 14px; padding: 16px 22px; border: 1px solid rgba(245,166,35,0.25); background: rgba(245,166,35,0.03); }
+.hs-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); animation: blink 1.4s ease infinite; flex-shrink: 0; }
+.hs-alert p { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.05em; color: rgba(245,166,35,0.65); line-height: 1.5; }
+.hs-alert p strong { color: var(--gold); }
+.hs-section-h { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(28px,4vw,48px); letter-spacing: -0.015em; color: var(--white); line-height: 1.05; }
+.hs-section-h .gold { color: var(--gold); }
+.hs-section-sub { font-size: 15px; font-weight: 300; color: rgba(255,255,255,0.35); margin-top: 10px; max-width: 500px; }
+
+/* ─── PROOF ─── */
+.proof-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--line); margin-bottom: 24px; }
+@media(max-width:640px){ .proof-grid { grid-template-columns: 1fr; } }
+.proof-card { background: var(--dark); padding: 32px 28px; }
+.proof-num { font-family: 'Inter', sans-serif; font-size: 44px; font-weight: 800; color: var(--red); line-height: 1; margin-bottom: 8px; }
+.proof-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); margin-bottom: 10px; display: block; }
+.proof-desc { font-size: 13px; color: var(--gray); line-height: 1.65; font-weight: 300; }
+.proof-desc strong { color: var(--white); font-weight: 500; }
+
+.proof-quote { background: var(--red-pale); border-left: 3px solid var(--red); padding: 24px 32px; font-size: 15px; color: rgba(255,255,255,0.55); line-height: 1.75; font-weight: 300; }
+.proof-quote strong { color: var(--red); font-weight: 600; }
+
+/* ─── PLAN ─── */
+.plan-list { display: flex; flex-direction: column; gap: 1px; background: var(--line); }
+.plan-row {
+  display: grid; grid-template-columns: 44px 1fr auto;
+  gap: 20px; align-items: center;
+  background: var(--dark); padding: 22px 28px; transition: background 0.2s;
+}
+.plan-row:hover { background: var(--dark2); }
+@media(max-width:560px){ .plan-row { grid-template-columns: 1fr; gap: 8px; } }
+
+.plan-row.locked { opacity: 0.45; }
+.plan-row.locked .plan-row-name,
+.plan-row.locked .plan-row-sub { filter: blur(3px); user-select: none; }
+
+.plan-n { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--red); }
+.plan-row-name { font-size: 14px; font-weight: 500; color: var(--white); }
+.plan-row-sub { font-size: 12px; color: var(--gray); margin-top: 2px; font-weight: 300; }
+
+.pill { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 12px; white-space: nowrap; }
+.pill.hot { border: 1px solid rgba(232,0,61,0.4); color: var(--red); background: var(--red-pale); }
+.pill.lock { border: 1px solid var(--line); color: var(--gray); display: flex; align-items: center; gap: 6px; }
+.pill.lock svg { width: 10px; height: 10px; }
+
+.plan-footer {
+  background: var(--dark); border: 1px solid var(--line); border-top: none;
+  padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.plan-footer p { font-size: 13px; color: var(--gray); font-weight: 300; line-height: 1.5; }
+.plan-footer p strong { color: var(--white); font-weight: 500; }
+
+/* ─── CTA ─── */
+.cta-section { padding: 96px 5vw; text-align: center; background: var(--dark); border-top: 1px solid var(--line); }
+.cta-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red); margin-bottom: 20px; }
+.cta-h { font-family: 'Inter', sans-serif; font-size: clamp(38px, 5vw, 72px); font-weight: 800; letter-spacing: -0.015em; line-height: 1.0; margin-bottom: 16px; color: var(--white); }
+.cta-h .red { color: var(--red); }
+.cta-sub { font-size: 16px; font-weight: 300; color: var(--gray); max-width: 460px; margin: 0 auto 40px; line-height: 1.7; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--red); color: var(--white);
+  padding: 16px 40px;
+  font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
+  text-decoration: none; transition: all 0.25s; border: none; cursor: pointer;
+}
+.btn:hover { background: var(--red-d); transform: translateY(-1px); box-shadow: 0 8px 32px rgba(232,0,61,0.25); }
+.btn svg { width: 16px; height: 16px; transition: transform 0.2s; }
+.btn:hover svg { transform: translateX(3px); }
+.btn.sm { padding: 11px 22px; font-size: 12px; }
+
+.cta-fine { margin-top: 16px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gray); letter-spacing: 0.08em; }
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--line); padding: 20px 5vw;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+  font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gray); letter-spacing: 0.06em;
+  background: var(--black);
+}
+
+/* ─── ANIMS ─── */
+@keyframes up   { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes blink{ 0%,100%{opacity:1}50%{opacity:0.25} }
+
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="13" stroke="#E8003D" stroke-width="1.5"/>
+      <circle cx="16" cy="16" r="4.5" stroke="#E8003D" stroke-width="1.2"/>
+      <line x1="16" y1="3" x2="16" y2="11.5" stroke="#E8003D" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="16" y1="20.5" x2="16" y2="29" stroke="#E8003D" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    LV4LFT
+  </div>
+  <span class="nav-pill">Diagnóstico confidencial</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Análisis de crecimiento · 2025</div>
+    <h1 class="hero-headline">
+      Tienen el club.<br>
+      Tienen los drops.<br>
+      <span class="red">Sin email,</span><br>
+      el algoritmo decide.
+    </h1>
+    <p class="hero-sub">
+      <strong>10.2K seguidores, drops limitados, Wellness Club activo, suplementos + active wear.</strong> El sistema está más avanzado que el 95% del nicho. El multiplicador que falta es email marketing + retargeting.
+    </p>
+    <div class="hero-metrics">
+      <div class="h-metric">
+        <span class="h-metric-val ok">10.2K</span>
+        <span class="h-metric-label">Comunidad activa</span>
+      </div>
+      <div class="h-metric">
+        <span class="h-metric-val bad">0</span>
+        <span class="h-metric-label">Email marketing</span>
+      </div>
+      <div class="h-metric">
+        <span class="h-metric-val bad">0</span>
+        <span class="h-metric-label">Retargeting</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-visual">
+      <div class="vis-fuga">
+        <div class="vis-dot red"></div>
+        <span class="vis-label">Email marketing / lista de drops</span>
+        <span class="vis-status">Sin activar</span>
+      </div>
+      <div class="vis-fuga">
+        <div class="vis-dot red"></div>
+        <span class="vis-label">Retargeting de visitantes</span>
+        <span class="vis-status">Sin activar</span>
+      </div>
+      <div class="vis-fuga">
+        <div class="vis-dot red"></div>
+        <span class="vis-label">Arquitectura Meta Ads escalable</span>
+        <span class="vis-status">Sin activar</span>
+      </div>
+      <div class="vis-fuga">
+        <div class="vis-dot red"></div>
+        <span class="vis-label">Recompra de suplementos (ciclo)</span>
+        <span class="vis-status">Sin activar</span>
+      </div>
+      <div class="vis-fuga">
+        <div class="vis-dot gold"></div>
+        <span class="vis-label">Sistema para Hot Sale</span>
+        <span class="vis-status warn">3 semanas</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEMA CENTRAL -->
+<div class="section-full">
+  <div class="inner">
+    <div class="tag reveal">El problema central</div>
+    <h2 class="section-h reveal">El drop sale por IG.<br><span class="red">Quien no lo ve ese día,</span><br>no existe.</h2>
+    <p class="section-sub reveal">El drops model es perfecto. El problema es el canal que lo distribuye — y ese canal no lo controlan.</p>
+
+    <div class="cubeta-2col reveal">
+      <div class="c-card bad">
+        <span class="c-card-label">Ahora mismo</span>
+        <div class="c-card-title">Drop → post en IG → el algoritmo decide el alcance</div>
+        <div class="c-card-body">El drop llega a quien IG decide mostrárselo. <strong>El que no vio el post ese día, nunca se enteró.</strong> Sin email, el canal de distribución lo controla Meta, no LV4LFT.</div>
+      </div>
+      <div class="c-card good">
+        <span class="c-card-label">Con sistema activo</span>
+        <div class="c-card-title">Drop → email a toda la lista → preventa exclusiva → conversión garantizada</div>
+        <div class="c-card-body">El drop llega a los 10K suscriptores sin importar el algoritmo. <strong>La lista de espera llena antes del lanzamiento.</strong> Tú decides cuándo y a quién.</div>
+      </div>
+    </div>
+
+    <div class="cubeta-quote reveal">
+      El drops model sin email marketing es como lanzar una preventa en voz baja. <strong>El que estaba parado enfrente lo escucha. Los demás, nunca se enteraron.</strong>
+    </div>
+  </div>
+</div>
+
+<!-- FUGAS -->
+<div class="section">
+  <div class="tag reveal">Las 5 fugas</div>
+  <h2 class="section-h reveal">Qué está <span class="red">frenando el techo</span><br>de crecimiento.</h2>
+  <p class="section-sub reveal">El sistema base está bien construido. Estas 5 fugas explican por qué no está multiplicando.</p>
+
+  <div class="fugas-grid reveal">
+
+    <!-- FUGA PRINCIPAL -->
+    <div class="fuga-card main">
+      <div>
+        <span class="fuga-num main-num">Fuga Principal</span>
+        <div class="fuga-title">Sin email marketing activo</div>
+        <div class="fuga-body">
+          El Wellness Club, los drops y los suplementos son exactamente el tipo de producto que vive en email. La lista de espera, la preventa exclusiva para suscriptores, el flujo de recompra — todo eso genera solo si Klaviyo está activo.<br><br>
+          <strong>Sin lista propia, el canal de distribución lo controla el algoritmo</strong> — y el algoritmo no trabaja para LV4LFT.
+        </div>
+        <div class="fuga-cost">Impacto: <b>cada drop llega solo a quien IG decide — no a toda la comunidad</b></div>
+      </div>
+      <div>
+        <div class="fuga-list">
+          <div class="fuga-list-item"><div class="fli-dot no"></div><span><strong>Sin lista de espera en email</strong> — el drop se anuncia el día del lanzamiento, no antes</span></div>
+          <div class="fuga-list-item"><div class="fli-dot no"></div><span><strong>Sin preventa exclusiva</strong> — los suscriptores del Wellness Club deberían comprar primero</span></div>
+          <div class="fuga-list-item"><div class="fli-dot no"></div><span><strong>Sin flujo de recompra de suplementos</strong> — proteína ~4 semanas, creatina ~30 días, ciclos predecibles sin activar</span></div>
+          <div class="fuga-list-item"><div class="fli-dot no"></div><span><strong>Sin recuperación de carritos</strong> — quien vio el drop y no compró, nadie lo busca de vuelta</span></div>
+          <div class="fuga-list-item"><div class="fli-dot no"></div><span><strong>Sin canal propio</strong> — si mañana IG cae, la comunidad desaparece</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fuga-card reveal">
+      <span class="fuga-num">Fuga 02</span>
+      <div class="fuga-title">Sin retargeting de visitantes</div>
+      <div class="fuga-body">Alguien llega al drop, ve la página de producto, no compra. Sin pixel estructurado ni campaña de retargeting, <strong>ese visitante desaparece para siempre.</strong></div>
+      <div class="fuga-cost">Costo: <b>visitantes del drop sin segunda oportunidad de conversión</b></div>
+    </div>
+
+    <div class="fuga-card reveal d1">
+      <span class="fuga-num">Fuga 03</span>
+      <div class="fuga-title">Comunidad fragmentada en dos cuentas</div>
+      <div class="fuga-body">`live4lift` con 10.2K y `live4lift.global` con 1.3K dividen el tráfico y la autoridad. <strong>Dos cuentas diluyen lo que debería ser una sola comunidad concentrada.</strong></div>
+      <div class="fuga-cost">Costo: <b>alcance orgánico partido entre dos canales</b></div>
+    </div>
+
+    <div class="fuga-card reveal d2">
+      <span class="fuga-num">Fuga 04</span>
+      <div class="fuga-title">Sin arquitectura Meta Ads escalable</div>
+      <div class="fuga-body">Tienen suplementos con ciclos predecibles y ropa con drops de temporada — dos tipos de producto perfectos para ads. <strong>Sin estructura frío → retargeting → recompra, el crecimiento depende del orgánico.</strong></div>
+      <div class="fuga-cost">Costo: <b>techo de crecimiento atado al alcance orgánico de IG</b></div>
+    </div>
+
+    <div class="fuga-card reveal d3">
+      <span class="fuga-num">Fuga 05</span>
+      <div class="fuga-title">Sin sistema para el Hot Sale</div>
+      <div class="fuga-body">Drops limitados + Hot Sale = combinación perfecta para llenar una lista de espera de cientos de personas antes del evento. <strong>Sin sistema preparado, ese tráfico extra pasa igual que cualquier semana.</strong></div>
+      <div class="fuga-cost">Costo: <b>Hot Sale en 3 semanas — ventana crítica sin sistema</b></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- HOT SALE -->
+<div class="hotsale-wrap">
+  <div class="hotsale-inner">
+    <div class="tag gold-tag reveal">Ventana crítica</div>
+    <h2 class="hs-section-h reveal">El <span class="gold">Hot Sale</span> es<br>en menos de 3 semanas.</h2>
+    <p class="hs-section-sub reveal">Con email activo antes del evento, el drop del Hot Sale llega a toda la lista. Sin email, llega al algoritmo.</p>
+
+    <div class="hs-grid reveal">
+      <div class="hs-card">
+        <span class="hs-label">Sin sistema</span>
+        <div class="hs-val">= 0×</div>
+        <div class="hs-desc">El tráfico extra del Hot Sale llega, ve el drop y se va. <strong>Sin lista de espera, sin retargeting — ninguna segunda oportunidad.</strong></div>
+      </div>
+      <div class="hs-card gold-bg">
+        <span class="hs-label">Con sistema antes del Hot Sale</span>
+        <div class="hs-val">× 4</div>
+        <div class="hs-desc"><strong>Lista de espera en email + drop exclusivo para suscriptores + retargeting</strong> — el Hot Sale se convierte en el lanzamiento más grande del año.</div>
+      </div>
+    </div>
+
+    <div class="hs-quote reveal">
+      Con Insano Clothing activamos el sistema antes de temporada alta. En <strong>15 días vendieron lo que hacían en 2 meses</strong> — no por el evento, sino porque el sistema capturó el tráfico que ya llegaba.
+    </div>
+
+    <div class="hs-alert reveal">
+      <div class="hs-dot"></div>
+      <p>El Hot Sale trae tráfico con o sin sistema. La diferencia es <strong>quién lo captura y quién lo deja ir.</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- PROOF -->
+<div class="section">
+  <div class="tag reveal">El caso que lo respalda</div>
+  <h2 class="section-h reveal">Insano Clothing.<br><span class="red">Lo que pasa cuando el sistema multiplica.</span></h2>
+
+  <div class="proof-grid reveal">
+    <div class="proof-card">
+      <span class="proof-label">Temporada alta con sistema</span>
+      <div class="proof-num">15 días</div>
+      <div class="proof-desc">Vendieron lo que normalmente hacían en <strong>2 meses completos.</strong> El tráfico ya existía — el sistema lo capturó.</div>
+    </div>
+    <div class="proof-card">
+      <span class="proof-label">Canal de email automatizado</span>
+      <div class="proof-num">39%</div>
+      <div class="proof-desc"><strong>De las ventas mensuales</strong> generadas por flujos automáticos — sin tocar ads ni el algoritmo.</div>
+    </div>
+    <div class="proof-card">
+      <span class="proof-label">Resultado en Meta Ads</span>
+      <div class="proof-num">46×</div>
+      <div class="proof-desc">ROAS con creativos UGC + estructura correcta. <strong>El mismo presupuesto, múltiplo de resultado.</strong></div>
+    </div>
+  </div>
+
+  <div class="proof-quote reveal">
+    LV4LFT tiene el sistema base más avanzado de este diagnóstico. <strong>Con email + retargeting activos antes del Hot Sale, el drops model se convierte en el canal de ventas más predecible del nicho.</strong>
+  </div>
+</div>
+
+<!-- PLAN BLOQUEADO -->
+<div class="section-full">
+  <div class="inner">
+    <div class="tag reveal">Plan de intervención</div>
+    <h2 class="section-h reveal">6 puntos de acción<br><span class="red">específicos para LV4LFT.</span></h2>
+    <p class="section-sub reveal">Los primeros 2 se activan antes del Hot Sale. El resto escala el sistema completo.</p>
+
+    <div class="plan-list reveal">
+      <div class="plan-row">
+        <div class="plan-n">01 /</div>
+        <div>
+          <div class="plan-row-name">Activar Klaviyo — lista de espera de drops + bienvenida al Wellness Club</div>
+          <div class="plan-row-sub">El drop del Hot Sale llega a toda la lista, no al algoritmo</div>
+        </div>
+        <div class="pill hot">Antes del Hot Sale</div>
+      </div>
+      <div class="plan-row">
+        <div class="plan-n">02 /</div>
+        <div>
+          <div class="plan-row-name">Retargeting de visitantes del drop + recuperación de carritos</div>
+          <div class="plan-row-sub">Segunda oportunidad para quienes llegaron y no compraron</div>
+        </div>
+        <div class="pill hot">Antes del Hot Sale</div>
+      </div>
+      <div class="plan-row locked">
+        <div class="plan-n">03 /</div>
+        <div>
+          <div class="plan-row-name">Flujos de recompra de suplementos por ciclo de producto</div>
+          <div class="plan-row-sub">Proteína · creatina · pre-entreno — cada uno en su ventana exacta de recompra</div>
+        </div>
+        <div class="pill lock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          En llamada
+        </div>
+      </div>
+      <div class="plan-row locked">
+        <div class="plan-n">04 /</div>
+        <div>
+          <div class="plan-row-name">Arquitectura completa Meta Ads (frío → retargeting → recompra)</div>
+          <div class="plan-row-sub">UGC de la comunidad como creativo principal — frío escalable</div>
+        </div>
+        <div class="pill lock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          En llamada
+        </div>
+      </div>
+      <div class="plan-row locked">
+        <div class="plan-n">05 /</div>
+        <div>
+          <div class="plan-row-name">Sistema de drops con preventa exclusiva para suscriptores</div>
+          <div class="plan-row-sub">La lista de espera llena antes del lanzamiento — cada drop sold out</div>
+        </div>
+        <div class="pill lock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          En llamada
+        </div>
+      </div>
+      <div class="plan-row locked">
+        <div class="plan-n">06 /</div>
+        <div>
+          <div class="plan-row-name">Estrategia Buen Fin y siguientes temporadas</div>
+          <div class="plan-row-sub">Drops de temporada + suplementos + evento = sistema integrado</div>
+        </div>
+        <div class="pill lock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          En llamada
+        </div>
+      </div>
+    </div>
+
+    <div class="plan-footer reveal">
+      <p>Los puntos 03–06 dependen de los números reales de LV4LFT.<br><strong>En 30 minutos los revisamos y definimos cómo activar el drops model con email antes del Hot Sale.</strong></p>
+      <a href="https://wa.link/yl7fn7" class="btn sm" target="_blank">
+        Ver plan completo
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-eyebrow reveal">Hot Sale en menos de 3 semanas</div>
+  <h2 class="cta-h reveal">30 minutos.<br><span class="red">El drops model completo.</span></h2>
+  <p class="cta-sub reveal">No una propuesta genérica. Una revisión de LV4LFT específicamente — cómo activar email antes del Hot Sale para que el drop llegue a toda la lista, no al algoritmo.</p>
+  <a href="https://wa.link/yl7fn7" class="btn reveal" target="_blank">
+    Quiero ver dónde está la fuga
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <div class="cta-fine reveal">30 minutos. Sin costo. Si no hay oportunidad real antes del Hot Sale, te lo digo directo.</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span>Esaú Bonilla — Growth Digital</span>
+  <span>Diagnóstico confidencial · LV4LFT · 2025</span>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.06 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
