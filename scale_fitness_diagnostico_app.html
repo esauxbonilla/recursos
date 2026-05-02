@@ -1,0 +1,768 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f5f0;
+    --accent: #C8FF00;
+    --accent2: #00C8FF;
+    --gray: #1a1a1a;
+    --gray2: #2a2a2a;
+    --muted: #888;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .app {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 0 20px;
+    border-bottom: 1px solid #222;
+    margin-bottom: 32px;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--accent);
+  }
+  .logo span { color: var(--white); }
+  .badge {
+    background: var(--accent);
+    color: var(--black);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Progress ── */
+  .progress-wrap { margin-bottom: 32px; }
+  .progress-track {
+    height: 3px;
+    background: #222;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* ── Screen system ── */
+  .screen { display: none; animation: fadeUp 0.4s ease both; }
+  .screen.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Intro screen ── */
+  .intro-eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .intro-title {
+    font-family: var(--font-display);
+    font-size: clamp(44px, 10vw, 64px);
+    line-height: 0.95;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+  .intro-title .highlight { color: var(--accent); }
+  .intro-body {
+    font-size: 16px;
+    color: #aaa;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    max-width: 480px;
+  }
+  .proof-strip {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 36px;
+    padding: 16px 20px;
+    background: var(--gray);
+    border-radius: 12px;
+    border: 1px solid #2a2a2a;
+    flex-wrap: wrap;
+  }
+  .proof-item { text-align: center; flex: 1; min-width: 80px; }
+  .proof-num {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+  .proof-lbl { font-size: 10px; color: var(--muted); line-height: 1.3; margin-top: 2px; }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent);
+    color: var(--black);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 700;
+    padding: 16px 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    width: 100%;
+    justify-content: center;
+    letter-spacing: 0.3px;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,255,0,0.25); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    margin-top: 12px;
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-outline:hover { border-color: #555; background: #111; }
+
+  /* ── Question screen ── */
+  .q-step {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .q-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 7vw, 42px);
+    line-height: 1.05;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .q-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    background: var(--gray);
+    border: 1.5px solid #2a2a2a;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    text-align: left;
+  }
+  .option:hover { border-color: #444; background: #1f1f1f; transform: translateX(3px); }
+  .option.selected { border-color: var(--accent); background: rgba(200,255,0,0.06); }
+  .option-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--gray2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .option.selected .option-icon { background: rgba(200,255,0,0.15); }
+  .option-text { flex: 1; }
+  .option-label { font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.3; margin-bottom: 3px; }
+  .option-desc { font-size: 13px; color: var(--muted); line-height: 1.4; }
+  .option-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid #333;
+    flex-shrink: 0;
+    margin-top: 4px;
+    transition: background 0.2s, border-color 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .option.selected .option-check {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .option.selected .option-check::after {
+    content: '';
+    width: 8px; height: 5px;
+    border-left: 2px solid var(--black);
+    border-bottom: 2px solid var(--black);
+    transform: rotate(-45deg) translateY(-1px);
+    display: block;
+  }
+
+  /* ── Name screen ── */
+  .name-input {
+    width: 100%;
+    background: var(--gray);
+    border: 1.5px solid #333;
+    border-radius: 10px;
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 500;
+    padding: 16px 20px;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 20px;
+  }
+  .name-input::placeholder { color: #444; }
+  .name-input:focus { border-color: var(--accent); }
+
+  /* ── Loading ── */
+  .loading-wrap {
+    text-align: center;
+    padding: 40px 0;
+  }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 3px solid #222;
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 24px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-family: var(--font-display); font-size: 28px; color: var(--white); margin-bottom: 8px; }
+  .loading-sub { font-size: 14px; color: var(--muted); }
+
+  /* ── Result screen ── */
+  .result-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .badge-red { background: rgba(255,80,80,0.15); color: #ff6b6b; border: 1px solid rgba(255,80,80,0.3); }
+  .badge-yellow { background: rgba(255,200,0,0.15); color: #ffc800; border: 1px solid rgba(255,200,0,0.3); }
+  .badge-green { background: rgba(200,255,0,0.15); color: var(--accent); border: 1px solid rgba(200,255,0,0.3); }
+
+  .result-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 8vw, 52px);
+    line-height: 1;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+  .result-desc {
+    font-size: 15px;
+    color: #bbb;
+    line-height: 1.65;
+    margin-bottom: 28px;
+    padding: 20px;
+    background: var(--gray);
+    border-radius: 10px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .recs-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    color: var(--accent);
+  }
+  .rec-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    background: var(--gray);
+    border-radius: 10px;
+    border: 1px solid #2a2a2a;
+    margin-bottom: 10px;
+  }
+  .rec-num {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--accent);
+    line-height: 1;
+    min-width: 28px;
+  }
+  .rec-text { flex: 1; }
+  .rec-label { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 3px; }
+  .rec-desc { font-size: 13px; color: var(--muted); line-height: 1.4; }
+
+  .score-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .score-item {
+    padding: 14px 12px;
+    background: var(--gray);
+    border-radius: 10px;
+    border: 1px solid #2a2a2a;
+    text-align: center;
+  }
+  .score-val { font-family: var(--font-display); font-size: 26px; line-height: 1; margin-bottom: 4px; }
+  .score-key { font-size: 11px; color: var(--muted); line-height: 1.3; }
+
+  /* ── CTA final ── */
+  .cta-box {
+    margin-top: 28px;
+    padding: 24px 20px;
+    background: linear-gradient(135deg, rgba(200,255,0,0.08), rgba(0,200,255,0.06));
+    border: 1px solid rgba(200,255,0,0.2);
+    border-radius: 12px;
+    text-align: center;
+  }
+  .cta-box-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .cta-box-sub { font-size: 14px; color: #aaa; margin-bottom: 20px; line-height: 1.5; }
+
+  .divider { border: none; border-top: 1px solid #1e1e1e; margin: 28px 0; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">SCALE<span>FITNESS</span></div>
+    <div class="badge">DIAGNOSTICO GRATIS</div>
+  </div>
+
+  <!-- Progress (oculto en intro) -->
+  <div class="progress-wrap" id="progressWrap" style="display:none">
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel">Pregunta 1 de 3</div>
+  </div>
+
+  <!-- ══ PANTALLA 0: INTRO ══ -->
+  <div class="screen active" id="screen-intro">
+    <p class="intro-eyebrow">Expo Fitness 2025</p>
+    <h1 class="intro-title">
+      ¿Cuanto <span class="highlight">dinero</span> esta dejando tu marca sobre la mesa?
+    </h1>
+    <p class="intro-body">
+      Responde 3 preguntas y te digo exactamente en que etapa esta tu marca, que le esta costando mas caro y que hacer primero.
+    </p>
+
+    <div class="proof-strip">
+      <div class="proof-item">
+        <div class="proof-num">$2.5M</div>
+        <div class="proof-lbl">MXN generados con el sistema</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-num">$70K</div>
+        <div class="proof-lbl">MXN en el primer dia de lanzamiento</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-num">10 mes</div>
+        <div class="proof-lbl">para nominar mejor marca nacional</div>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="showName()">
+      Hacer el diagnostico gratis →
+    </button>
+    <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:12px">30 segundos · Sin formularios largos · Resultado inmediato</p>
+  </div>
+
+  <!-- ══ PANTALLA NOMBRE ══ -->
+  <div class="screen" id="screen-name">
+    <p class="q-step">Antes de empezar</p>
+    <h2 class="q-title">¿Como se llama tu marca?</h2>
+    <p class="q-sub">Para personalizar tu diagnostico.</p>
+    <input type="text" class="name-input" id="brandName" placeholder="Ej: Iron Lab, FitZone, Brutal..." maxlength="30">
+    <button class="btn-primary" onclick="startQuiz()">Continuar →</button>
+  </div>
+
+  <!-- ══ PANTALLAS DE PREGUNTAS ══ -->
+
+  <!-- Q1 -->
+  <div class="screen" id="screen-q1">
+    <p class="q-step">Pregunta 1 de 3</p>
+    <h2 class="q-title">¿Como vende tu marca hoy?</h2>
+    <p class="q-sub">Selecciona la opcion que mejor describe tu situacion actual.</p>
+    <div class="options" id="opts-q1">
+      <div class="option" onclick="selectOption('q1', 0, this)">
+        <div class="option-icon">📱</div>
+        <div class="option-text">
+          <div class="option-label">WhatsApp y redes sociales</div>
+          <div class="option-desc">Atiendo pedidos manualmente, cada venta depende de mi o mi equipo</div>
+        </div>
+        <div class="option-check"></div>
+      </div>
+      <div class="option" onclick="selectOption('q1', 1, this)">
+        <div class="option-icon">🏭</div>
+        <div class="option-text">
+          <div class="option-label">Principalmente mayoreo</div>
+          <div class="option-desc">Vendo a distribuidores o tiendas en volumen, poco margen por pieza</div>
+        </div>
+        <div class="option-check"></div>
+      </div>
+      <div class="option" onclick="selectOption('q1', 2, this)">
+        <div class="option-icon">🛒</div>
+        <div class="option-text">
+          <div class="option-label">Tengo tienda online pero no convierte</div>
+          <div class="option-desc">Shopify o similar activo pero las ventas online son minimas</div>
+        </div>
+        <div class="option-check"></div>
+      </div>
+      <div class="option" onclick="selectOption('q1', 3, this)">
+        <div class="option-icon">🚀</div>
+        <div class="option-text">
+          <div class="option-label">Tengo e-commerce funcionando</div>
+          <div class="option-desc">Vendo online de forma constante pero quiero escalar mas rapido</div>
+        </div>
+        <div class="option-check"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="screen" id="screen-q2">
+    <p class="q-step">Pregunta 2 de 3</p>
+    <h2 class="q-title">¿Que pasa con tu contenido y lanzamientos?</h2>
+    <p class="q-sub">Escoge lo que mas se parece a tu realidad.</p>
+    <div class="options" id="opts-q2">
+      <div class="option" onclick="selectOption('q2', 0, this)">
+        <div class="option-icon">😩</div>
+        <div class="option-text">
+          <div class="option-label">No tenemos sistema de contenido</div>
+          <div class="option-desc">Publicamos cuando podemos, sin estrategia ni calendario claro</div>
+        </div>
+        <div class="option-check"></div>
+      </div>
+      <div class="option" onclick="selectOption('q2', 1, this)">
+        <div class="option-icon">💸</div>
+        <div class="option-text">
+          <div class="option-label">Gastamos mucho en sesiones y produccion</div>
+          <div class="option-desc">Fotografia, modelos, video — caro, lento y no siempre da resultados</div>
+        </div>
+        <div class="option-check"></div>
+      </div>
+      <div class="option" onclick="selectOption('q2', 2, this)">
+        <div class="option-icon">📦</div>
+        <div class="option-text">
+          <div class="option-label">Lanzamos productos pero sin calentamiento</div>
+          <div class="option-desc">Sacamos drops o colecciones pero sin preparar a la audiencia antes</div>
+        </div>
+        <div class="option-check"></div>
+      </div>
+      <div class="option" onclick="selectOption('q2', 3, this)">
+        <div class="option-icon">📈</div>
+        <div class="option-text">
+          <div class="option-label">Tenemos contenido pero los anuncios no funcionan</div>
+          <div class="option-desc">Corremos Meta Ads pero el costo por venta es muy alto</div>
+        </div>
+        <div class="option-check"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="screen" id="screen-q3">
+    <p class="q-step">Pregunta 3 de 3</p>
+    <h2 class="q-title">¿Como consigues nuevos clientes hoy?</h2>
+    <p class="q-sub">La que mas se acerque a tu situacion.</p>
+    <div class="options" id="opts-q3">
+      <div class="option" onclick="selectOption('q3', 0, this)">
+        <div class="option-icon">👄</div>
+        <div class="option-text">
+          <div class="option-label">Recomendacion de boca en boca</div>
+          <div class="option-desc">La mayoria llega por referidos o porque ya conocen la marca, sin sistema claro</div>
+        </div>
+        <div class="option-check"></div>
+      </div>
+      <div class="option" onclick="selectOption('q3', 1, this)">
+        <div class="option-icon">🤳</div>
+        <div class="option-text">
+          <div class="option-label">Influencers o colaboraciones esporadicas</div>
+          <div class="option-desc">Hacemos colabs de vez en cuando pero no es un sistema formal</div>
+        </div>
+        <div class="option-check"></div>
+      </div>
+      <div class="option" onclick="selectOption('q3', 2, this)">
+        <div class="option-icon">📣</div>
+        <div class="option-text">
+          <div class="option-label">Publicidad pagada en Meta o TikTok</div>
+          <div class="option-desc">Invertimos en anuncios pero los resultados son inconsistentes</div>
+        </div>
+        <div class="option-check"></div>
+      </div>
+      <div class="option" onclick="selectOption('q3', 3, this)">
+        <div class="option-icon">⚙️</div>
+        <div class="option-text">
+          <div class="option-label">Queremos escalar pero no sabemos por donde empezar</div>
+          <div class="option-desc">Tenemos la marca, el producto y las ganas — nos falta el sistema</div>
+        </div>
+        <div class="option-check"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LOADING ══ -->
+  <div class="screen" id="screen-loading">
+    <div class="loading-wrap">
+      <div class="spinner"></div>
+      <div class="loading-text" id="loadingText">ANALIZANDO TU MARCA...</div>
+      <div class="loading-sub" id="loadingSub">Calculando tu potencial de crecimiento</div>
+    </div>
+  </div>
+
+  <!-- ══ RESULTADO ══ -->
+  <div class="screen" id="screen-result">
+    <div id="result-content"></div>
+  </div>
+
+</div>
+
+<script>
+  const answers = { q1: -1, q2: -1, q3: -1 };
+  let brandName = "";
+  let currentQ = 0;
+
+  function showName() {
+    showScreen('screen-name');
+    document.getElementById('progressWrap').style.display = 'block';
+    updateProgress(0, 4);
+  }
+
+  function startQuiz() {
+    const input = document.getElementById('brandName');
+    brandName = input.value.trim() || "tu marca";
+    showScreen('screen-q1');
+    updateProgress(1, 4);
+  }
+
+  function selectOption(q, idx, el) {
+    document.querySelectorAll(`#opts-${q} .option`).forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[q] = idx;
+
+    setTimeout(() => {
+      if (q === 'q1') { showScreen('screen-q2'); updateProgress(2, 4); }
+      else if (q === 'q2') { showScreen('screen-q3'); updateProgress(3, 4); }
+      else if (q === 'q3') { showLoading(); }
+    }, 500);
+  }
+
+  function updateProgress(step, total) {
+    const pct = Math.round((step / total) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    const labels = ['', 'Nombre', 'Pregunta 1 de 3', 'Pregunta 2 de 3', 'Pregunta 3 de 3', 'Listo'];
+    document.getElementById('progressLabel').textContent = labels[step] || 'Completado';
+  }
+
+  function showLoading() {
+    showScreen('screen-loading');
+    updateProgress(4, 4);
+    const msgs = [
+      ['ANALIZANDO TU MARCA...', 'Identificando tu etapa de crecimiento'],
+      ['CALCULANDO OPORTUNIDADES...', 'Comparando con marcas similares'],
+      ['GENERANDO TU DIAGNOSTICO...', 'Preparando tus recomendaciones'],
+    ];
+    let i = 0;
+    const iv = setInterval(() => {
+      i++;
+      if (i < msgs.length) {
+        document.getElementById('loadingText').textContent = msgs[i][0];
+        document.getElementById('loadingSub').textContent = msgs[i][1];
+      } else {
+        clearInterval(iv);
+      }
+    }, 700);
+    setTimeout(showResult, 2400);
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(id);
+    el.classList.add('active');
+  }
+
+  function showResult() {
+    const profile = getProfile();
+    document.getElementById('result-content').innerHTML = buildResult(profile);
+    showScreen('screen-result');
+  }
+
+  function getProfile() {
+    const q1 = answers.q1; // canal de venta
+    const q2 = answers.q2; // contenido
+    const q3 = answers.q3; // adquisicion
+
+    // Score de urgencia 0-9 (3 respuestas x 0-3)
+    const score = q1 + q2 + q3;
+
+    if (q1 === 0 || q1 === 1) {
+      // WhatsApp o mayoreo = sin sistema
+      return {
+        level: 'CRITICO',
+        badge: 'badge-red',
+        title: 'Tu marca esta perdiendo dinero cada dia',
+        desc: `${brandName} tiene producto y audiencia, pero sin un sistema digital estructurado esta regalando ventas a la competencia. Cada mes sin e-commerce, sin drops y sin sistema de influencers es dinero que no va a recuperar. La buena noticia: este es el escenario donde el crecimiento es mas explosivo.`,
+        scores: [
+          { val: '0%', key: 'Ventas automaticas online', color: '#ff6b6b' },
+          { val: 'Alto', key: 'Costo operativo por venta', color: '#ff6b6b' },
+          { val: '5X', key: 'Potencial de crecimiento', color: 'var(--accent)' }
+        ],
+        recs: [
+          { label: 'Construir el e-commerce en Shopify', desc: 'Tu tienda digital tiene que estar vendiendo antes de que salga el proximo drop. Con el sistema correcto, el primer lanzamiento puede generar $50K+ MXN organico.' },
+          { label: 'Lanzar el primer drop con calentamiento', desc: '3 semanas de preparacion con reels, stories y comunidades de WhatsApp antes de abrir ventas. Generamos anticipacion que convierte desde el minuto uno.' },
+          { label: 'Activar el sistema de influencers y distribuidores', desc: 'Colaboradores, embajadores y atletas coordinados mas un programa de distribuidores formalizado — alcance masivo sin presupuesto publicitario.' }
+        ]
+      };
+    } else if (q1 === 2) {
+      // Tienda sin conversion
+      return {
+        level: 'OPORTUNIDAD',
+        badge: 'badge-yellow',
+        title: 'Tienes la base, falta el sistema',
+        desc: `${brandName} ya dio el primer paso con el e-commerce, pero tener la tienda activa no es suficiente si no convierte. El problema no es el producto ni la marca — es que falta el ecosistema completo: drops con calentamiento, comunidades activas, influencers coordinados y publicidad que amplifique lo que ya funciona.`,
+        scores: [
+          { val: 'Bajo', key: 'Conversion actual', color: '#ffc800' },
+          { val: 'Medio', key: 'Esfuerzo requerido', color: 'var(--accent)' },
+          { val: '3X', key: 'Potencial de escala', color: 'var(--accent)' }
+        ],
+        recs: [
+          { label: 'Optimizar la tienda y activar el sistema de drops', desc: 'Auditoria de la experiencia de compra + implementacion de drops mensuales con calentamiento de 3 semanas. Un drop bien ejecutado puede triplicar las ventas del mes.' },
+          { label: 'Produccion de contenido con IA', desc: 'Modelos virtuales, fotos de producto y creativos publicitarios generados con IA — contenido de calidad sin el costo de sesiones tradicionales.' },
+          { label: 'Meta Ads con UGC e IA', desc: 'Activar publicidad pagada con creativos que parecen contenido organico (UGC) mas variaciones con IA para maximizar el ROI de cada peso invertido.' }
+        ]
+      };
+    } else {
+      // Ya vende, quiere escalar
+      return {
+        level: 'ESCALA',
+        badge: 'badge-green',
+        title: 'Estas listo para escalar agresivo',
+        desc: `${brandName} ya tiene el e-commerce funcionando — eso los pone por delante del 80% de las marcas fitness. El siguiente nivel es construir los sistemas que multiplican los resultados: influencers coordinados, programa de distribuidores formal, chats automatizados para captacion y publicidad que escala lo que ya funciona.`,
+        scores: [
+          { val: 'Activo', key: 'Canal digital', color: 'var(--accent)' },
+          { val: '10X', key: 'Potencial de escala', color: 'var(--accent)' },
+          { val: 'Ahora', key: 'Momento de actuar', color: 'var(--accent)' }
+        ],
+        recs: [
+          { label: 'Sistema de influencers en 3 niveles', desc: 'Colaboradores, embajadores y atletas coordinados con un sistema formal — alcance organico masivo con bajo presupuesto.' },
+          { label: 'Chats automatizados para captacion en Instagram', desc: 'Automatizacion que atrae distribuidores e influencers desde el Instagram de la marca — el sistema trabaja solo mientras tu te enfocas en el negocio.' },
+          { label: 'Escalar Meta Ads con UGC e IA', desc: 'Creativos UGC que generan alta confianza mas variaciones con IA — mas tests, mas datos, menos costo por adquisicion.' }
+        ]
+      };
+    }
+  }
+
+  function buildResult(p) {
+    return `
+      <div class="result-badge ${p.badge}">${p.level}</div>
+      <h2 class="result-title">${p.title}</h2>
+      <div class="result-desc">${p.desc}</div>
+
+      <div class="score-strip">
+        ${p.scores.map(s => `
+          <div class="score-item">
+            <div class="score-val" style="color:${s.color}">${s.val}</div>
+            <div class="score-key">${s.key}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="recs-title">3 ACCIONES CLAVE PARA ${brandName.toUpperCase()}</div>
+      ${p.recs.map((r, i) => `
+        <div class="rec-item">
+          <div class="rec-num">0${i+1}</div>
+          <div class="rec-text">
+            <div class="rec-label">${r.label}</div>
+            <div class="rec-desc">${r.desc}</div>
+          </div>
+        </div>
+      `).join('')}
+
+      <div class="divider"></div>
+
+      <div class="cta-box">
+        <div class="cta-box-title">¿QUIERES VER ESTO APLICADO A ${brandName.toUpperCase()}?</div>
+        <div class="cta-box-sub">
+          En 30 minutos te muestro exactamente como INSANO paso de vender por WhatsApp a $2.5M MXN en 10 meses — y como replicamos ese sistema para tu marca.
+        </div>
+        <button class="btn-primary" onclick="sendPrompt('Quiero ver como aplicar el sistema Scale Fitness a mi marca. Mi diagnostico fue: ' + '${p.level}')">
+          Agendar diagnostico con el equipo →
+        </button>
+        <button class="btn-outline" onclick="resetApp()">↩ Hacer el diagnostico de nuevo</button>
+      </div>
+    `;
+  }
+
+  function resetApp() {
+    answers.q1 = -1; answers.q2 = -1; answers.q3 = -1;
+    brandName = "";
+    document.getElementById('brandName').value = '';
+    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    document.getElementById('progressWrap').style.display = 'none';
+    showScreen('screen-intro');
+  }
+</script>
+</body>
+</html>
