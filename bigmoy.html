@@ -862,6 +862,33 @@
       gap: 10px;
     }
 
+    /* PROOF INSANO */
+    .proof-section { padding: 86px 5vw; background: var(--white); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .proof-inner { max-width: 1220px; margin: 0 auto; }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      margin-bottom: 1px;
+    }
+    @media(max-width: 640px) { .proof-grid { grid-template-columns: 1fr; } }
+    .proof-card { background: var(--white); padding: 32px 28px; }
+    .proof-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--gray); margin-bottom: 10px; display: block; }
+    .proof-num { font-family: 'Inter', sans-serif; font-size: 44px; font-weight: 900; color: var(--blue); line-height: 1; margin-bottom: 8px; letter-spacing: -0.04em; }
+    .proof-desc { font-size: 13px; color: var(--gray); line-height: 1.65; font-weight: 300; }
+    .proof-desc strong { color: var(--ink); font-weight: 600; }
+    .proof-quote { border-left: 3px solid var(--blue); background: rgba(36,107,254,.05); padding: 22px 28px; font-size: 15px; color: var(--gray); line-height: 1.75; font-weight: 300; }
+    .proof-quote strong { color: var(--blue); font-weight: 600; }
+
+    /* LOCKED PLAN ROWS */
+    .plan-row.locked { opacity: 0.42; cursor: default; }
+    .plan-row.locked .plan-name,
+    .plan-row.locked .plan-sub { filter: blur(3.5px); user-select: none; pointer-events: none; }
+    .plan-row.locked:hover { background: var(--white); }
+    .pill.en-llamada { border: 1px solid var(--line); color: var(--gray); background: transparent; display: flex; align-items: center; gap: 6px; }
+    .pill.en-llamada svg { width: 10px; height: 10px; }
+
     /* ANIMS */
     @keyframes up {
       from { opacity: 0; transform: translateY(18px); }
@@ -1152,6 +1179,36 @@
     </div>
   </section>
 
+  <!-- INSANO PROOF -->
+  <section class="proof-section">
+    <div class="proof-inner">
+      <div class="tag reveal">El caso que lo respalda</div>
+      <h2 class="section-h reveal">Insano Clothing.<br><span class="red">Lo que pasa cuando se tapan las fugas.</span></h2>
+
+      <div class="proof-grid reveal">
+        <div class="proof-card">
+          <span class="proof-label">Temporada alta con sistema</span>
+          <div class="proof-num">15 días</div>
+          <div class="proof-desc">Vendieron lo que normalmente hacían en <strong>2 meses completos.</strong> El tráfico ya existía — el sistema lo capturó.</div>
+        </div>
+        <div class="proof-card">
+          <span class="proof-label">Canal de email automatizado</span>
+          <div class="proof-num">39%</div>
+          <div class="proof-desc"><strong>De las ventas mensuales</strong> generadas por flujos automáticos — sin tocar ads.</div>
+        </div>
+        <div class="proof-card">
+          <span class="proof-label">Resultado en Meta Ads</span>
+          <div class="proof-num">46×</div>
+          <div class="proof-desc">ROAS con creativos UGC + estructura correcta. <strong>El mismo presupuesto, múltiplo de resultado.</strong></div>
+        </div>
+      </div>
+
+      <div class="proof-quote reveal">
+        La marca ya tenía comunidad y producto. Solo faltaba el sistema. <strong>Bigmoy está en ese mismo punto — con el próximo drop como ventana de activación.</strong>
+      </div>
+    </div>
+  </section>
+
   <section class="offer-band">
     <div class="offer-inner">
       <h2 class="offer-h reveal">El próximo drop no debería depender de suerte.</h2>
@@ -1190,40 +1247,52 @@
           <div class="pill red">Prioridad alta</div>
         </div>
 
-        <div class="plan-row">
+        <div class="plan-row locked">
           <div class="plan-n">03 /</div>
           <div>
             <div class="plan-name">Reestructurar Meta Ads por temperatura</div>
             <div class="plan-sub">Frío con UGC, tibio con prueba social, caliente con producto/carrito y recompra.</div>
           </div>
-          <div class="pill black">Ads</div>
+          <div class="pill en-llamada">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            En llamada
+          </div>
         </div>
 
-        <div class="plan-row">
+        <div class="plan-row locked">
           <div class="plan-n">04 /</div>
           <div>
             <div class="plan-name">Convertir UGC en activo de venta</div>
             <div class="plan-sub">Unboxings, gym fits, pruebas de talla, clientes reales y creators para anuncios.</div>
           </div>
-          <div class="pill black">Creativos</div>
+          <div class="pill en-llamada">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            En llamada
+          </div>
         </div>
 
-        <div class="plan-row">
+        <div class="plan-row locked">
           <div class="plan-n">05 /</div>
           <div>
             <div class="plan-name">Optimizar fichas de producto</div>
             <div class="plan-sub">Fit, guía visual de talla, escasez, confianza, reseñas, bundles y envío gratis desde $999.</div>
           </div>
-          <div class="pill gold">Conversión</div>
+          <div class="pill en-llamada">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            En llamada
+          </div>
         </div>
 
-        <div class="plan-row">
+        <div class="plan-row locked">
           <div class="plan-n">06 /</div>
           <div>
             <div class="plan-name">Diseñar sistema de lanzamientos</div>
             <div class="plan-sub">Pre-drop, waitlist, early access, lanzamiento, retargeting, cierre y post-drop.</div>
           </div>
-          <div class="pill gold">Drops</div>
+          <div class="pill en-llamada">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            En llamada
+          </div>
         </div>
       </div>
 
