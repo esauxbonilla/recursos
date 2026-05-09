@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intense Swimwear Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #111111;
+      --white: #ffffff;
+      --sand: #dfd9cd;
+      --line: rgba(0, 0, 0, 0.12);
+      --text: #050505;
+      --muted: #555555;
+      --soft: #f6f4ef;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #151312;
+      color: var(--text);
+      font-family: "Inter", Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .site-shell {
+      width: min(1188px, calc(100vw - 32px));
+      margin: 0 auto;
+      background: var(--white);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .announcement {
+      height: 48px;
+      background: #090909;
+      color: #ffffff;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .announcement-track {
+      display: flex;
+      gap: 74px;
+      min-width: max-content;
+      animation: marquee 28s linear infinite;
+    }
+
+    .announcement span {
+      opacity: 0.92;
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .navbar {
+      height: 60px;
+      padding: 0 38px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-links a,
+    .nav-links button {
+      transition: opacity 0.25s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links button:hover,
+    .nav-icons button:hover {
+      opacity: 0.55;
+    }
+
+    .brand {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 48px;
+      line-height: 1;
+      font-weight: 300;
+      letter-spacing: -0.08em;
+      transform: translateY(-2px);
+    }
+
+    .nav-icons {
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .icon {
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-menu-button {
+      display: none;
+      width: 32px;
+      height: 32px;
+    }
+
+    .mobile-menu-button span {
+      display: block;
+      height: 1px;
+      width: 22px;
+      margin: 6px auto;
+      background: #111;
+    }
+
+    .hero {
+      min-height: 720px;
+      position: relative;
+      color: white;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 0 56px 104px;
+      background-image:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.54), rgba(0, 0, 0, 0.18) 45%, rgba(0, 0, 0, 0.5)),
+        url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1900&q=85");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 42% 42%, rgba(255,255,255,0.22), transparent 20%),
+        linear-gradient(120deg, transparent 0 25%, rgba(255,255,255,0.18) 25% 31%, transparent 31% 100%);
+      mix-blend-mode: soft-light;
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 560px;
+    }
+
+    .eyebrow {
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 12px;
+      letter-spacing: -0.04em;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 5vw, 58px);
+      line-height: 1.15;
+      font-weight: 300;
+      letter-spacing: -0.075em;
+      margin-bottom: 32px;
+    }
+
+    .outline-button {
+      width: 140px;
+      height: 52px;
+      border: 1px solid currentColor;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    .outline-button:hover {
+      background: white;
+      color: black;
+    }
+
+    .slider-arrow {
+      position: absolute;
+      z-index: 4;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.28);
+      background: rgba(255, 255, 255, 0.78);
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      line-height: 1;
+      backdrop-filter: blur(8px);
+      transition: transform 0.25s ease;
+    }
+
+    .slider-arrow:hover {
+      transform: scale(1.05);
+    }
+
+    .slider-arrow.left { left: 12px; top: 50%; }
+    .slider-arrow.right { right: 12px; top: 50%; }
+
+    .collections {
+      background: #ffffff;
+      padding: 56px 36px 50px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .promo-marquee {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      white-space: nowrap;
+      color: rgba(0, 0, 0, 0.65);
+      font-size: 18px;
+      background: #ffffff;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .promo-track {
+      display: flex;
+      align-items: center;
+      gap: 42px;
+      min-width: max-content;
+      animation: marquee 34s linear infinite;
+    }
+
+    .devil {
+      font-size: 22px;
+    }
+
+    .collection-row {
+      margin-top: 0;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(240px, 1fr));
+      gap: 12px;
+      position: relative;
+    }
+
+    .collection-card {
+      min-width: 0;
+    }
+
+    .collection-img {
+      height: 440px;
+      width: 100%;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .collection-card:nth-child(1) .collection-img {
+      background-image: url("https://images.unsplash.com/photo-1583846717393-dc2412c95ed7?auto=format&fit=crop&w=800&q=80");
+    }
+
+    .collection-card:nth-child(2) .collection-img {
+      background-image: url("https://images.unsplash.com/photo-1616091216791-a5360b5fc78a?auto=format&fit=crop&w=800&q=80");
+    }
+
+    .collection-card:nth-child(3) .collection-img {
+      background-image: url("https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80");
+    }
+
+    .collection-card:nth-child(4) .collection-img {
+      background-image: url("https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80");
+    }
+
+    .collection-card h3 {
+      font-size: 31px;
+      line-height: 1.25;
+      font-weight: 300;
+      letter-spacing: -0.08em;
+      margin: 20px 16px 0;
+      max-width: 280px;
+    }
+
+    .section-intro {
+      padding: 6px 40px 40px;
+      text-align: center;
+      background: white;
+    }
+
+    .section-intro h2 {
+      font-size: clamp(36px, 4.2vw, 48px);
+      line-height: 1;
+      font-weight: 300;
+      letter-spacing: -0.08em;
+      margin-bottom: 30px;
+    }
+
+    .section-intro p {
+      max-width: 720px;
+      margin: 0 auto;
+      font-size: 14px;
+      line-height: 1.75;
+      color: #111;
+      font-weight: 300;
+    }
+
+    .image-banner {
+      width: 100%;
+      height: 545px;
+      background-image: url("https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1800&q=85");
+      background-size: cover;
+      background-position: center 64%;
+    }
+
+    .products {
+      background: white;
+      padding: 86px 36px 72px;
+      position: relative;
+    }
+
+    .products h2 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 30px;
+      font-weight: 400;
+      letter-spacing: -0.05em;
+      margin: 0 0 12px 52px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1112px;
+      margin: 0 auto;
+    }
+
+    .product-image {
+      height: 335px;
+      background-color: #e7e1df;
+      background-size: contain;
+      background-position: center bottom;
+      background-repeat: no-repeat;
+      transition: transform 0.3s ease;
+    }
+
+    .product:hover .product-image {
+      transform: translateY(-4px);
+    }
+
+    .product:nth-child(1) .product-image {
+      background-image: url("https://images.unsplash.com/photo-1519415943484-9fa1873496d4?auto=format&fit=crop&w=700&q=80");
+      background-size: cover;
+    }
+
+    .product:nth-child(2) .product-image {
+      background-image: url("https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=700&q=80");
+      background-size: cover;
+    }
+
+    .product:nth-child(3) .product-image {
+      background-image: url("https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=700&q=80");
+      background-size: cover;
+    }
+
+    .product:nth-child(4) .product-image {
+      background-image: url("https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=700&q=80");
+      background-size: cover;
+    }
+
+    .swatches {
+      display: flex;
+      gap: 10px;
+      padding: 10px 6px 14px;
+    }
+
+    .swatch {
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.18);
+      box-shadow: inset 0 0 0 3px #fff;
+    }
+
+    .brown { background: #b83134; }
+    .white { background: #ffffff; }
+    .yellow { background: #ffd500; }
+    .gray { background: #8b8b87; }
+    .black { background: #000000; }
+    .blue { background: #0818a8; }
+
+    .product-info {
+      padding: 0 6px;
+    }
+
+    .product-name {
+      font-size: 14px;
+      font-weight: 300;
+      margin-bottom: 16px;
+    }
+
+    .price {
+      font-size: 12px;
+      color: #111;
+      font-weight: 300;
+    }
+
+    .editorial {
+      background: #ded8cd;
+      padding: 68px 48px 38px;
+    }
+
+    .editorial-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .editorial-image {
+      height: 530px;
+      background-image: url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=85");
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .editorial-image span {
+      position: absolute;
+      left: 12px;
+      bottom: 28px;
+      background: rgba(255, 255, 255, 0.84);
+      font-size: 31px;
+      line-height: 1.1;
+      letter-spacing: -0.08em;
+      font-weight: 300;
+      padding: 0 4px;
+    }
+
+    .accordion {
+      padding-left: 0;
+    }
+
+    .accordion-item {
+      min-height: 105px;
+      border-bottom: 1px solid rgba(255,255,255,0.64);
+      display: grid;
+      grid-template-columns: 1fr 78px;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .accordion-item:first-child {
+      border-top: 0;
+    }
+
+    .accordion-title {
+      font-size: clamp(32px, 4vw, 42px);
+      line-height: 1.08;
+      font-weight: 300;
+      letter-spacing: -0.09em;
+    }
+
+    .accordion-action {
+      font-size: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      justify-self: end;
+      transition: background 0.25s ease;
+    }
+
+    .accordion-item.active .accordion-action {
+      background: white;
+    }
+
+    .footer {
+      background: #101010;
+      color: white;
+      padding: 80px 44px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .footer-logo {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 64px;
+      letter-spacing: -0.08em;
+      font-weight: 300;
+    }
+
+    .footer p {
+      max-width: 420px;
+      color: rgba(255,255,255,0.68);
+      line-height: 1.7;
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    .newsletter {
+      align-self: end;
+    }
+
+    .newsletter label {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+    }
+
+    .newsletter-row {
+      display: flex;
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+      height: 48px;
+    }
+
+    .newsletter-row input {
+      flex: 1;
+      background: transparent;
+      border: 0;
+      color: white;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .newsletter-row button {
+      font-size: 28px;
+      padding: 0 4px 0 20px;
+    }
+
+    .back-top {
+      position: fixed;
+      right: 42px;
+      bottom: 28px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: white;
+      color: #000;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 23px;
+      z-index: 80;
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: min(420px, 100vw);
+      background: white;
+      z-index: 120;
+      transform: translateX(100%);
+      transition: transform 0.35s ease;
+      box-shadow: -24px 0 60px rgba(0,0,0,0.2);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-drawer.open {
+      transform: translateX(0);
+    }
+
+    .cart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+    }
+
+    .cart-header h3 {
+      font-size: 30px;
+      font-weight: 300;
+      letter-spacing: -0.07em;
+    }
+
+    .cart-line {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+      margin-top: auto;
+      font-size: 18px;
+    }
+
+    .checkout-btn {
+      margin-top: 18px;
+      height: 52px;
+      background: #111;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 12px;
+    }
+
+    .empty-cart {
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: min(320px, 86vw);
+      background: white;
+      z-index: 130;
+      padding: 30px;
+      transform: translateX(-100%);
+      transition: transform 0.32s ease;
+      box-shadow: 20px 0 60px rgba(0,0,0,0.22);
+    }
+
+    .mobile-menu.open {
+      transform: translateX(0);
+    }
+
+    .mobile-menu a {
+      display: block;
+      font-size: 22px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+      text-transform: uppercase;
+      letter-spacing: -0.05em;
+    }
+
+    .mobile-close {
+      margin-left: auto;
+      display: block;
+      font-size: 28px;
+      margin-bottom: 28px;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.36);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 110;
+    }
+
+    .overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    @media (max-width: 1024px) {
+      .site-shell {
+        width: 100%;
+      }
+
+      .hero {
+        min-height: 620px;
+        padding-left: 48px;
+      }
+
+      .collection-row,
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .editorial-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .announcement {
+        height: 38px;
+      }
+
+      .navbar {
+        padding: 0 18px;
+        grid-template-columns: 42px 1fr auto;
+      }
+
+      .mobile-menu-button {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .brand {
+        justify-self: center;
+        font-size: 42px;
+      }
+
+      .nav-icons {
+        gap: 10px;
+      }
+
+      .nav-icons .hide-mobile {
+        display: none;
+      }
+
+      .hero {
+        min-height: 590px;
+        padding: 0 24px 44px;
+      }
+
+      .hero h1 {
+        font-size: 42px;
+      }
+
+      .collection-row,
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .collections,
+      .products,
+      .editorial {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .collection-img,
+      .product-image {
+        height: 420px;
+      }
+
+      .section-intro {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .image-banner {
+        height: 390px;
+      }
+
+      .products h2 {
+        margin-left: 0;
+      }
+
+      .editorial {
+        padding-top: 38px;
+      }
+
+      .editorial-image {
+        height: 430px;
+      }
+
+      .accordion-item {
+        grid-template-columns: 1fr 44px;
+        min-height: 84px;
+      }
+
+      .accordion-action {
+        width: 44px;
+        height: 44px;
+      }
+
+      .footer {
+        grid-template-columns: 1fr;
+        padding: 56px 24px;
+      }
+
+      .back-top {
+        right: 18px;
+        bottom: 18px;
+        width: 50px;
+        height: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="mobile-menu" id="mobileMenu" aria-label="Mobile menu">
+    <button class="mobile-close" id="closeMenu" aria-label="Close menu">×</button>
+    <a href="#home">Home</a>
+    <a href="#new-arrivals">New Arrivals</a>
+    <a href="#shop">Shop</a>
+    <a href="#contact">Contact</a>
+    <a href="#lookbook">Lookbook</a>
+  </aside>
+
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+    <div class="cart-header">
+      <h3>Your Bag</h3>
+      <button id="closeCart" aria-label="Close cart">✕</button>
+    </div>
+    <p class="empty-cart">Your cart is currently empty. Add products from the Best Sellers section to preview the shopping flow.</p>
+    <div class="cart-line">
+      <strong>Subtotal</strong>
+      <strong id="cartTotal">$0.00</strong>
+    </div>
+    <button class="checkout-btn">Checkout</button>
+  </aside>
+
+  <main class="site-shell" id="home">
+    <div class="announcement">
+      <div class="announcement-track">
+        <span>Express Shipping & Easy Returns</span>
+        <span>40% off on first order</span>
+        <span>Express Shipping & Easy Returns</span>
+        <span>40% off on first order</span>
+        <span>Express Shipping & Easy Returns</span>
+        <span>40% off on first order</span>
+        <span>Express Shipping & Easy Returns</span>
+        <span>40% off on first order</span>
+      </div>
+    </div>
+
+    <header class="navbar">
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <button>New Arrivals⌄</button>
+        <a href="#shop">Shop</a>
+        <a href="#contact">Contact</a>
+        <a href="#lookbook">Lookbook</a>
+      </nav>
+
+      <button class="mobile-menu-button" id="openMenu" aria-label="Open menu">
+        <span></span>
+        <span></span>
+      </button>
+
+      <a class="brand" href="#home" aria-label="Intense home">Intense</a>
+
+      <div class="nav-icons">
+        <button class="icon hide-mobile" aria-label="Language">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.4 3 14.6 0 18M12 3c-3 3.4-3 14.6 0 18"/></svg>
+        </button>
+        <button class="icon hide-mobile" aria-label="Account">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.8-4.3 14.2-4.3 16 0"/></svg>
+        </button>
+        <button class="icon" aria-label="Search">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        </button>
+        <button class="icon" id="openCart" aria-label="Cart">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 8h13l-1.2 12H6.8L5.5 4H3"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <button class="slider-arrow left" aria-label="Previous slide">‹</button>
+      <button class="slider-arrow right" aria-label="Next slide">›</button>
+      <div class="hero-content">
+        <p class="eyebrow">BIG SALE</p>
+        <h1>30% Sale On Selected Swimwear This Season</h1>
+        <a href="#shop" class="outline-button">Shop Now</a>
+      </div>
+    </section>
+
+    <section class="collections" id="new-arrivals">
+      <div class="promo-marquee">
+        <div class="promo-track">
+          <span>Enjoy 50% Off Everything!</span><span class="devil">👺</span><span>Lifetime Warranty</span>
+          <span>Enjoy 50% Off Everything!</span><span class="devil">👺</span><span>Lifetime Warranty</span>
+          <span>Enjoy 50% Off Everything!</span><span class="devil">👺</span><span>Lifetime Warranty</span>
+          <span>Enjoy 50% Off Everything!</span><span class="devil">👺</span><span>Lifetime Warranty</span>
+        </div>
+      </div>
+      <button class="slider-arrow left" aria-label="Previous collection">‹</button>
+      <button class="slider-arrow right" aria-label="Next collection">›</button>
+
+      <div class="collection-row">
+        <article class="collection-card">
+          <div class="collection-img"></div>
+          <h3>Dive Different</h3>
+        </article>
+        <article class="collection-card">
+          <div class="collection-img"></div>
+          <h3>Swim Unique</h3>
+        </article>
+        <article class="collection-card">
+          <div class="collection-img"></div>
+          <h3>Wear Your Confidence</h3>
+        </article>
+        <article class="collection-card">
+          <div class="collection-img"></div>
+          <h3>Dive Into Summer</h3>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-intro">
+      <h2>Glow of Endless Summer</h2>
+      <p>Embrace the warmth of sunlit days and breezy nights with our radiant beachwear collection. Designed for comfort and style, each piece captures the essence of endless summer — glowing skin, vibrant colors, and effortless elegance.</p>
+    </section>
+
+    <section class="image-banner" id="lookbook" aria-label="Summer beachwear banner"></section>
+
+    <section class="products" id="shop">
+      <button class="slider-arrow left" aria-label="Previous products">‹</button>
+      <button class="slider-arrow right" aria-label="Next products">›</button>
+      <h2>Best Sellers</h2>
+      <div class="product-grid">
+        <article class="product" data-price="31000">
+          <div class="product-image"></div>
+          <div class="swatches"><span class="swatch brown"></span><span class="swatch white"></span><span class="swatch yellow"></span><span class="swatch gray"></span></div>
+          <div class="product-info"><p class="product-name">Cocoa Knot</p><p class="price">$31,000.00</p></div>
+        </article>
+        <article class="product" data-price="42000">
+          <div class="product-image"></div>
+          <div class="swatches"><span class="swatch black"></span><span class="swatch white"></span><span class="swatch gray"></span><span class="swatch brown"></span></div>
+          <div class="product-info"><p class="product-name">Fresh Start</p><p class="price">$42,000.00</p></div>
+        </article>
+        <article class="product" data-price="44000">
+          <div class="product-image"></div>
+          <div class="swatches"><span class="swatch black"></span><span class="swatch gray"></span><span class="swatch brown"></span><span class="swatch blue"></span></div>
+          <div class="product-info"><p class="product-name">Midnight Lift</p><p class="price">$44,000.00</p></div>
+        </article>
+        <article class="product" data-price="29000">
+          <div class="product-image"></div>
+          <div class="swatches"><span class="swatch gray"></span><span class="swatch white"></span><span class="swatch brown"></span></div>
+          <div class="product-info"><p class="product-name">Ivory Contour</p><p class="price">$29,000.00</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="editorial">
+      <div class="editorial-inner">
+        <div class="editorial-image">
+          <span>Fashion with Beach Looks</span>
+        </div>
+        <div class="accordion">
+          <div class="accordion-item">
+            <h3 class="accordion-title">Swimwear for Summer</h3>
+            <button class="accordion-action" aria-label="Open Swimwear for Summer">+</button>
+          </div>
+          <div class="accordion-item active">
+            <h3 class="accordion-title">Fashion with Beach Looks</h3>
+            <button class="accordion-action" aria-label="Open Fashion with Beach Looks">→</button>
+          </div>
+          <div class="accordion-item">
+            <h3 class="accordion-title">Every Shoreline</h3>
+            <button class="accordion-action" aria-label="Open Every Shoreline">+</button>
+          </div>
+          <div class="accordion-item">
+            <h3 class="accordion-title">One-Piece Perfection</h3>
+            <button class="accordion-action" aria-label="Open One-Piece Perfection">+</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer" id="contact">
+      <div>
+        <div class="footer-logo">Intense</div>
+        <p>A polished swimwear storefront demo built as a single HTML file. Replace images, prices and links with Shopify dynamic data when moving into production.</p>
+      </div>
+      <form class="newsletter">
+        <label for="email">Newsletter</label>
+        <div class="newsletter-row">
+          <input id="email" type="email" placeholder="Enter your email" />
+          <button type="submit" aria-label="Subscribe">→</button>
+        </div>
+      </form>
+    </footer>
+  </main>
+
+  <a class="back-top" href="#home" aria-label="Back to top">↑</a>
+
+  <script>
+    const overlay = document.getElementById('overlay');
+    const cart = document.getElementById('cartDrawer');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const openCart = document.getElementById('openCart');
+    const closeCart = document.getElementById('closeCart');
+    const openMenu = document.getElementById('openMenu');
+    const closeMenu = document.getElementById('closeMenu');
+    const emptyCart = document.querySelector('.empty-cart');
+    const cartTotal = document.getElementById('cartTotal');
+    let total = 0;
+
+    function showOverlay() {
+      overlay.classList.add('open');
+    }
+
+    function hideOverlay() {
+      overlay.classList.remove('open');
+      cart.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    }
+
+    openCart.addEventListener('click', () => {
+      cart.classList.add('open');
+      showOverlay();
+    });
+
+    closeCart.addEventListener('click', hideOverlay);
+
+    openMenu.addEventListener('click', () => {
+      mobileMenu.classList.add('open');
+      showOverlay();
+    });
+
+    closeMenu.addEventListener('click', hideOverlay);
+    overlay.addEventListener('click', hideOverlay);
+
+    document.querySelectorAll('.product').forEach(product => {
+      product.addEventListener('click', () => {
+        total += Number(product.dataset.price || 0);
+        emptyCart.textContent = `${product.querySelector('.product-name').textContent} was added to your bag.`;
+        cartTotal.textContent = total.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        cart.classList.add('open');
+        showOverlay();
+      });
+    });
+  </script>
+</body>
+</html>
