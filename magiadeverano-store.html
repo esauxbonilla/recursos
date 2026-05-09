@@ -712,6 +712,22 @@
     font-weight: 500;
     color: rgba(255,255,255,0.6);
   }
+
+  /* ── REAL IMAGE SUPPORT ── */
+  .hero-bg-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center top;
+    opacity: 0.88;
+  }
+  .col-card-bg, .product-img-bg { display: block; }
+  .col-card-bg img, .product-img-bg img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .feature-img { position: relative; }
+  .editorial-img > img, .feature-img > img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  }
 </style>
 </head>
 <body>
@@ -775,21 +791,7 @@
 
 <!-- HERO -->
 <div class="hero">
-  <!-- Product color collage background -->
-  <div class="hero-collage">
-    <div class="hero-col">
-      <div class="hero-swatch s-red"></div>
-      <div class="hero-swatch s-lila"></div>
-    </div>
-    <div class="hero-col">
-      <div class="hero-swatch s-yellow"></div>
-      <div class="hero-swatch s-pink"></div>
-    </div>
-    <div class="hero-col">
-      <div class="hero-swatch s-turq"></div>
-      <div class="hero-swatch s-coral"></div>
-    </div>
-  </div>
+  <img class="hero-bg-img" src="img/pexels-pedrofurtadoo-31094962.jpg" alt="">
   <div class="hero-overlay"></div>
 
   <div class="hero-text">
@@ -834,7 +836,7 @@
 
   <div class="col-slider">
     <div class="col-card">
-      <div class="col-card-bg" style="background: linear-gradient(175deg,#D93025,#FF6B9D,#FFD166);">🩱</div>
+      <div class="col-card-bg"><img src="img/SaveClip.App_621633055_18118632052573754_4571639078298917212_n.jpg" alt="Colores Vivos"></div>
       <div class="col-card-overlay"></div>
       <div class="col-card-text">
         <div class="col-card-name">Colores Vivos</div>
@@ -842,7 +844,7 @@
       </div>
     </div>
     <div class="col-card">
-      <div class="col-card-bg" style="background: linear-gradient(175deg,#4ECDC4,#0077B6,#90E0EF);">🌊</div>
+      <div class="col-card-bg"><img src="img/pexels-kseniachernaya-8070240.jpg" alt="Mar Caribe"></div>
       <div class="col-card-overlay"></div>
       <div class="col-card-text">
         <div class="col-card-name">Mar Caribe</div>
@@ -850,7 +852,7 @@
       </div>
     </div>
     <div class="col-card">
-      <div class="col-card-bg" style="background: linear-gradient(175deg,#CE93D8,#FF6B9D,#FFF8F0);">🌴</div>
+      <div class="col-card-bg"><img src="img/GramFetchr_Thumbnail_25292719.jpeg" alt="Dulce Verano"></div>
       <div class="col-card-overlay"></div>
       <div class="col-card-text">
         <div class="col-card-name">Dulce Verano</div>
@@ -868,7 +870,7 @@
     Embrace the warmth of Colombia's coast — vibrant colors, artisan craftsmanship, and pieces designed for women who carry the ocean with them wherever they go. Hecho con amor en Colombia. 🌊
   </p>
   <div class="editorial-img">
-    🌊
+    <img src="img/GramFetchr_Thumbnail_35154064.jpeg" alt="Editorial">
     <div class="editorial-img-label">Magia de Verano Swim · Hecho en Colombia</div>
   </div>
 </section>
@@ -888,7 +890,7 @@
     <!-- 1 -->
     <div class="product-card">
       <div class="product-img">
-        <div class="product-img-bg s-red">🩱</div>
+        <div class="product-img-bg"><img src="img/pexels-karola-g-8362994.jpg" alt="Coral Passion Bikini Set"></div>
         <div class="product-tag">Sale</div>
         <div class="product-wishlist">🤍</div>
       </div>
@@ -904,7 +906,7 @@
     <!-- 2 -->
     <div class="product-card">
       <div class="product-img">
-        <div class="product-img-bg s-yellow">☀️</div>
+        <div class="product-img-bg"><img src="img/pexels-dmitriy-piskarev-11113107.jpg" alt="Sol Dorado Set"></div>
         <div class="product-tag new">New</div>
         <div class="product-wishlist">🤍</div>
       </div>
@@ -920,7 +922,7 @@
     <!-- 3 -->
     <div class="product-card">
       <div class="product-img">
-        <div class="product-img-bg s-lila">🌸</div>
+        <div class="product-img-bg"><img src="img/SaveClip.App_623388225_18121373866561516_3089218003418740365_n.jpg" alt="Violeta Dream Bikini"></div>
         <div class="product-wishlist">🤍</div>
       </div>
       <div class="product-swatches">
@@ -935,7 +937,7 @@
     <!-- 4 -->
     <div class="product-card">
       <div class="product-img">
-        <div class="product-img-bg s-pink">🌺</div>
+        <div class="product-img-bg"><img src="img/pexels-lepta-studio-333887315-14019725.jpg" alt="Fucsia Night Set"></div>
         <div class="product-tag">Sale</div>
         <div class="product-wishlist">🤍</div>
       </div>
@@ -955,7 +957,7 @@
 <!-- FEATURE SPLIT -->
 <div class="feature">
   <div class="feature-img">
-    🌴
+    <img src="img/pexels-felix-young-449360607-16911590.jpg" alt="Feature">
     <div class="feature-img-label">Swimwear for every shoreline</div>
   </div>
   <div class="feature-content">
