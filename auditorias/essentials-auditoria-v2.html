@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Essentials MX — Diagnóstico de Crecimiento</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:      #1B8EF2;
+  --blue-d:    #1070C8;
+  --blue-pale: #EBF4FE;
+  --red:       #E53935;
+  --gold:      #F5A623;
+  --black:     #0A0A0A;
+  --ink:       #1A1A2E;
+  --gray:      #6B7280;
+  --line:      #E5E7EB;
+  --white:     #FFFFFF;
+  --offwhite:  #F8F9FB;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--white);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  padding: 0 5vw;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 800;
+  letter-spacing: -0.01em; color: var(--black);
+}
+.nav-brand svg { width: 26px; height: 26px; }
+.nav-pill {
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--blue); background: var(--blue-pale);
+  padding: 5px 12px; border-radius: 100px;
+}
+
+/* ─── HERO ─── */
+.hero {
+  padding: 120px 5vw 80px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  max-width: 1200px; margin: 0 auto;
+}
+@media(max-width:768px){ .hero { grid-template-columns: 1fr; gap: 40px; padding: 100px 5vw 60px; } }
+
+.hero-left {}
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue);
+  margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+  opacity: 0; animation: up 0.5s ease forwards 0.1s;
+}
+.hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--blue); }
+
+.hero-headline {
+  font-family: 'Inter', sans-serif; font-weight: 800;
+  font-size: clamp(42px, 5.5vw, 72px); line-height: 1.0;
+  letter-spacing: -0.015em; color: var(--black); margin-bottom: 24px;
+  opacity: 0; animation: up 0.6s ease forwards 0.2s;
+}
+.hero-headline .red { color: var(--red); }
+.hero-headline .blue { color: var(--blue); }
+
+.hero-sub {
+  font-size: 16px; font-weight: 300; color: var(--gray);
+  line-height: 1.7; margin-bottom: 36px;
+  opacity: 0; animation: up 0.6s ease forwards 0.3s;
+}
+.hero-sub strong { color: var(--ink); font-weight: 500; }
+
+.hero-metrics {
+  display: flex; gap: 0;
+  border: 1px solid var(--line); width: fit-content;
+  opacity: 0; animation: up 0.6s ease forwards 0.4s;
+}
+.h-metric { padding: 16px 28px; border-right: 1px solid var(--line); text-align: center; }
+.h-metric:last-child { border-right: none; }
+.h-metric-val {
+  font-family: 'Inter', sans-serif; font-size: 28px; font-weight: 800;
+  color: var(--blue); display: block; line-height: 1;
+}
+.h-metric-val.red { color: var(--red); }
+.h-metric-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); margin-top: 4px; display: block; }
+
+.hero-right {
+  opacity: 0; animation: up 0.7s ease forwards 0.35s;
+}
+.hero-visual {
+  background: var(--offwhite); border: 1px solid var(--line);
+  padding: 36px; position: relative;
+}
+.hero-visual::before {
+  content: 'Diagnóstico detectado';
+  position: absolute; top: -1px; left: 32px;
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--white); background: var(--blue); padding: 4px 12px;
+}
+.vis-fuga {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0; border-bottom: 1px solid var(--line);
+  font-size: 14px; font-weight: 400;
+}
+.vis-fuga:last-child { border-bottom: none; }
+.vis-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-right: 14px; }
+.vis-dot.red { background: var(--red); box-shadow: 0 0 8px rgba(229,57,53,0.5); }
+.vis-dot.gold { background: var(--gold); box-shadow: 0 0 8px rgba(245,166,35,0.5); }
+.vis-label { flex: 1; color: var(--ink); }
+.vis-status { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--red); letter-spacing: 0.06em; }
+.vis-status.warn { color: var(--gold); }
+
+/* ─── SECCIONES ─── */
+.section { padding: 80px 5vw; max-width: 1200px; margin: 0 auto; }
+.section-full { padding: 80px 5vw; background: var(--offwhite); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.section-full .inner { max-width: 1200px; margin: 0 auto; }
+
+.tag {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--blue); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+}
+.tag::before { content: ''; width: 20px; height: 1px; background: var(--blue); }
+.tag.gold { color: var(--gold); }
+.tag.gold::before { background: var(--gold); }
+
+.section-h {
+  font-family: 'Inter', sans-serif; font-weight: 800;
+  font-size: clamp(30px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.05;
+  margin-bottom: 12px; color: var(--black);
+}
+.section-h .blue { color: var(--blue); }
+.section-h .red  { color: var(--red); }
+.section-h .gold { color: var(--gold); }
+
+.section-sub {
+  font-size: 15px; font-weight: 300; color: var(--gray);
+  line-height: 1.7; margin-bottom: 48px; max-width: 560px;
+}
+
+/* ─── CUBETA ─── */
+.cubeta-2col {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--line); margin-bottom: 24px;
+}
+@media(max-width:640px){ .cubeta-2col { grid-template-columns: 1fr; } }
+
+.c-card { background: var(--white); padding: 36px 32px; }
+.c-card.bad  { border-top: 3px solid var(--red); }
+.c-card.good { border-top: 3px solid var(--blue); }
+.c-card-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 12px; display: block; }
+.c-card.bad  .c-card-label { color: var(--red); }
+.c-card.good .c-card-label { color: var(--blue); }
+.c-card-title { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+.c-card-body { font-size: 14px; color: var(--gray); line-height: 1.7; font-weight: 300; }
+.c-card-body strong { color: var(--ink); font-weight: 500; }
+
+.cubeta-quote {
+  background: var(--blue-pale); border-left: 3px solid var(--blue);
+  padding: 20px 28px; font-size: 15px; color: var(--ink); line-height: 1.7; font-weight: 300;
+}
+.cubeta-quote strong { color: var(--blue); font-weight: 600; }
+
+/* ─── FUGAS ─── */
+.fugas-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1px; background: var(--line);
+}
+.fuga-card {
+  background: var(--white); padding: 32px 28px;
+  position: relative; overflow: hidden;
+  transition: background 0.2s;
+}
+.fuga-card:hover { background: var(--offwhite); }
+.fuga-card.main {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+  background: var(--ink); color: var(--white);
+  border-top: 3px solid var(--blue);
+}
+@media(max-width:640px){ .fuga-card.main { grid-template-columns: 1fr; } }
+.fuga-card.main .fuga-body { color: rgba(255,255,255,0.6); }
+.fuga-card.main .fuga-body strong { color: var(--blue); font-weight: 500; }
+.fuga-card.main .fuga-title { color: var(--white); }
+
+.fuga-num {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--blue); margin-bottom: 12px; display: block;
+}
+.fuga-card.main .fuga-num { color: rgba(71,170,255,0.7); }
+.fuga-num.main-num { color: rgba(245,166,35,0.8); letter-spacing: 0.1em; }
+
+.fuga-title { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 10px; color: var(--black); }
+.fuga-body { font-size: 13.5px; color: var(--gray); line-height: 1.7; font-weight: 300; }
+.fuga-body strong { color: var(--ink); font-weight: 500; }
+
+.fuga-cost {
+  margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line);
+  font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gray); letter-spacing: 0.04em;
+}
+.fuga-cost b { color: var(--red); }
+.fuga-card.main .fuga-cost { border-color: rgba(255,255,255,0.1); }
+.fuga-card.main .fuga-cost b { color: rgba(71,170,255,0.9); }
+
+.fuga-right {}
+.fuga-list { margin-top: 8px; }
+.fuga-list-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.5; font-weight: 300;
+}
+.fuga-list-item:last-child { border-bottom: none; }
+.fli-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); flex-shrink: 0; margin-top: 5px; }
+.fli-dot.no { background: var(--red); }
+.fuga-list-item strong { color: var(--white); font-weight: 500; }
+
+/* ─── HOT SALE ─── */
+.hotsale-wrap { padding: 80px 5vw; background: var(--ink); }
+.hotsale-inner { max-width: 1200px; margin: 0 auto; }
+
+.hs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(255,255,255,0.08); margin: 40px 0 24px; }
+@media(max-width:640px){ .hs-grid { grid-template-columns: 1fr; } }
+
+.hs-card { background: #111827; padding: 32px; }
+.hs-card.gold-bg { background: rgba(245,166,35,0.06); border: 1px solid rgba(245,166,35,0.25); }
+.hs-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 10px; display: block; }
+.hs-val { font-family: 'Inter', sans-serif; font-size: 52px; font-weight: 800; line-height: 1; color: var(--gold); margin-bottom: 8px; }
+.hs-desc { font-size: 13.5px; color: rgba(255,255,255,0.5); line-height: 1.65; font-weight: 300; }
+.hs-desc strong { color: rgba(255,255,255,0.85); font-weight: 500; }
+.hs-card.gold-bg .hs-desc { color: rgba(245,166,35,0.7); }
+.hs-card.gold-bg .hs-desc strong { color: var(--gold); }
+
+.hs-quote { border-left: 3px solid var(--gold); padding: 20px 28px; background: rgba(245,166,35,0.05); font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.7; font-weight: 300; margin-bottom: 20px; }
+.hs-quote strong { color: var(--gold); font-weight: 600; }
+
+.hs-alert { display: flex; align-items: center; gap: 14px; padding: 16px 22px; border: 1px solid rgba(245,166,35,0.3); background: rgba(245,166,35,0.04); }
+.hs-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); animation: blink 1.4s ease infinite; flex-shrink: 0; }
+.hs-alert p { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.05em; color: rgba(245,166,35,0.75); line-height: 1.5; }
+.hs-alert p strong { color: var(--gold); }
+.hs-section-h { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(28px,4vw,48px); letter-spacing: -0.015em; color: var(--white); line-height: 1.05; }
+.hs-section-h .gold { color: var(--gold); }
+.hs-section-sub { font-size: 15px; font-weight: 300; color: rgba(255,255,255,0.4); margin-top: 10px; max-width: 500px; }
+
+/* ─── PROOF ─── */
+.proof-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--line); margin-bottom: 24px; }
+@media(max-width:640px){ .proof-grid { grid-template-columns: 1fr; } }
+.proof-card { background: var(--white); padding: 32px 28px; }
+.proof-num { font-family: 'Inter', sans-serif; font-size: 44px; font-weight: 800; color: var(--blue); line-height: 1; margin-bottom: 8px; }
+.proof-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); margin-bottom: 10px; display: block; }
+.proof-desc { font-size: 13px; color: var(--gray); line-height: 1.65; font-weight: 300; }
+.proof-desc strong { color: var(--ink); font-weight: 500; }
+
+.proof-quote { background: var(--blue-pale); border-left: 3px solid var(--blue); padding: 24px 32px; font-size: 15px; color: var(--ink); line-height: 1.75; font-weight: 300; }
+.proof-quote strong { color: var(--blue); font-weight: 600; }
+
+/* ─── PLAN ─── */
+.plan-list { display: flex; flex-direction: column; gap: 1px; background: var(--line); }
+.plan-row {
+  display: grid; grid-template-columns: 44px 1fr auto;
+  gap: 20px; align-items: center;
+  background: var(--white); padding: 22px 28px;
+  transition: background 0.2s;
+}
+.plan-row:hover { background: var(--offwhite); }
+@media(max-width:560px){ .plan-row { grid-template-columns: 1fr; gap: 8px; } }
+
+.plan-row.locked { opacity: 0.45; }
+.plan-row.locked .plan-row-name,
+.plan-row.locked .plan-row-sub { filter: blur(3px); user-select: none; }
+
+.plan-n { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue); }
+.plan-row-name { font-size: 14px; font-weight: 500; }
+.plan-row-sub { font-size: 12px; color: var(--gray); margin-top: 2px; font-weight: 300; }
+
+.pill { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 12px; white-space: nowrap; }
+.pill.gold { border: 1px solid rgba(245,166,35,0.5); color: var(--gold); background: rgba(245,166,35,0.05); }
+.pill.lock { border: 1px solid var(--line); color: var(--gray); display: flex; align-items: center; gap: 6px; }
+.pill.lock svg { width: 10px; height: 10px; }
+
+.plan-footer {
+  background: var(--offwhite); border: 1px solid var(--line); border-top: none;
+  padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.plan-footer p { font-size: 13px; color: var(--gray); font-weight: 300; line-height: 1.5; }
+.plan-footer p strong { color: var(--ink); font-weight: 500; }
+
+/* ─── CTA ─── */
+.cta-section { padding: 96px 5vw; text-align: center; background: var(--white); border-top: 1px solid var(--line); }
+.cta-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); margin-bottom: 20px; }
+.cta-h { font-family: 'Inter', sans-serif; font-size: clamp(38px, 5vw, 72px); font-weight: 800; letter-spacing: -0.015em; line-height: 1.0; margin-bottom: 16px; color: var(--black); }
+.cta-h .blue { color: var(--blue); }
+.cta-sub { font-size: 16px; font-weight: 300; color: var(--gray); max-width: 460px; margin: 0 auto 40px; line-height: 1.7; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--blue); color: var(--white);
+  padding: 16px 40px;
+  font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
+  text-decoration: none; transition: all 0.25s; border: none; cursor: pointer;
+}
+.btn:hover { background: var(--blue-d); transform: translateY(-1px); box-shadow: 0 8px 32px rgba(27,142,242,0.3); }
+.btn svg { width: 16px; height: 16px; transition: transform 0.2s; }
+.btn:hover svg { transform: translateX(3px); }
+.btn.sm { padding: 11px 22px; font-size: 12px; }
+
+.cta-fine { margin-top: 16px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gray); letter-spacing: 0.08em; }
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--line); padding: 20px 5vw;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+  font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gray); letter-spacing: 0.06em;
+}
+
+/* ─── ANIMS ─── */
+@keyframes up   { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes blink{ 0%,100%{opacity:1}50%{opacity:0.25} }
+
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19 4L10 18H16L13 28L22 14H16L19 4Z" fill="#1B8EF2"/>
+    </svg>
+    Essentials MX
+  </div>
+  <span class="nav-pill">Diagnóstico confidencial</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Análisis de crecimiento · 2025</div>
+    <h1 class="hero-headline">
+      El producto<br>es bueno.<br>
+      <span class="red">El sistema</span><br>
+      <span class="blue">tiene fugas.</span>
+    </h1>
+    <p class="hero-sub">
+      <strong>19K seguidores, certificación GMP, tienda activa.</strong> El potencial está. Pero con el sistema actual, una parte importante del tráfico se escapa antes de volver a comprar.
+    </p>
+    <div class="hero-metrics">
+      <div class="h-metric">
+        <span class="h-metric-val red">0</span>
+        <span class="h-metric-label">Retención activa</span>
+      </div>
+      <div class="h-metric">
+        <span class="h-metric-val red">0</span>
+        <span class="h-metric-label">Retargeting</span>
+      </div>
+      <div class="h-metric">
+        <span class="h-metric-val">5</span>
+        <span class="h-metric-label">Fugas detectadas</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-visual">
+      <div class="vis-fuga">
+        <div class="vis-dot red"></div>
+        <span class="vis-label">Sistema de adquisición escalable</span>
+        <span class="vis-status">Sin activar</span>
+      </div>
+      <div class="vis-fuga">
+        <div class="vis-dot red"></div>
+        <span class="vis-label">Captura de email / lista activa</span>
+        <span class="vis-status">Sin activar</span>
+      </div>
+      <div class="vis-fuga">
+        <div class="vis-dot red"></div>
+        <span class="vis-label">Recuperación de carritos</span>
+        <span class="vis-status">Sin activar</span>
+      </div>
+      <div class="vis-fuga">
+        <div class="vis-dot red"></div>
+        <span class="vis-label">Recompra por ciclo de producto</span>
+        <span class="vis-status">Sin activar</span>
+      </div>
+      <div class="vis-fuga">
+        <div class="vis-dot gold"></div>
+        <span class="vis-label">Sistema para Hot Sale</span>
+        <span class="vis-status warn">3 semanas</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CUBETA -->
+<div class="section-full">
+  <div class="inner">
+    <div class="tag reveal">El problema central</div>
+    <h2 class="section-h reveal">Ads sin sistema<br><span class="blue">= cubeta con fugas.</span></h2>
+    <p class="section-sub reveal">Más inversión en ads trae más gente. Sin sistema, esa gente se va y no vuelve.</p>
+
+    <div class="cubeta-2col reveal">
+      <div class="c-card bad">
+        <span class="c-card-label">Ahora mismo</span>
+        <div class="c-card-title">Ads → visita → se va</div>
+        <div class="c-card-body">El clic cuesta dinero. Sin retargeting, sin email capturado — <strong>ese visitante se fue para siempre.</strong></div>
+      </div>
+      <div class="c-card good">
+        <span class="c-card-label">Con sistema activo</span>
+        <div class="c-card-title">Ads → captura → regresa → compra → vuelve</div>
+        <div class="c-card-body">El mismo presupuesto vale mucho más. <strong>Entre más ads, más multiplica el sistema.</strong></div>
+      </div>
+    </div>
+
+    <div class="cubeta-quote reveal">
+      Con sistema activo, <strong>cada peso en ads multiplica en lugar de escaparse.</strong> Sin él, más presupuesto solo significa más gente que se va sin dejar rastro.
+    </div>
+  </div>
+</div>
+
+<!-- FUGAS -->
+<div class="section">
+  <div class="tag reveal">Las 5 fugas</div>
+  <h2 class="section-h reveal">Qué está <span class="red">costando ventas</span><br>en este momento.</h2>
+  <p class="section-sub reveal">Cada fuga por separado ya duele. Las 5 juntas explican el techo de crecimiento actual.</p>
+
+  <div class="fugas-grid reveal">
+
+    <!-- FUGA PRINCIPAL -->
+    <div class="fuga-card main">
+      <div>
+        <span class="fuga-num main-num">Fuga Principal</span>
+        <div class="fuga-title">Sin sistema de adquisición escalable</div>
+        <div class="fuga-body">
+          Sin UGC ni estructura de Meta Ads (frío → retargeting → recompra), los ads funcionan en modo básico: traen gente pero no escalan.<br><br>
+          <strong>El UGC baja el costo por clic, sube la conversión y alimenta el retargeting.</strong> Sin él, cada peso en ads vale menos de lo que debería.
+        </div>
+        <div class="fuga-cost">Impacto: <b>el techo de crecimiento está definido por la falta de este sistema</b></div>
+      </div>
+      <div class="fuga-right">
+        <div class="fuga-list">
+          <div class="fuga-list-item"><div class="fli-dot"></div><span><strong>UGC de creators fitness</strong> — contenido real que convierte en frío</span></div>
+          <div class="fuga-list-item"><div class="fli-dot"></div><span><strong>Campaña tráfico frío</strong> — UGC como creativo principal</span></div>
+          <div class="fuga-list-item"><div class="fli-dot"></div><span><strong>Retargeting</strong> — los que no compraron, vuelven</span></div>
+          <div class="fuga-list-item"><div class="fli-dot"></div><span><strong>Campaña recompra</strong> — oferta en el momento correcto</span></div>
+          <div class="fuga-list-item"><div class="fli-dot no"></div><span style="color:rgba(229,57,53,0.6)">Ninguna capa activa actualmente</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fuga-card reveal">
+      <span class="fuga-num">Fuga 02</span>
+      <div class="fuga-title">Sin captura de email</div>
+      <div class="fuga-body">Cada visitante que llega y no deja su email es una oportunidad perdida. <strong>Sin lista, no hay canal propio.</strong></div>
+      <div class="fuga-cost">Costo: <b>base de datos que debería crecer sola, no crece</b></div>
+    </div>
+
+    <div class="fuga-card reveal d1">
+      <span class="fuga-num">Fuga 03</span>
+      <div class="fuga-title">Carritos abandonados sin recuperar</div>
+      <div class="fuga-body">Alguien agrega el Whey o el Isolate y se va. Sin flujo de recuperación, <strong>ese dinero desaparece sin segunda oportunidad.</strong></div>
+      <div class="fuga-cost">Costo: <b>15–25% de carritos recuperables cada mes</b></div>
+    </div>
+
+    <div class="fuga-card reveal d2">
+      <span class="fuga-num">Fuga 04</span>
+      <div class="fuga-title">Sin recompra activada</div>
+      <div class="fuga-body">Whey ~4 semanas. Creatina ~30 días. TRT tiene ciclos. <strong>El cliente más fácil de venderle es el que ya compró</strong> — nadie lo activa.</div>
+      <div class="fuga-cost">Costo: <b>LTV real vs LTV actual — diferencia enorme</b></div>
+    </div>
+
+    <div class="fuga-card reveal d3">
+      <span class="fuga-num">Fuga 05</span>
+      <div class="fuga-title">Sin sistema para temporadas</div>
+      <div class="fuga-body">Hot Sale, Buen Fin, Black Friday — tráfico gratis que llega solo. Sin sistema preparado, <strong>el evento pasa igual que un mes cualquiera.</strong></div>
+      <div class="fuga-cost">Costo: <b>Hot Sale en 3 semanas — ventana cerrándose</b></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- HOT SALE -->
+<div class="hotsale-wrap">
+  <div class="hotsale-inner">
+    <div class="tag gold reveal">Ventana crítica</div>
+    <h2 class="hs-section-h reveal">El <span class="gold">Hot Sale</span> es<br>en menos de 3 semanas.</h2>
+    <p class="hs-section-sub reveal">Sin sistema activo, ese tráfico se va. Con sistema, es otra historia.</p>
+
+    <div class="hs-grid reveal">
+      <div class="hs-card">
+        <span class="hs-label">Sin sistema</span>
+        <div class="hs-val">= 0×</div>
+        <div class="hs-desc">El tráfico llega y se va. <strong>Sin retargeting ni email, no hay segunda oportunidad.</strong></div>
+      </div>
+      <div class="hs-card gold-bg">
+        <span class="hs-label">Con sistema antes del Hot Sale</span>
+        <div class="hs-val">× 4</div>
+        <div class="hs-desc"><strong>El mismo tráfico se captura, se retargetea y convierte</strong> — antes, durante y después del evento.</div>
+      </div>
+    </div>
+
+    <div class="hs-quote reveal">
+      Con Insano Clothing activamos el sistema antes de temporada alta. En <strong>15 días vendieron lo que hacían en 2 meses</strong> — no por el evento, sino porque el sistema capturó el tráfico que ya llegaba.
+    </div>
+
+    <div class="hs-alert reveal">
+      <div class="hs-dot"></div>
+      <p>El Hot Sale trae tráfico con o sin sistema. La diferencia es <strong>quién lo captura y quién lo deja ir.</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- PROOF -->
+<div class="section">
+  <div class="tag reveal">El caso que lo respalda</div>
+  <h2 class="section-h reveal">Insano Clothing.<br><span class="blue">Lo que pasa cuando se tapan las fugas.</span></h2>
+
+  <div class="proof-grid reveal">
+    <div class="proof-card">
+      <span class="proof-label">Temporada alta con sistema</span>
+      <div class="proof-num">15 días</div>
+      <div class="proof-desc">Vendieron lo que normalmente hacían en <strong>2 meses completos.</strong> El tráfico ya existía — el sistema lo capturó.</div>
+    </div>
+    <div class="proof-card">
+      <span class="proof-label">Canal de email automatizado</span>
+      <div class="proof-num">39%</div>
+      <div class="proof-desc"><strong>De las ventas mensuales</strong> generadas por flujos automáticos — sin tocar ads.</div>
+    </div>
+    <div class="proof-card">
+      <span class="proof-label">Resultado en Meta Ads</span>
+      <div class="proof-num">46×</div>
+      <div class="proof-desc">ROAS con creativos UGC + estructura correcta. <strong>El mismo presupuesto, múltiplo de resultado.</strong></div>
+    </div>
+  </div>
+
+  <div class="proof-quote reveal">
+    La marca ya tenía comunidad y producto. Solo faltaba el sistema. <strong>Essentials está en ese mismo punto, con el Hot Sale a 3 semanas.</strong>
+  </div>
+</div>
+
+<!-- PLAN BLOQUEADO -->
+<div class="section-full">
+  <div class="inner">
+    <div class="tag reveal">Plan de intervención</div>
+    <h2 class="section-h reveal">6 puntos de acción<br><span class="blue">específicos para Essentials.</span></h2>
+    <p class="section-sub reveal">Los primeros 2 se activan antes del Hot Sale. El resto construye el sistema completo.</p>
+
+    <div class="plan-list reveal">
+      <div class="plan-row">
+        <div class="plan-n">01 /</div>
+        <div>
+          <div class="plan-row-name">Activar captura de demanda antes del Hot Sale</div>
+          <div class="plan-row-sub">Mayor impacto inmediato — activo en menos de una semana</div>
+        </div>
+        <div class="pill gold">Antes del Hot Sale</div>
+      </div>
+      <div class="plan-row">
+        <div class="plan-n">02 /</div>
+        <div>
+          <div class="plan-row-name">Retargeting + recuperación de tráfico del evento</div>
+          <div class="plan-row-sub">Para que cada visita durante el Hot Sale tenga segunda oportunidad</div>
+        </div>
+        <div class="pill gold">Antes del Hot Sale</div>
+      </div>
+      <div class="plan-row locked">
+        <div class="plan-n">03 /</div>
+        <div>
+          <div class="plan-row-name">Sistema UGC + arquitectura de campañas Meta</div>
+          <div class="plan-row-sub">Frío con UGC · retargeting · recompra — arquitectura completa</div>
+        </div>
+        <div class="pill lock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          En llamada
+        </div>
+      </div>
+      <div class="plan-row locked">
+        <div class="plan-n">04 /</div>
+        <div>
+          <div class="plan-row-name">Flujos de email automatizados</div>
+          <div class="plan-row-sub">Bienvenida · carrito · recompra · post-compra · reactivación</div>
+        </div>
+        <div class="pill lock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          En llamada
+        </div>
+      </div>
+      <div class="plan-row locked">
+        <div class="plan-n">05 /</div>
+        <div>
+          <div class="plan-row-name">Recompra activada por ciclo de producto</div>
+          <div class="plan-row-sub">Whey · Isolate · Creatina · TRT — cada uno en su ventana exacta</div>
+        </div>
+        <div class="pill lock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          En llamada
+        </div>
+      </div>
+      <div class="plan-row locked">
+        <div class="plan-n">06 /</div>
+        <div>
+          <div class="plan-row-name">Sistema de drops y temporadas</div>
+          <div class="plan-row-sub">Para que el Buen Fin y el próximo Hot Sale no sean un mes más</div>
+        </div>
+        <div class="pill lock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          En llamada
+        </div>
+      </div>
+    </div>
+
+    <div class="plan-footer reveal">
+      <p>Los puntos 03–06 dependen de los números reales de Essentials.<br><strong>En 30 minutos los revisamos y definimos cuáles activan más retorno antes del Hot Sale.</strong></p>
+      <a href="https://wa.link/yl7fn7" class="btn sm" target="_blank">
+        Ver plan completo
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-eyebrow reveal">Hot Sale en menos de 3 semanas</div>
+  <h2 class="cta-h reveal">30 minutos.<br><span class="blue">Un plan concreto.</span></h2>
+  <p class="cta-sub reveal">No una propuesta genérica. Una revisión de Essentials específicamente — qué activar antes del Hot Sale y cómo hacer que cada peso en ads valga más.</p>
+  <a href="https://wa.link/yl7fn7" class="btn reveal" target="_blank">
+    Quiero ver dónde está la fuga
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <div class="cta-fine reveal">30 minutos. Sin costo. Si no hay oportunidad real antes del Hot Sale, te lo digo directo.</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span>Esaú Bonilla — Growth Digital</span>
+  <span>Diagnóstico confidencial · Essentials MX · 2025</span>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.06 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

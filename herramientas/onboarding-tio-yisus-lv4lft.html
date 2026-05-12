@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding — LV4LFT × Tío Yisus</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --magenta: #E8007D;
+    --magenta-dim: rgba(232,0,125,0.08);
+    --magenta-border: rgba(232,0,125,0.25);
+    --black: #0A0A0A;
+    --white: #FFFFFF;
+    --off-white: #F7F7F7;
+    --gray-light: #EFEFEF;
+    --gray-mid: #D0D0D0;
+    --gray-text: #888;
+    --gray-dark: #333;
+    --green: #12A84B;
+    --green-dim: rgba(18,168,75,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: var(--black);
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    border: 2px solid var(--magenta);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    color: var(--magenta);
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .logo-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 4px;
+    color: var(--white);
+  }
+
+  .logo-sub {
+    font-size: 9px;
+    color: var(--gray-text);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    display: block;
+    margin-top: -3px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .header-tag {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray-text);
+    border: 1px solid #333;
+    padding: 5px 12px;
+  }
+
+  .header-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--magenta);
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%,100%{opacity:1} 50%{opacity:0.3}
+  }
+
+  /* ─── HERO STRIP ─── */
+  .hero-strip {
+    background: var(--magenta);
+    padding: 56px 48px 52px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-strip::after {
+    content: 'LV4LFT';
+    position: absolute;
+    right: -20px; bottom: -28px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 160px;
+    color: rgba(255,255,255,0.08);
+    letter-spacing: 8px;
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 20px; height: 1px;
+    background: rgba(255,255,255,0.5);
+  }
+
+  .hero-strip h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 7vw, 84px);
+    line-height: 0.92;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+
+  .hero-strip p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.65;
+    max-width: 480px;
+    font-weight: 300;
+  }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-wrap {
+    background: var(--black);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .progress-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray-text);
+    white-space: nowrap;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 3px;
+    background: #222;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    position: absolute;
+    left:0; top:0; bottom:0;
+    width: 0%;
+    background: var(--magenta);
+    transition: width 1s cubic-bezier(.4,0,.2,1);
+  }
+
+  .progress-num {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--magenta);
+    white-space: nowrap;
+    min-width: 30px;
+    text-align: right;
+  }
+
+  /* ─── LAYOUT ─── */
+  .body-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 56px 48px 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+
+  /* ─── SECTION ─── */
+  .sec-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .sec-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--magenta);
+  }
+
+  .sec-line {
+    flex:1; height:1px; background: var(--gray-light);
+  }
+
+  .sec-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 34px;
+    letter-spacing: 2px;
+    color: var(--black);
+    margin-bottom: 6px;
+  }
+
+  .sec-sub {
+    font-size: 14px;
+    color: var(--gray-text);
+    line-height: 1.6;
+    font-weight: 300;
+    margin-bottom: 28px;
+  }
+
+  /* ─── ACCESS CARDS ─── */
+  .cards-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .acc-card {
+    border: 1.5px solid var(--gray-light);
+    padding: 28px 24px;
+    position: relative;
+    transition: border-color .2s, box-shadow .2s, transform .2s;
+    cursor: default;
+    background: var(--white);
+  }
+
+  .acc-card:hover {
+    border-color: var(--magenta);
+    box-shadow: 0 4px 24px rgba(232,0,125,0.08);
+    transform: translateY(-2px);
+  }
+
+  .acc-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .acc-icon {
+    width: 40px; height: 40px;
+    background: var(--magenta-dim);
+    border: 1px solid var(--magenta-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .acc-status {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gray-mid);
+    cursor: pointer;
+    transition: all .2s;
+    flex-shrink: 0;
+  }
+
+  .acc-status:hover { border-color: var(--magenta); }
+
+  .acc-status.done {
+    background: var(--green);
+    border-color: var(--green);
+    box-shadow: 0 0 10px rgba(18,168,75,.3);
+  }
+
+  .acc-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+  }
+
+  .acc-role {
+    font-size: 11px;
+    color: var(--gray-text);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .acc-perms {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .perm-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--gray-dark);
+  }
+
+  .perm-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--magenta);
+    flex-shrink: 0;
+  }
+
+  /* ─── HOW-TO BOX ─── */
+  .howto-box {
+    margin-top: 20px;
+    background: var(--off-white);
+    border-left: 3px solid var(--magenta);
+    padding: 18px 22px;
+  }
+
+  .howto-title {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--magenta);
+    margin-bottom: 8px;
+  }
+
+  .howto-box p {
+    font-size: 13px;
+    color: var(--gray-dark);
+    line-height: 1.7;
+  }
+
+  .howto-box strong {
+    color: var(--black);
+    font-weight: 600;
+  }
+
+  /* ─── STEPS ─── */
+  .steps-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step-row {
+    display: grid;
+    grid-template-columns: 52px 1fr auto;
+    gap: 20px;
+    align-items: start;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--gray-light);
+    transition: background .15s;
+  }
+
+  .step-row:first-child { padding-top: 0; }
+  .step-row:last-child { border-bottom: none; }
+
+  .step-n-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2px;
+    gap: 6px;
+  }
+
+  .step-n {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--magenta);
+  }
+
+  .step-connector {
+    width: 1px; height: 20px;
+    background: var(--gray-light);
+  }
+
+  .step-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--black);
+    margin-bottom: 5px;
+  }
+
+  .step-detail {
+    font-size: 13px;
+    color: var(--gray-text);
+    line-height: 1.65;
+  }
+
+  .step-detail strong { color: var(--black); font-weight: 600; }
+
+  .step-check {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gray-mid);
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+    margin-top: 1px;
+  }
+
+  .step-check:hover { border-color: var(--magenta); }
+
+  .step-check.done {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .step-check.done::after {
+    content: '✓';
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  /* ─── DELIVERABLES TABLE ─── */
+  .deliverables-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .deliverables-table thead tr {
+    border-bottom: 2px solid var(--black);
+  }
+
+  .deliverables-table th {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray-text);
+    padding: 0 0 12px;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .deliverables-table th:last-child { text-align: right; }
+
+  .deliverables-table td {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--gray-light);
+    vertical-align: top;
+  }
+
+  .deliverables-table tr:last-child td { border-bottom: none; }
+
+  .del-tag {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--magenta);
+    background: var(--magenta-dim);
+    border: 1px solid var(--magenta-border);
+    padding: 2px 8px;
+    margin-bottom: 6px;
+  }
+
+  .del-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--black);
+    margin-bottom: 3px;
+  }
+
+  .del-desc {
+    font-size: 12px;
+    color: var(--gray-text);
+    line-height: 1.5;
+    max-width: 380px;
+  }
+
+  .del-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: var(--magenta);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .del-price-sub {
+    font-size: 10px;
+    color: var(--gray-text);
+    text-align: right;
+    letter-spacing: 1px;
+    font-weight: 300;
+    margin-top: 2px;
+  }
+
+  .total-row td {
+    padding-top: 22px !important;
+    border-bottom: none !important;
+  }
+
+  .total-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: var(--black);
+  }
+
+  .total-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 2px;
+    color: var(--black);
+    text-align: right;
+  }
+
+  /* ─── GUARANTEE ─── */
+  .guarantee-block {
+    background: var(--black);
+    padding: 36px 40px;
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .guarantee-block::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--magenta);
+  }
+
+  .guarantee-icon-box {
+    width: 48px; height: 48px;
+    border: 1.5px solid var(--magenta);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .guarantee-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .guarantee-body {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .guarantee-body strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  /* ─── NEXT STEPS CTA ─── */
+  .cta-block {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 32px;
+    border: 1.5px solid var(--gray-light);
+    padding: 36px 40px;
+  }
+
+  .cta-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 2px;
+    color: var(--black);
+    margin-bottom: 6px;
+  }
+
+  .cta-sub {
+    font-size: 14px;
+    color: var(--gray-text);
+    font-weight: 300;
+  }
+
+  .cta-btn {
+    background: var(--magenta);
+    color: var(--white);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 3px;
+    padding: 16px 36px;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity .2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .cta-btn:hover { opacity: 0.85; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--black);
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 4px;
+    color: var(--white);
+  }
+
+  .footer-meta {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gray-text);
+    text-transform: uppercase;
+  }
+
+  /* ─── COMPLETION ─── */
+  #done-banner {
+    display: none;
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--magenta);
+    color: var(--white);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    padding: 16px 32px;
+    z-index: 300;
+    animation: slideUp .4s ease;
+    white-space: nowrap;
+    box-shadow: 0 8px 32px rgba(232,0,125,0.35);
+  }
+
+  @keyframes slideUp {
+    from { opacity:0; transform: translateX(-50%) translateY(16px); }
+    to   { opacity:1; transform: translateX(-50%) translateY(0); }
+  }
+
+  /* ─── PRINT ─── */
+  @media print {
+    header, .progress-wrap, .step-check, .acc-status, footer, #done-banner { display: none !important; }
+    .body-wrap { padding: 24px; }
+  }
+
+  @media (max-width: 700px) {
+    header, .progress-wrap, footer { padding-left: 20px; padding-right: 20px; }
+    .body-wrap { padding: 36px 20px 80px; }
+    .cards-row { grid-template-columns: 1fr; }
+    .cta-block { grid-template-columns: 1fr; }
+    .hero-strip { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <div class="logo-icon">LV</div>
+    <div>
+      <div class="logo-name">LV4LFT</div>
+      <span class="logo-sub">Wellness Club</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-tag">Onboarding Doc</div>
+    <div class="header-dot"></div>
+  </div>
+</header>
+
+<!-- HERO STRIP -->
+<div class="hero-strip">
+  <div class="hero-eyebrow">Sistema de Activación</div>
+  <h1>Bienvenido<br>al Club,<br>Tío Yisus.</h1>
+  <p>Este documento guía el proceso de onboarding presencial. Sigue cada paso en orden y tenemos el sistema operando desde hoy.</p>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap">
+  <span class="progress-label">Progreso</span>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+  <span class="progress-num" id="progress-pct">0%</span>
+</div>
+
+<!-- BODY -->
+<div class="body-wrap">
+
+  <!-- 01 ACCESOS -->
+  <div>
+    <div class="sec-label">
+      <span class="sec-num">01</span>
+      <div class="sec-line"></div>
+    </div>
+    <div class="sec-title">Accesos Necesarios</div>
+    <p class="sec-sub">Necesitamos que nos des acceso a estas 3 plataformas antes de activar el sistema. Marca el círculo cuando cada acceso esté listo.</p>
+
+    <div class="cards-row">
+
+      <!-- SHOPIFY -->
+      <div class="acc-card">
+        <div class="acc-card-top">
+          <div class="acc-icon">🛍️</div>
+          <div class="acc-status" id="s-shopify" onclick="toggleAccess('shopify')"></div>
+        </div>
+        <div class="acc-name">Shopify</div>
+        <div class="acc-role">Staff Account</div>
+        <div class="acc-perms">
+          <div class="perm-row"><div class="perm-dot"></div>Crear y editar tienda</div>
+          <div class="perm-row"><div class="perm-dot"></div>Ver y gestionar pedidos</div>
+          <div class="perm-row"><div class="perm-dot"></div>Analíticas y reportes</div>
+          <div class="perm-row"><div class="perm-dot"></div>Configuración general</div>
+        </div>
+      </div>
+
+      <!-- META -->
+      <div class="acc-card">
+        <div class="acc-card-top">
+          <div class="acc-icon">📣</div>
+          <div class="acc-status" id="s-meta" onclick="toggleAccess('meta')"></div>
+        </div>
+        <div class="acc-name">Meta Business</div>
+        <div class="acc-role">Admin / Anunciante</div>
+        <div class="acc-perms">
+          <div class="perm-row"><div class="perm-dot"></div>Business Manager (Admin)</div>
+          <div class="perm-row"><div class="perm-dot"></div>Cuenta publicitaria</div>
+          <div class="perm-row"><div class="perm-dot"></div>Pixel instalado</div>
+          <div class="perm-row"><div class="perm-dot"></div>Catálogo de productos</div>
+        </div>
+      </div>
+
+      <!-- INSTAGRAM -->
+      <div class="acc-card">
+        <div class="acc-card-top">
+          <div class="acc-icon">📱</div>
+          <div class="acc-status" id="s-ig" onclick="toggleAccess('ig')"></div>
+        </div>
+        <div class="acc-name">Instagram</div>
+        <div class="acc-role">Acceso de Publicación</div>
+        <div class="acc-perms">
+          <div class="perm-row"><div class="perm-dot"></div>Publicar contenido orgánico</div>
+          <div class="perm-row"><div class="perm-dot"></div>Ver métricas de cuenta</div>
+          <div class="perm-row"><div class="perm-dot"></div>Stories y Reels</div>
+          <div class="perm-row"><div class="perm-dot"></div>Conectada a Business Manager</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="howto-box">
+      <div class="howto-title">⚡ Cómo dar acceso en Shopify — 3 minutos</div>
+      <p><strong>Settings → Users and permissions → Add staff</strong> → Ingresa el email de tu Growth Partner → Selecciona los permisos listados → Envía invitación.</p>
+    </div>
+  </div>
+
+  <!-- 02 PROCESO -->
+  <div>
+    <div class="sec-label">
+      <span class="sec-num">02</span>
+      <div class="sec-line"></div>
+    </div>
+    <div class="sec-title">Proceso de Activación</div>
+    <p class="sec-sub">Los pasos que completamos juntos hoy y en los próximos días para tener el sistema corriendo.</p>
+
+    <div class="steps-wrap">
+
+      <div class="step-row">
+        <div class="step-n-wrap">
+          <div class="step-n">01</div>
+          <div class="step-connector"></div>
+        </div>
+        <div>
+          <div class="step-title">Envío de accesos (HOY)</div>
+          <div class="step-detail">Nos mandas las invitaciones de Shopify, Meta BM e Instagram durante esta reunión. Tiempo estimado: <strong>10 min</strong></div>
+        </div>
+        <div class="step-check" id="c1" onclick="toggleCheck(1)"></div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-n-wrap">
+          <div class="step-n">02</div>
+          <div class="step-connector"></div>
+        </div>
+        <div>
+          <div class="step-title">Auditoría inicial</div>
+          <div class="step-detail">Revisamos tu tienda, cuentas publicitarias y métricas actuales. Identificamos puntos de palanca inmediata. <strong>48 hrs.</strong></div>
+        </div>
+        <div class="step-check" id="c2" onclick="toggleCheck(2)"></div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-n-wrap">
+          <div class="step-n">03</div>
+          <div class="step-connector"></div>
+        </div>
+        <div>
+          <div class="step-title">Kick-off call</div>
+          <div class="step-detail">Sesión donde presentamos el plan de los primeros 30 días, acordamos objetivos y métricas de éxito.</div>
+        </div>
+        <div class="step-check" id="c3" onclick="toggleCheck(3)"></div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-n-wrap">
+          <div class="step-n">04</div>
+          <div class="step-connector"></div>
+        </div>
+        <div>
+          <div class="step-title">Setup de Email Marketing (Klaviyo)</div>
+          <div class="step-detail">Instalación y configuración de flujos automatizados: <strong>Welcome Series, Abandoned Cart, Post-Purchase.</strong></div>
+        </div>
+        <div class="step-check" id="c4" onclick="toggleCheck(4)"></div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-n-wrap">
+          <div class="step-n">05</div>
+          <div class="step-connector"></div>
+        </div>
+        <div>
+          <div class="step-title">Lanzamiento de Meta Ads</div>
+          <div class="step-detail">Activamos las primeras campañas bajo la estructura probada. Período de aprendizaje: <strong>7–10 días.</strong></div>
+        </div>
+        <div class="step-check" id="c5" onclick="toggleCheck(5)"></div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-n-wrap">
+          <div class="step-n">06</div>
+        </div>
+        <div>
+          <div class="step-title">Reporte semana 1</div>
+          <div class="step-detail">Primer reporte de métricas, ajustes y siguiente bloque de acciones. Comunicación continua por <strong>WhatsApp.</strong></div>
+        </div>
+        <div class="step-check" id="c6" onclick="toggleCheck(6)"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 03 DELIVERABLES -->
+  <div>
+    <div class="sec-label">
+      <span class="sec-num">03</span>
+      <div class="sec-line"></div>
+    </div>
+    <div class="sec-title">Shadow Ops System</div>
+    <p class="sec-sub">Todo lo que activamos dentro de tu negocio.</p>
+
+    <table class="deliverables-table">
+      <thead>
+        <tr>
+          <th>Servicio</th>
+          <th style="text-align:right">Precio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="del-tag">ADS</div>
+            <div class="del-name">Estrategia de contenido pagado</div>
+            <div class="del-desc">Meta Ads con creativos optimizados, estructura de campañas probada y escalado progresivo basado en ROAS real.</div>
+          </td>
+          <td style="text-align:right; vertical-align:top;">
+            <div class="del-price">$1,500</div>
+            <div class="del-price-sub">USD / mes</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="del-tag">ORGÁNICO</div>
+            <div class="del-name">Estrategia de contenido orgánico</div>
+            <div class="del-desc">Calendario editorial para Instagram, Reels y Stories orientados a comunidad y conversión.</div>
+          </td>
+          <td style="text-align:right; vertical-align:top;">
+            <div class="del-price">$1,500</div>
+            <div class="del-price-sub">USD / mes</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="del-tag">LANZAMIENTO</div>
+            <div class="del-name">Estrategia de drops</div>
+            <div class="del-desc">Sistema de drops con generación de expectativa, escasez y ventana de compra limitada.</div>
+          </td>
+          <td style="text-align:right; vertical-align:top;">
+            <div class="del-price">$1,000</div>
+            <div class="del-price-sub">USD / mes</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="del-tag">CRO</div>
+            <div class="del-name">Optimización de conversión</div>
+            <div class="del-desc">Mejoras en tienda Shopify para aumentar el porcentaje de visitantes que compran.</div>
+          </td>
+          <td style="text-align:right; vertical-align:top;">
+            <div class="del-price">$500</div>
+            <div class="del-price-sub">USD / mes</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="del-tag">EMAIL</div>
+            <div class="del-name">Email Marketing</div>
+            <div class="del-desc">Flujos automatizados que trabajan 24/7. Con clientes anteriores, los flujos generaron el 88% de ingresos atribuidos.</div>
+          </td>
+          <td style="text-align:right; vertical-align:top;">
+            <div class="del-price">$1,000</div>
+            <div class="del-price-sub">USD setup</div>
+          </td>
+        </tr>
+        <tr class="total-row">
+          <td><div class="total-label">TOTAL DEL SISTEMA</div></td>
+          <td><div class="total-price">$5,500 USD</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- GARANTÍA -->
+  <div class="guarantee-block">
+    <div class="guarantee-icon-box">🛡️</div>
+    <div>
+      <div class="guarantee-title">Garantía de Resultados</div>
+      <div class="guarantee-body">Agregamos <strong>$2,500 USD a tus ventas mensuales en menos de 60 días</strong> o trabajamos gratis hasta que lo logres. Sin letra chiquita, sin excusas.</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-block">
+    <div>
+      <div class="cta-title">¿Arrancamos hoy?</div>
+      <p class="cta-sub">Manda los accesos ahora y activamos el sistema esta semana.</p>
+    </div>
+    <a href="https://wa.me/52" class="cta-btn">CONFIRMAR →</a>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="logo-icon" style="width:24px;height:24px;font-size:9px;">LV</div>
+    <span class="footer-logo">LV4LFT</span>
+  </div>
+  <div class="footer-meta">Shadow Ops System · 2026 · Confidencial</div>
+</footer>
+
+<!-- DONE BANNER -->
+<div id="done-banner">✓ ONBOARDING COMPLETADO — SISTEMA ACTIVADO</div>
+
+<script>
+  const TOTAL = 9; // 3 accesos + 6 pasos
+  let acc = {shopify:false,meta:false,ig:false};
+  let chk = {1:false,2:false,3:false,4:false,5:false,6:false};
+
+  function updateProgress() {
+    const done = Object.values(acc).filter(Boolean).length + Object.values(chk).filter(Boolean).length;
+    const pct = Math.round(done / TOTAL * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    if (pct === 100) document.getElementById('done-banner').style.display = 'block';
+  }
+
+  function toggleAccess(id) {
+    acc[id] = !acc[id];
+    const el = document.getElementById('s-' + id);
+    el.classList.toggle('done', acc[id]);
+    updateProgress();
+  }
+
+  function toggleCheck(n) {
+    chk[n] = !chk[n];
+    const el = document.getElementById('c' + n);
+    el.classList.toggle('done', chk[n]);
+    updateProgress();
+  }
+
+  setTimeout(updateProgress, 400);
+</script>
+</body>
+</html>

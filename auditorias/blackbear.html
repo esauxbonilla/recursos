@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BlackBear — Diagnóstico de Crecimiento</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #E8433F;
+    --red-2: #C92F2B;
+    --red-soft: rgba(232,67,63,0.11);
+    --red-line: rgba(232,67,63,0.32);
+    --brown: #9A6A48;
+    --brown-2: #C89A72;
+    --black: #050505;
+    --dark: #090909;
+    --dark-2: #111111;
+    --dark-3: #191919;
+    --white: #FFFFFF;
+    --offwhite: #F5F5F2;
+    --ink: #EFEFEA;
+    --muted: #8C8C88;
+    --muted-2: #575752;
+    --line: rgba(255,255,255,0.09);
+    --green: #25D366;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background:
+      radial-gradient(circle at 82% 12%, rgba(232,67,63,.15), transparent 28%),
+      radial-gradient(circle at 12% 20%, rgba(154,106,72,.20), transparent 24%),
+      linear-gradient(180deg, #050505 0%, #0A0A0A 52%, #050505 100%);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.075'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: .55;
+    mix-blend-mode: screen;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  .page { position: relative; z-index: 1; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 72px;
+    padding: 0 5vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 100;
+    background: rgba(5,5,5,.86);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+
+  .brand-mark {
+    width: 42px;
+    height: 42px;
+    border: 2px solid var(--white);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    position: relative;
+    background: #050505;
+  }
+
+  .brand-mark::before {
+    content: '';
+    width: 20px;
+    height: 15px;
+    border-radius: 50% 50% 42% 42%;
+    border: 2px solid var(--white);
+    border-bottom-width: 4px;
+    position: absolute;
+    top: 10px;
+  }
+
+  .brand-mark::after {
+    content: 'BB';
+    color: var(--red);
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 15px;
+    letter-spacing: .02em;
+    position: absolute;
+    bottom: 5px;
+  }
+
+  .brand-text { line-height: 1.05; }
+
+  .brand-name {
+    display: block;
+    color: var(--white);
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 28px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .brand-sub {
+    display: block;
+    color: var(--red);
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .nav-pill {
+    color: var(--red);
+    border: 1px solid var(--red-line);
+    background: var(--red-soft);
+    padding: 8px 13px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  @media(max-width: 640px) { .nav-pill { display: none; } }
+
+  /* TICKER */
+  .ticker-wrap {
+    margin-top: 72px;
+    height: 38px;
+    background: var(--red);
+    color: #050505;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .ticker { display: flex; animation: ticker 24s linear infinite; }
+  .ticker span { padding: 0 28px; }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* HERO */
+  .hero {
+    min-height: calc(100vh - 110px);
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 92px 5vw 86px;
+    display: grid;
+    grid-template-columns: 1.06fr .94fr;
+    gap: 70px;
+    align-items: center;
+  }
+
+  @media(max-width: 880px) {
+    .hero { grid-template-columns: 1fr; gap: 44px; padding-top: 70px; }
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .20em;
+    text-transform: uppercase;
+    color: var(--red);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: up .55s ease forwards .08s;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: var(--red);
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(62px, 8.5vw, 124px);
+    line-height: .84;
+    font-weight: 400;
+    letter-spacing: .01em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 26px;
+    opacity: 0;
+    animation: up .65s ease forwards .18s;
+  }
+
+  .hero h1 .red { color: var(--red); }
+  .hero h1 .stroke {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--white);
+    text-stroke: 1px var(--white);
+    opacity: .72;
+  }
+
+  .hero-sub {
+    max-width: 585px;
+    color: rgba(239,239,234,.66);
+    font-size: 16px;
+    line-height: 1.78;
+    font-weight: 300;
+    margin-bottom: 34px;
+    opacity: 0;
+    animation: up .65s ease forwards .28s;
+  }
+
+  .hero-sub strong { color: var(--white); font-weight: 650; }
+
+  .hero-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    width: fit-content;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,.025);
+    opacity: 0;
+    animation: up .65s ease forwards .38s;
+  }
+
+  .metric {
+    min-width: 142px;
+    padding: 17px 22px;
+    border-right: 1px solid var(--line);
+  }
+
+  .metric:last-child { border-right: none; }
+
+  .metric-val {
+    display: block;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 44px;
+    line-height: .92;
+    color: var(--red);
+  }
+
+  .metric-val.good { color: var(--white); }
+  .metric-val.green { color: var(--green); }
+
+  .metric-label {
+    display: block;
+    margin-top: 6px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+  }
+
+  @media(max-width: 560px) {
+    .hero-metrics { width: 100%; }
+    .metric { flex: 1 1 50%; border-bottom: 1px solid var(--line); }
+    .metric:nth-child(2) { border-right: none; }
+    .metric:nth-child(3), .metric:nth-child(4) { border-bottom: none; }
+  }
+
+  .audit-panel {
+    opacity: 0;
+    animation: up .75s ease forwards .32s;
+    background:
+      linear-gradient(135deg, rgba(232,67,63,.13), transparent 42%),
+      rgba(17,17,17,.93);
+    border: 1px solid var(--red-line);
+    padding: 34px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 90px rgba(0,0,0,.40);
+  }
+
+  .audit-panel::before {
+    content: 'ECOMMERCE AUDIT';
+    position: absolute;
+    top: -1px;
+    left: 30px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .16em;
+    color: var(--white);
+    background: var(--red);
+    padding: 6px 13px;
+    text-transform: uppercase;
+  }
+
+  .audit-panel::after {
+    content: '';
+    position: absolute;
+    right: -105px;
+    top: -105px;
+    width: 245px;
+    height: 245px;
+    border: 1px solid var(--red-line);
+    border-radius: 50%;
+  }
+
+  .audit-head {
+    position: relative;
+    z-index: 1;
+    padding-top: 24px;
+    margin-bottom: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 18px;
+  }
+
+  .audit-title {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    color: var(--white);
+    font-size: 42px;
+    line-height: .95;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+  }
+
+  .audit-score {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .audit-score b {
+    display: block;
+    color: var(--red);
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 35px;
+    line-height: .9;
+    font-weight: 400;
+  }
+
+  .audit-row {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 10px 1fr auto;
+    gap: 13px;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .audit-row:last-child { border-bottom: none; }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 14px rgba(232,67,63,.70);
+  }
+
+  .dot.green { background: var(--green); box-shadow: 0 0 14px rgba(37,211,102,.55); }
+  .dot.brown { background: var(--brown-2); box-shadow: 0 0 14px rgba(200,154,114,.55); }
+
+  .audit-label {
+    color: rgba(239,239,234,.75);
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .audit-status {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--red);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    text-align: right;
+  }
+
+  .audit-status.green { color: var(--green); }
+  .audit-status.brown { color: var(--brown-2); }
+
+  /* SHARED */
+  .section {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 92px 5vw;
+  }
+
+  .section-full {
+    padding: 92px 5vw;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,.025);
+  }
+
+  .inner { max-width: 1240px; margin: 0 auto; }
+
+  .tag {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    color: var(--red);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .20em;
+    text-transform: uppercase;
+  }
+
+  .tag::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--red);
+  }
+
+  .section-h {
+    max-width: 850px;
+    color: var(--white);
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(48px, 6.2vw, 88px);
+    line-height: .88;
+    letter-spacing: .01em;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .section-h .red { color: var(--red); }
+  .section-h .stroke {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--white);
+    text-stroke: 1px var(--white);
+    opacity: .72;
+  }
+
+  .section-sub {
+    max-width: 690px;
+    color: rgba(239,239,234,.60);
+    font-size: 15px;
+    line-height: 1.78;
+    font-weight: 300;
+    margin-bottom: 48px;
+  }
+
+  .section-sub strong { color: var(--white); font-weight: 650; }
+
+  /* PROBLEM */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  @media(max-width: 760px) { .problem-grid { grid-template-columns: 1fr; } }
+
+  .problem-card {
+    background: var(--dark-2);
+    padding: 34px 30px;
+    min-height: 260px;
+    border-top: 3px solid transparent;
+  }
+
+  .problem-card.bad { border-color: var(--red); }
+  .problem-card.good { border-color: var(--white); }
+
+  .problem-label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .problem-card.bad .problem-label { color: var(--red); }
+  .problem-card.good .problem-label { color: var(--white); }
+
+  .problem-title {
+    font-size: 22px;
+    color: var(--white);
+    font-weight: 800;
+    letter-spacing: -.02em;
+    margin-bottom: 12px;
+    line-height: 1.18;
+  }
+
+  .problem-body {
+    color: rgba(239,239,234,.58);
+    font-size: 14px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .problem-body strong { color: var(--white); font-weight: 650; }
+
+  .quote {
+    margin-top: 24px;
+    border-left: 3px solid var(--red);
+    background: var(--red-soft);
+    padding: 21px 27px;
+    color: rgba(239,239,234,.72);
+    font-size: 15px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .quote strong { color: var(--red); font-weight: 800; }
+
+  /* SPEED */
+  .speed-band {
+    background: #F5F5F2;
+    color: #050505;
+    padding: 90px 5vw;
+    border-top: 1px solid rgba(255,255,255,.1);
+    border-bottom: 1px solid rgba(255,255,255,.1);
+  }
+
+  .speed-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: .92fr 1.08fr;
+    gap: 54px;
+    align-items: center;
+  }
+
+  @media(max-width: 860px) { .speed-inner { grid-template-columns: 1fr; } }
+
+  .speed-h {
+    color: #050505;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(56px, 7vw, 104px);
+    line-height: .84;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  .speed-h .red { color: var(--red); }
+
+  .speed-copy {
+    color: #555;
+    font-size: 15px;
+    line-height: 1.78;
+    font-weight: 400;
+  }
+
+  .speed-copy strong { color: #050505; font-weight: 800; }
+
+  .speed-cards {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #D7D7D0;
+    border: 1px solid #D7D7D0;
+  }
+
+  @media(max-width: 620px) { .speed-cards { grid-template-columns: 1fr; } }
+
+  .speed-card {
+    background: #FFFFFF;
+    padding: 20px;
+  }
+
+  .speed-card b {
+    display: block;
+    color: var(--red);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    margin-bottom: 8px;
+  }
+
+  .speed-card span {
+    color: #4F4F4A;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  /* LEAKS */
+  .leaks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .leak-card {
+    background: var(--dark-2);
+    padding: 31px 27px;
+    min-height: 252px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .22s ease, background .22s ease;
+  }
+
+  .leak-card:hover { background: var(--dark-3); transform: translateY(-2px); }
+
+  .leak-card.main {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 44px;
+    background:
+      linear-gradient(135deg, rgba(232,67,63,.12), transparent 48%),
+      #0B0B0B;
+    border-top: 3px solid var(--red);
+    min-height: auto;
+  }
+
+  @media(max-width: 740px) { .leak-card.main { grid-template-columns: 1fr; } }
+
+  .leak-num {
+    display: block;
+    margin-bottom: 13px;
+    color: var(--red);
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .leak-title {
+    color: var(--white);
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -.018em;
+    line-height: 1.2;
+    margin-bottom: 11px;
+  }
+
+  .leak-card.main .leak-title {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 44px;
+    font-weight: 400;
+    line-height: .95;
+    letter-spacing: .01em;
+    text-transform: uppercase;
+  }
+
+  .leak-body {
+    color: rgba(239,239,234,.56);
+    font-size: 13.5px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .leak-body strong { color: var(--red); font-weight: 800; }
+
+  .cost {
+    margin-top: 18px;
+    padding-top: 15px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    line-height: 1.55;
+    letter-spacing: .04em;
+  }
+
+  .cost b { color: var(--red); }
+
+  .system-list {
+    display: grid;
+    gap: 1px;
+    background: var(--line);
+  }
+
+  .system-item {
+    background: rgba(255,255,255,.035);
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    color: rgba(239,239,234,.58);
+    font-size: 13px;
+    line-height: 1.55;
+    font-weight: 300;
+  }
+
+  .mini-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+    background: var(--red);
+    box-shadow: 0 0 12px rgba(232,67,63,.55);
+  }
+
+  .system-item strong { color: var(--white); font-weight: 700; }
+
+  /* CATEGORIES */
+  .category-wrap {
+    background: #070707;
+    padding: 92px 5vw;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .category-inner { max-width: 1240px; margin: 0 auto; }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  @media(max-width: 980px) { .category-grid { grid-template-columns: repeat(2,1fr); } }
+  @media(max-width: 560px) { .category-grid { grid-template-columns: 1fr; } }
+
+  .category-card {
+    background: var(--dark-2);
+    padding: 28px 22px;
+    min-height: 232px;
+  }
+
+  .cat-stage {
+    color: var(--red);
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .cat-title {
+    font-size: 18px;
+    color: var(--white);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 11px;
+  }
+
+  .cat-text {
+    color: rgba(239,239,234,.55);
+    font-size: 13px;
+    line-height: 1.67;
+    font-weight: 300;
+  }
+
+  .cat-chip {
+    display: inline-block;
+    margin-top: 16px;
+    border: 1px solid var(--red-line);
+    background: var(--red-soft);
+    color: var(--red);
+    padding: 6px 9px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  /* EMAIL */
+  .email-layout {
+    display: grid;
+    grid-template-columns: .82fr 1.18fr;
+    gap: 52px;
+    align-items: start;
+  }
+
+  @media(max-width: 860px) { .email-layout { grid-template-columns: 1fr; } }
+
+  .email-panel {
+    position: sticky;
+    top: 100px;
+    background: var(--dark-2);
+    border: 1px solid var(--red-line);
+    padding: 30px;
+  }
+
+  @media(max-width: 860px) { .email-panel { position: relative; top: auto; } }
+
+  .email-score {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 92px;
+    line-height: .85;
+    color: var(--red);
+    margin-bottom: 14px;
+  }
+
+  .email-panel p {
+    color: rgba(239,239,234,.62);
+    line-height: 1.75;
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .email-panel strong { color: var(--white); }
+
+  .flow-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .flow-row {
+    background: var(--dark-2);
+    padding: 23px 26px;
+    display: grid;
+    grid-template-columns: 58px 1fr auto;
+    gap: 20px;
+    align-items: center;
+  }
+
+  @media(max-width: 620px) { .flow-row { grid-template-columns: 1fr; gap: 8px; } }
+
+  .flow-n { color: var(--red); font-family: 'DM Mono', monospace; font-size: 11px; }
+  .flow-name { color: var(--white); font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+  .flow-sub { color: var(--muted); font-size: 12.5px; line-height: 1.5; font-weight: 300; }
+
+  .pill {
+    border: 1px solid var(--red-line);
+    background: var(--red-soft);
+    color: var(--red);
+    padding: 6px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .10em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .pill.white { color: var(--white); border-color: var(--line); background: rgba(255,255,255,.04); }
+  .pill.green { color: var(--green); border-color: rgba(37,211,102,.32); background: rgba(37,211,102,.08); }
+
+  /* PLAN */
+  .plan-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .plan-row {
+    background: var(--dark-2);
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: 58px 1fr auto;
+    gap: 20px;
+    align-items: center;
+    transition: background .2s ease;
+  }
+
+  .plan-row:hover { background: var(--dark-3); }
+
+  .plan-row.locked {
+    position: relative;
+    opacity: .52;
+  }
+
+  .plan-row.locked .plan-name,
+  .plan-row.locked .plan-sub {
+    filter: blur(3.5px);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .plan-row.locked:hover { background: var(--dark-2); }
+
+  @media(max-width: 620px) { .plan-row { grid-template-columns: 1fr; gap: 8px; } }
+
+  .plan-n { color: var(--red); font-family: 'DM Mono', monospace; font-size: 11px; }
+  .plan-name { color: var(--white); font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+  .plan-sub { color: var(--muted); font-size: 12.5px; line-height: 1.5; font-weight: 300; }
+  .pill.locked { color: var(--muted); border-color: var(--line); background: rgba(255,255,255,.035); }
+
+  .plan-footer {
+    background: rgba(255,255,255,.035);
+    border: 1px solid var(--line);
+    border-top: none;
+    padding: 22px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .plan-footer p { color: var(--muted); font-size: 13px; line-height: 1.55; font-weight: 300; }
+  .plan-footer strong { color: var(--white); font-weight: 700; }
+
+  /* CTA */
+  .cta {
+    padding: 110px 5vw;
+    text-align: center;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(232,67,63,.18), transparent 30%),
+      #050505;
+    border-top: 1px solid var(--line);
+  }
+
+  .cta-eyebrow {
+    color: var(--red);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .cta h2 {
+    color: var(--white);
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(64px, 8.2vw, 126px);
+    font-weight: 400;
+    line-height: .84;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .cta h2 .red { color: var(--red); }
+
+  .cta p {
+    max-width: 650px;
+    margin: 0 auto 38px;
+    color: rgba(239,239,234,.58);
+    font-size: 16px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border: 1px solid var(--red);
+    background: var(--red);
+    color: var(--white);
+    padding: 16px 36px;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    transition: transform .22s ease, box-shadow .22s ease, background .22s ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 42px rgba(232,67,63,.26);
+    background: var(--red-2);
+  }
+
+  .btn.dark {
+    background: transparent;
+    color: var(--red);
+  }
+
+  .btn.dark:hover { background: var(--red-soft); }
+  .btn.sm { padding: 11px 20px; font-size: 11px; }
+
+  .btn svg { width: 16px; height: 16px; transition: transform .2s ease; }
+  .btn:hover svg { transform: translateX(3px); }
+
+  .fine {
+    margin-top: 16px;
+    color: var(--muted-2);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  footer {
+    border-top: 1px solid var(--line);
+    background: #050505;
+    padding: 20px 5vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: var(--muted-2);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  /* REVEAL */
+  @keyframes up {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity .58s ease, transform .58s ease;
+  }
+
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .d1 { transition-delay: .08s; }
+  .d2 { transition-delay: .16s; }
+  .d3 { transition-delay: .24s; }
+</style>
+</head>
+<body>
+<div class="page">
+  <nav>
+    <a href="#top" class="brand" aria-label="BlackBear Growth Audit">
+      <div class="brand-mark"></div>
+      <div class="brand-text">
+        <span class="brand-name">BlackBear</span>
+        <span class="brand-sub">Ecommerce Growth Audit</span>
+      </div>
+    </a>
+    <span class="nav-pill">Diagnóstico confidencial</span>
+  </nav>
+
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span>✦ Tienda avanzada</span>
+      <span>✦ Experiencia 3D</span>
+      <span>✦ Categorías claras</span>
+      <span>✦ Producto visual fuerte</span>
+      <span>✦ Falta captura</span>
+      <span>✦ Retargeting pendiente</span>
+      <span>✦ Tienda avanzada</span>
+      <span>✦ Experiencia 3D</span>
+      <span>✦ Categorías claras</span>
+      <span>✦ Producto visual fuerte</span>
+      <span>✦ Falta captura</span>
+      <span>✦ Retargeting pendiente</span>
+    </div>
+  </div>
+
+  <section class="hero" id="top">
+    <div>
+      <div class="eyebrow">Auditoría de crecimiento · BlackBear</div>
+      <h1>
+        Ya tienen<br>
+        la tienda.<br>
+        Falta el sistema<br>
+        que <span class="red">la haga escalar.</span>
+      </h1>
+      <p class="hero-sub">
+        <strong>BlackBear ya invirtió en infraestructura: web, catálogo, producto, carrito, WhatsApp, categorías y experiencia visual avanzada.</strong> El siguiente salto no es otra tienda: es captura, velocidad, email marketing, ads por intención y retargeting para recuperar cada visita.
+      </p>
+
+      <div class="hero-metrics">
+        <div class="metric">
+          <span class="metric-val good">3D</span>
+          <span class="metric-label">Experiencia web</span>
+        </div>
+        <div class="metric">
+          <span class="metric-val green">✔</span>
+          <span class="metric-label">Tienda activa</span>
+        </div>
+        <div class="metric">
+          <span class="metric-val red">4.7K</span>
+          <span class="metric-label">Comunidad IG</span>
+        </div>
+        <div class="metric">
+          <span class="metric-val red">5</span>
+          <span class="metric-label">Fugas clave</span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="audit-panel">
+      <div class="audit-head">
+        <div class="audit-title">Diagnóstico rápido</div>
+        <div class="audit-score">Infraestructura<br><b>ALTA</b></div>
+      </div>
+
+      <div class="audit-row">
+        <div class="dot green"></div>
+        <div class="audit-label">Tienda con catálogo, carrito y categorías</div>
+        <div class="audit-status green">Activo</div>
+      </div>
+      <div class="audit-row">
+        <div class="dot green"></div>
+        <div class="audit-label">Visualización 2D/3D en producto</div>
+        <div class="audit-status green">Premium</div>
+      </div>
+      <div class="audit-row">
+        <div class="dot brown"></div>
+        <div class="audit-label">Carga y experiencia móvil</div>
+        <div class="audit-status brown">Revisar</div>
+      </div>
+      <div class="audit-row">
+        <div class="dot"></div>
+        <div class="audit-label">Captura de email/WhatsApp antes de compra</div>
+        <div class="audit-status">Fuga</div>
+      </div>
+      <div class="audit-row">
+        <div class="dot"></div>
+        <div class="audit-label">Retargeting por categoría y carrito</div>
+        <div class="audit-status">Crítico</div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section-full">
+    <div class="inner">
+      <div class="tag reveal">El problema central</div>
+      <h2 class="section-h reveal">Una tienda avanzada<br><span class="stroke">no debe perder visitantes anónimos.</span></h2>
+      <p class="section-sub reveal">
+        La web está por encima de muchas marcas del nicho. Tiene presencia, producto, categorías y una experiencia visual llamativa. Pero si el usuario entra, compara, revisa un producto y se va sin dejar dato, toda esa inversión queda trabajando a medias.
+      </p>
+
+      <div class="problem-grid reveal">
+        <div class="problem-card bad">
+          <span class="problem-label">Sistema actual probable</span>
+          <div class="problem-title">Visita → producto → duda → se va</div>
+          <div class="problem-body">
+            La persona llega desde Instagram, Google o WhatsApp. Revisa proteína, creatina, BCAA, snacks o algún producto específico. Si no compra en esa sesión, <strong>no parece quedar atrapada en una máquina de seguimiento.</strong>
+          </div>
+        </div>
+
+        <div class="problem-card good">
+          <span class="problem-label">Sistema recomendado</span>
+          <div class="problem-title">Visita → captura → retargeting → carrito → recompra</div>
+          <div class="problem-body">
+            Cada visitante debe alimentar base propia y audiencias: email, WhatsApp opt-in, producto visto, categoría vista, carrito, comprador y cliente recurrente. <strong>Así la tienda empieza a trabajar después de la visita.</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="quote reveal">
+        <strong>BlackBear no necesita otra tienda.</strong> Necesita que la tienda actual deje de perder visitantes anónimos y empiece a convertirlos en base, compradores y recompra.
+      </div>
+    </div>
+  </section>
+
+  <section class="speed-band">
+    <div class="speed-inner">
+      <div class="reveal">
+        <h2 class="speed-h">El 3D vende percepción.<br><span class="red">Pero no puede frenar la compra.</span></h2>
+      </div>
+
+      <div class="reveal d1">
+        <p class="speed-copy">
+          La experiencia 2D/3D es un diferencial fuerte: comunica inversión, detalle y una marca más trabajada. El riesgo es que, si la carga se siente pesada en móvil, el usuario puede abandonar antes de ver el valor.
+          <br><br>
+          <strong>No hay que quitarlo. Hay que optimizarlo.</strong> Primero imagen estática rápida, luego carga diferida del 3D, compresión de assets y medición real en celular.
+        </p>
+        <div class="speed-cards">
+          <div class="speed-card"><b>01 · Lazy load</b><span>Cargar el 3D solo cuando el usuario llega al módulo.</span></div>
+          <div class="speed-card"><b>02 · Mobile first</b><span>Priorizar velocidad en celular antes que efecto visual.</span></div>
+          <div class="speed-card"><b>03 · CRO</b><span>Medir si la experiencia aumenta confianza o baja conversión.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="tag reveal">Las 5 fugas</div>
+    <h2 class="section-h reveal">Dónde se está <span class="red">frenando</span><br>el siguiente nivel.</h2>
+    <p class="section-sub reveal">
+      La oportunidad no está en rehacer todo. Está en conectar lo que ya existe con una arquitectura de adquisición, retargeting, email y recompra.
+    </p>
+
+    <div class="leaks-grid reveal">
+      <div class="leak-card main">
+        <div>
+          <span class="leak-num">Fuga principal</span>
+          <div class="leak-title">Infraestructura fuerte sin sistema completo de recuperación</div>
+          <div class="leak-body">
+            La tienda ya tiene activos: categorías, producto, experiencia visual, carrito, WhatsApp y navegación. Pero el dinero grande está en lo que pasa cuando el usuario no compra en la primera visita.
+            <br><br>
+            <strong>Ahí entran email marketing, retargeting y ads por intención.</strong>
+          </div>
+          <div class="cost">Impacto: <b>tráfico trabajado por la tienda, pero no recuperado por un sistema automático</b></div>
+        </div>
+
+        <div class="system-list">
+          <div class="system-item"><span class="mini-dot"></span><span><strong>Visitante nuevo</strong> → captura con incentivo o acceso exclusivo</span></div>
+          <div class="system-item"><span class="mini-dot"></span><span><strong>Categoría vista</strong> → email + anuncio específico por interés</span></div>
+          <div class="system-item"><span class="mini-dot"></span><span><strong>Producto visto</strong> → recordatorio, prueba social y CTA</span></div>
+          <div class="system-item"><span class="mini-dot"></span><span><strong>Carrito abandonado</strong> → secuencia de recuperación</span></div>
+          <div class="system-item"><span class="mini-dot"></span><span><strong>Comprador previo</strong> → recompra por ciclo de consumo</span></div>
+        </div>
+      </div>
+
+      <div class="leak-card">
+        <span class="leak-num">Fuga 02</span>
+        <div class="leak-title">Carga y fricción visual</div>
+        <div class="leak-body">El 3D suma valor, pero si ralentiza la navegación puede afectar conversión móvil. <strong>La experiencia premium tiene que sentirse rápida, no pesada.</strong></div>
+        <div class="cost">Costo: <b>usuarios saliendo antes de interactuar con el producto</b></div>
+      </div>
+
+      <div class="leak-card d1">
+        <span class="leak-num">Fuga 03</span>
+        <div class="leak-title">Captura débil de correos y WhatsApp opt-in</div>
+        <div class="leak-body">Cada visita debería convertirse en dato propio: email, WhatsApp, lista VIP o lead magnet. <strong>Sin captura, la marca vuelve a pagar por la misma atención.</strong></div>
+        <div class="cost">Costo: <b>base propia creciendo más lento de lo que debería</b></div>
+      </div>
+
+      <div class="leak-card d2">
+        <span class="leak-num">Fuga 04</span>
+        <div class="leak-title">Ads sin segmentación por categoría</div>
+        <div class="leak-body">No se le habla igual a quien vio proteína que a quien vio creatina, snacks, óxido o BCAA. <strong>Cada categoría requiere mensaje, creativo y seguimiento distinto.</strong></div>
+        <div class="cost">Costo: <b>presupuesto sin suficiente precisión comercial</b></div>
+      </div>
+
+      <div class="leak-card d3">
+        <span class="leak-num">Fuga 05</span>
+        <div class="leak-title">Recompra no automatizada</div>
+        <div class="leak-body">Los suplementos tienen consumo recurrente. Quien compró una vez debe recibir recordatorios, bundles, educación y ofertas antes de comprar en otro lado. <strong>La segunda compra se diseña.</strong></div>
+        <div class="cost">Costo: <b>LTV menor al potencial real del ecommerce</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="category-wrap">
+    <div class="category-inner">
+      <div class="tag reveal">Ads por categoría</div>
+      <h2 class="section-h reveal">No todos los productos<br>venden con el mismo mensaje.</h2>
+      <p class="section-sub reveal">
+        La tienda ya tiene categorías claras. El sistema de anuncios y email debería usar esa estructura para crear audiencias, mensajes y secuencias por intención.
+      </p>
+
+      <div class="category-grid reveal">
+        <div class="category-card">
+          <span class="cat-stage">01 · Proteínas</span>
+          <div class="cat-title">Compra recurrente y sabor</div>
+          <div class="cat-text">Creativos de uso diario, rutina, sabor, confianza y recompra por frecuencia de consumo.</div>
+          <span class="cat-chip">Recompra</span>
+        </div>
+        <div class="category-card">
+          <span class="cat-stage">02 · Creatinas</span>
+          <div class="cat-title">Educación + consistencia</div>
+          <div class="cat-text">Campañas educativas, objeciones frecuentes, hábito, resultados esperados y recordatorios.</div>
+          <span class="cat-chip">Educación</span>
+        </div>
+        <div class="category-card">
+          <span class="cat-stage">03 · Snacks</span>
+          <div class="cat-title">Impulso y bundle</div>
+          <div class="cat-text">Producto perfecto para aumentar ticket, paquetes, cross-sell y ofertas dentro de carrito.</div>
+          <span class="cat-chip">AOV</span>
+        </div>
+        <div class="category-card">
+          <span class="cat-stage">04 · BCAA / Óxido</span>
+          <div class="cat-title">Pre-entreno y rutina</div>
+          <div class="cat-text">Segmentación por objetivo, momento de consumo, stack y recompra por entrenamiento.</div>
+          <span class="cat-chip">Segmentación</span>
+        </div>
+        <div class="category-card">
+          <span class="cat-stage">05 · Compradores</span>
+          <div class="cat-title">Retención y comunidad</div>
+          <div class="cat-text">Postcompra, reseñas, UGC, afiliados, distribuidores, eventos y recompra mensual.</div>
+          <span class="cat-chip">LTV</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="email-layout">
+      <aside class="email-panel reveal">
+        <div class="email-score">CRM</div>
+        <p>
+          <strong>El email marketing es la pieza que convierte una tienda bonita en una máquina.</strong> Captura visitantes, recupera carritos, educa por categoría y empuja recompra sin depender siempre de publicar o pagar tráfico nuevo.
+        </p>
+      </aside>
+
+      <div>
+        <div class="tag reveal">Email marketing</div>
+        <h2 class="section-h reveal">La tienda ya existe.<br><span class="red">Ahora necesita memoria.</span></h2>
+        <p class="section-sub reveal">
+          Si alguien vio un producto, entró a una categoría o agregó al carrito, el sistema debe recordarlo y traerlo de vuelta. Eso es lo que email, SMS, WhatsApp opt-in y retargeting hacen juntos.
+        </p>
+
+        <div class="flow-list reveal">
+          <div class="flow-row">
+            <div class="flow-n">01 /</div>
+            <div><div class="flow-name">Captura de visitante nuevo</div><div class="flow-sub">Pop-up o módulo con incentivo, envío, guía, descuento o acceso a promociones.</div></div>
+            <div class="pill">Prioridad</div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-n">02 /</div>
+            <div><div class="flow-name">Welcome flow</div><div class="flow-sub">Presentación de marca, categorías principales, confianza, envío y primera compra.</div></div>
+            <div class="pill white">Base</div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-n">03 /</div>
+            <div><div class="flow-name">Browse abandonment</div><div class="flow-sub">Correo cuando alguien visita producto o categoría sin comprar.</div></div>
+            <div class="pill white">Retargeting</div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-n">04 /</div>
+            <div><div class="flow-name">Cart + checkout abandonment</div><div class="flow-sub">Recuperación de carrito con objeciones, prueba social, disponibilidad y CTA.</div></div>
+            <div class="pill">Dinero</div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-n">05 /</div>
+            <div><div class="flow-name">Postcompra</div><div class="flow-sub">Educación, reseña, UGC, productos complementarios y segundo pedido.</div></div>
+            <div class="pill green">LTV</div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-n">06 /</div>
+            <div><div class="flow-name">Recompra por ciclo</div><div class="flow-sub">Recordatorios por consumo aproximado, bundles y campañas mensuales.</div></div>
+            <div class="pill green">Recompra</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-full">
+    <div class="inner">
+      <div class="tag reveal">Plan de intervención</div>
+      <h2 class="section-h reveal">6 acciones para sacar<br>más jugo a la marca.</h2>
+      <p class="section-sub reveal">
+        Primero se activa lo que recupera dinero rápido: velocidad, captura y flujos base. El resto se define con números reales de tráfico, carrito, conversión y compra recurrente.
+      </p>
+
+      <div class="plan-list reveal">
+        <div class="plan-row">
+          <div class="plan-n">01 /</div>
+          <div><div class="plan-name">Auditar velocidad y carga de experiencia 3D</div><div class="plan-sub">Optimizar mobile, lazy load, peso de assets y ruta rápida hacia producto/carrito.</div></div>
+          <div class="pill">Primero</div>
+        </div>
+        <div class="plan-row">
+          <div class="plan-n">02 /</div>
+          <div><div class="plan-name">Instalar captura de email/WhatsApp opt-in</div><div class="plan-sub">Convertir tráfico anónimo en base propia con incentivo, promoción o acceso exclusivo.</div></div>
+          <div class="pill">Crítico</div>
+        </div>
+        <div class="plan-row locked">
+          <div class="plan-n">03 /</div>
+          <div><div class="plan-name">Crear flujos automáticos de email</div><div class="plan-sub">Welcome, browse, carrito, checkout, postcompra, recompra y reactivación.</div></div>
+          <div class="pill locked">En llamada</div>
+        </div>
+        <div class="plan-row locked">
+          <div class="plan-n">04 /</div>
+          <div><div class="plan-name">Estructurar Meta Ads por categoría e intención</div><div class="plan-sub">Proteína, creatina, snacks, BCAA, compradores, carritos y visitantes recurrentes.</div></div>
+          <div class="pill locked">En llamada</div>
+        </div>
+        <div class="plan-row locked">
+          <div class="plan-n">05 /</div>
+          <div><div class="plan-name">Optimizar páginas de producto para conversión</div><div class="plan-sub">Confianza, prueba social, envío, sabores, bundles, beneficios y CTA a WhatsApp.</div></div>
+          <div class="pill locked">En llamada</div>
+        </div>
+        <div class="plan-row locked">
+          <div class="plan-n">06 /</div>
+          <div><div class="plan-name">Diseñar sistema de recompra mensual</div><div class="plan-sub">Campañas por consumo, bundles, promociones, clientes VIP y reactivación.</div></div>
+          <div class="pill locked">En llamada</div>
+        </div>
+      </div>
+
+      <div class="plan-footer reveal">
+        <p>Los puntos 03–06 dependen de los números reales de BlackBear.<br><strong>En 30 minutos revisamos qué está frenando más ventas: velocidad, captura, ads o recompra.</strong></p>
+        <a href="https://wa.link/yl7fn7" target="_blank" rel="noopener" class="btn sm dark">
+          Ver plan completo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="cta-eyebrow reveal">Diagnóstico estratégico</div>
+    <h2 class="reveal">30 minutos.<br><span class="red">Sistema claro.</span><br>Más retorno.</h2>
+    <p class="reveal">
+      Revisamos tienda, velocidad, experiencia 3D, categorías, campañas, email marketing, carritos y recompra. Si la web ya está lista para escalar, el siguiente paso es hacer que cada visita deje rastro.
+    </p>
+    <a href="https://wa.link/yl7fn7" target="_blank" rel="noopener" class="btn reveal">
+      Quiero ver dónde se fuga la venta
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <div class="fine reveal">Velocidad · Email Marketing · Meta Ads · Retargeting · Recompra</div>
+  </section>
+
+  <footer>
+    <span>Esaú Bonilla — Growth Digital</span>
+    <span>Diagnóstico confidencial · BlackBear Supplements</span>
+  </footer>
+</div>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.06 });
+
+  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+</script>
+</body>
+</html>

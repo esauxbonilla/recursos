@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bigmoy — Diagnóstico de Crecimiento</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #E11D24;
+      --red-d: #A80F14;
+      --red-pale: #FFF0F0;
+      --gold: #F6B21A;
+      --purple: #7C3AED;
+      --blue: #246BFE;
+      --black: #050505;
+      --ink: #111217;
+      --gray: #6B7280;
+      --line: #E5E7EB;
+      --white: #FFFFFF;
+      --offwhite: #F7F7F8;
+      --dark: #090A0E;
+      --dark-2: #101116;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 64px;
+      padding: 0 5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--black);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--red);
+      line-height: 1;
+    }
+
+    .nav-pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--red);
+      background: var(--red-pale);
+      padding: 6px 13px;
+      border-radius: 100px;
+    }
+
+    /* TOP STRIP */
+    .top-strip {
+      margin-top: 64px;
+      background: var(--gold);
+      color: var(--black);
+      height: 34px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(0,0,0,.08);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .ticker {
+      display: flex;
+      animation: ticker 24s linear infinite;
+    }
+
+    .ticker span { padding: 0 28px; }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* HERO */
+    .hero {
+      min-height: calc(100vh - 98px);
+      padding: 92px 5vw 82px;
+      display: grid;
+      grid-template-columns: 1.02fr .98fr;
+      gap: 76px;
+      align-items: center;
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    @media(max-width: 860px) {
+      .hero { grid-template-columns: 1fr; gap: 44px; padding-top: 76px; }
+    }
+
+    .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      animation: up .5s ease forwards .08s;
+    }
+
+    .eyebrow::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--red);
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 5.8vw, 78px);
+      line-height: .95;
+      letter-spacing: -0.035em;
+      font-weight: 900;
+      color: var(--black);
+      margin-bottom: 25px;
+      opacity: 0;
+      animation: up .65s ease forwards .18s;
+    }
+
+    .hero h1 .red { color: var(--red); }
+    .hero h1 .gold { color: var(--gold); text-shadow: 0 1px 0 rgba(0,0,0,.2); }
+
+    .hero-sub {
+      max-width: 555px;
+      color: var(--gray);
+      font-size: 16px;
+      line-height: 1.75;
+      font-weight: 300;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: up .65s ease forwards .28s;
+    }
+
+    .hero-sub strong { color: var(--ink); font-weight: 600; }
+
+    .hero-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      border: 1px solid var(--line);
+      width: fit-content;
+      opacity: 0;
+      animation: up .65s ease forwards .38s;
+    }
+
+    .metric {
+      padding: 17px 25px;
+      border-right: 1px solid var(--line);
+      min-width: 138px;
+    }
+
+    .metric:last-child { border-right: none; }
+
+    @media(max-width: 560px) {
+      .hero-metrics { width: 100%; }
+      .metric { flex: 1 1 50%; border-bottom: 1px solid var(--line); }
+      .metric:nth-child(2) { border-right: none; }
+      .metric:nth-child(3), .metric:nth-child(4) { border-bottom: none; }
+    }
+
+    .metric-val {
+      display: block;
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--red);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .metric-val.good { color: var(--black); }
+
+    .metric-label {
+      display: block;
+      margin-top: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .hero-right { opacity: 0; animation: up .7s ease forwards .34s; }
+
+    .audit-panel {
+      background: var(--dark);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,.1);
+      padding: 34px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 22px 60px rgba(0,0,0,.18);
+    }
+
+    .audit-panel::before {
+      content: 'BM_GROWTH_AUDIT';
+      position: absolute;
+      top: -1px;
+      left: 28px;
+      background: var(--red);
+      color: var(--white);
+      padding: 5px 13px;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .audit-panel::after {
+      content: '';
+      position: absolute;
+      right: -90px;
+      top: -90px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(225,29,36,.34), transparent 66%);
+      pointer-events: none;
+    }
+
+    .audit-top {
+      padding-top: 24px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 18px;
+    }
+
+    .audit-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -.03em;
+      line-height: 1.08;
+    }
+
+    .audit-score {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: rgba(255,255,255,.45);
+      text-align: right;
+      line-height: 1.6;
+    }
+
+    .audit-score b { color: var(--gold); font-size: 17px; }
+
+    .diagnostic-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      position: relative;
+      z-index: 1;
+    }
+
+    .diagnostic-row:last-child { border-bottom: none; }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 14px rgba(225,29,36,.7);
+      flex-shrink: 0;
+    }
+
+    .dot.warn { background: var(--gold); box-shadow: 0 0 14px rgba(246,178,26,.7); }
+    .dot.blue { background: var(--blue); box-shadow: 0 0 14px rgba(36,107,254,.7); }
+
+    .diagnostic-label {
+      flex: 1;
+      font-size: 14px;
+      color: rgba(255,255,255,.8);
+      line-height: 1.35;
+    }
+
+    .diagnostic-status {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--red);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      text-align: right;
+    }
+
+    .diagnostic-status.warn { color: var(--gold); }
+    .diagnostic-status.blue { color: #75A6FF; }
+
+    /* SHARED */
+    .section {
+      padding: 86px 5vw;
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    .section-full {
+      padding: 86px 5vw;
+      background: var(--offwhite);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .inner { max-width: 1220px; margin: 0 auto; }
+
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .tag::before {
+      content: '';
+      width: 22px;
+      height: 1px;
+      background: var(--red);
+    }
+
+    .tag.gold { color: var(--gold); }
+    .tag.gold::before { background: var(--gold); }
+
+    .section-h {
+      font-size: clamp(32px, 4vw, 55px);
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      color: var(--black);
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+
+    .section-h .red { color: var(--red); }
+    .section-h .gold { color: var(--gold); }
+
+    .section-sub {
+      max-width: 610px;
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--gray);
+      font-weight: 300;
+      margin-bottom: 48px;
+    }
+
+    /* LEAKS */
+    .leak-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(276px, 1fr));
+      gap: 1px;
+      background: var(--line);
+    }
+
+    .leak-card {
+      background: var(--white);
+      padding: 31px 28px;
+      min-height: 238px;
+      transition: background .2s ease, transform .2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .leak-card:hover { background: #FCFCFD; transform: translateY(-1px); }
+
+    .leak-card.main {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 44px;
+      background: var(--dark);
+      color: var(--white);
+      border-top: 3px solid var(--red);
+      min-height: auto;
+    }
+
+    @media(max-width: 720px) { .leak-card.main { grid-template-columns: 1fr; } }
+
+    .leak-num {
+      display: block;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 13px;
+    }
+
+    .leak-card.main .leak-num { color: rgba(246,178,26,.84); }
+
+    .leak-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -.015em;
+      color: var(--black);
+      margin-bottom: 11px;
+      line-height: 1.2;
+    }
+
+    .leak-card.main .leak-title { color: var(--white); font-size: 24px; }
+
+    .leak-body {
+      font-size: 13.5px;
+      color: var(--gray);
+      line-height: 1.75;
+      font-weight: 300;
+    }
+
+    .leak-card.main .leak-body { color: rgba(255,255,255,.62); }
+    .leak-body strong { color: var(--ink); font-weight: 600; }
+    .leak-card.main .leak-body strong { color: var(--gold); }
+
+    .cost {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      font-family: 'DM Mono', monospace;
+      color: var(--gray);
+      font-size: 10px;
+      letter-spacing: .04em;
+      line-height: 1.55;
+    }
+
+    .cost b { color: var(--red); }
+    .leak-card.main .cost { border-color: rgba(255,255,255,.1); color: rgba(255,255,255,.45); }
+    .leak-card.main .cost b { color: #FF6B70; }
+
+    .system-list { display: grid; gap: 1px; background: rgba(255,255,255,.08); }
+
+    .system-item {
+      background: rgba(255,255,255,.035);
+      padding: 15px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      color: rgba(255,255,255,.56);
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 300;
+    }
+
+    .system-item .mini-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--red);
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .system-item strong { color: var(--white); font-weight: 600; }
+
+    /* EMAIL */
+    .email-wrap {
+      background: var(--dark);
+      color: var(--white);
+      padding: 86px 5vw;
+    }
+
+    .email-inner { max-width: 1220px; margin: 0 auto; }
+
+    .email-head {
+      display: grid;
+      grid-template-columns: .85fr 1.15fr;
+      gap: 58px;
+      align-items: end;
+      margin-bottom: 44px;
+    }
+
+    @media(max-width: 760px) { .email-head { grid-template-columns: 1fr; gap: 22px; } }
+
+    .dark-h {
+      color: var(--white);
+      font-size: clamp(31px, 4vw, 54px);
+      line-height: 1.02;
+      letter-spacing: -.035em;
+      font-weight: 900;
+    }
+
+    .dark-h .gold { color: var(--gold); }
+
+    .dark-sub {
+      font-size: 15px;
+      line-height: 1.75;
+      color: rgba(255,255,255,.48);
+      font-weight: 300;
+      max-width: 565px;
+    }
+
+    .dark-sub strong { color: rgba(255,255,255,.86); font-weight: 600; }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,.1);
+    }
+
+    @media(max-width: 980px) { .flow-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media(max-width: 560px) { .flow-grid { grid-template-columns: 1fr; } }
+
+    .flow-card {
+      background: var(--dark-2);
+      padding: 28px 22px;
+      min-height: 214px;
+    }
+
+    .flow-n {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    .flow-title {
+      color: var(--white);
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+
+    .flow-text {
+      color: rgba(255,255,255,.48);
+      font-size: 13px;
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    .email-alert {
+      margin-top: 24px;
+      border-left: 3px solid var(--gold);
+      background: rgba(246,178,26,.055);
+      padding: 20px 26px;
+      color: rgba(255,255,255,.68);
+      font-size: 15px;
+      line-height: 1.72;
+      font-weight: 300;
+    }
+
+    .email-alert strong { color: var(--gold); font-weight: 700; }
+
+    /* ADS */
+    .ads-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--line);
+    }
+
+    @media(max-width: 760px) { .ads-grid { grid-template-columns: 1fr; } }
+
+    .ads-card {
+      background: var(--white);
+      padding: 34px 30px;
+      border-top: 3px solid var(--line);
+    }
+
+    .ads-card.bad { border-color: var(--red); }
+    .ads-card.good { border-color: var(--black); }
+
+    .ads-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .ads-card.bad .ads-label { color: var(--red); }
+    .ads-card.good .ads-label { color: var(--black); }
+
+    .ads-title {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -.025em;
+      margin-bottom: 12px;
+      color: var(--black);
+    }
+
+    .ads-text {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--gray);
+      font-weight: 300;
+    }
+
+    .ads-text strong { color: var(--ink); font-weight: 600; }
+
+    .ads-stack {
+      margin-top: 24px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .ads-step {
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--gray);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .ads-step b { color: var(--red); }
+    .ads-card.good .ads-step b { color: var(--black); }
+
+    /* OFFER */
+    .offer-band {
+      background: var(--red);
+      color: var(--white);
+      padding: 76px 5vw;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .offer-band::before {
+      content: 'BIGMOY BIGMOY BIGMOY BIGMOY';
+      position: absolute;
+      inset: auto 0 -30px 0;
+      font-size: clamp(64px, 10vw, 140px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -.06em;
+      color: rgba(255,255,255,.06);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .offer-inner {
+      max-width: 1220px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media(max-width: 760px) { .offer-inner { grid-template-columns: 1fr; } }
+
+    .offer-h {
+      font-size: clamp(34px, 4.4vw, 62px);
+      line-height: .98;
+      letter-spacing: -.04em;
+      font-weight: 900;
+      color: var(--white);
+    }
+
+    .offer-text {
+      color: rgba(255,255,255,.78);
+      font-size: 15px;
+      line-height: 1.78;
+      font-weight: 300;
+    }
+
+    .offer-text strong { color: var(--white); font-weight: 700; }
+
+    /* PLAN */
+    .plan-list { display: flex; flex-direction: column; gap: 1px; background: var(--line); }
+
+    .plan-row {
+      background: var(--white);
+      display: grid;
+      grid-template-columns: 54px 1fr auto;
+      gap: 20px;
+      align-items: center;
+      padding: 24px 28px;
+      transition: background .2s ease;
+    }
+
+    .plan-row:hover { background: #FCFCFD; }
+
+    @media(max-width: 620px) { .plan-row { grid-template-columns: 1fr; gap: 8px; } }
+
+    .plan-n {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--red);
+    }
+
+    .plan-name { font-size: 15px; font-weight: 800; color: var(--black); margin-bottom: 3px; }
+    .plan-sub { font-size: 12.5px; color: var(--gray); line-height: 1.5; font-weight: 300; }
+
+    .pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      white-space: nowrap;
+    }
+
+    .pill.red { border: 1px solid rgba(225,29,36,.35); color: var(--red); background: rgba(225,29,36,.045); }
+    .pill.black { border: 1px solid var(--black); color: var(--black); background: rgba(0,0,0,.025); }
+    .pill.gold { border: 1px solid rgba(246,178,26,.5); color: #B97700; background: rgba(246,178,26,.09); }
+
+    .plan-footer {
+      background: var(--offwhite);
+      border: 1px solid var(--line);
+      border-top: none;
+      padding: 21px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .plan-footer p {
+      color: var(--gray);
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 300;
+    }
+
+    .plan-footer strong { color: var(--black); font-weight: 700; }
+
+    /* CTA */
+    .cta {
+      padding: 100px 5vw;
+      text-align: center;
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .cta-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .cta h2 {
+      font-size: clamp(40px, 5.5vw, 78px);
+      line-height: .96;
+      letter-spacing: -.045em;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .cta h2 .red { color: #FF4E55; }
+
+    .cta p {
+      max-width: 560px;
+      margin: 0 auto 40px;
+      color: rgba(255,255,255,.55);
+      font-size: 16px;
+      line-height: 1.75;
+      font-weight: 300;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px 38px;
+      background: var(--red);
+      color: var(--white);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      transition: transform .22s ease, background .22s ease, box-shadow .22s ease;
+    }
+
+    .btn:hover {
+      background: var(--red-d);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 34px rgba(225,29,36,.34);
+    }
+
+    .btn.black { background: var(--black); color: var(--white); }
+    .btn.black:hover { background: #232323; box-shadow: 0 10px 34px rgba(0,0,0,.22); }
+    .btn.light { background: var(--white); color: var(--black); }
+    .btn.light:hover { background: #F2F2F2; box-shadow: 0 10px 34px rgba(255,255,255,.2); }
+    .btn.sm { padding: 11px 22px; font-size: 12px; }
+
+    .btn svg { width: 16px; height: 16px; transition: transform .2s ease; }
+    .btn:hover svg { transform: translateX(3px); }
+
+    .fine {
+      margin-top: 17px;
+      font-family: 'DM Mono', monospace;
+      color: rgba(255,255,255,.38);
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    footer {
+      background: var(--black);
+      border-top: 1px solid rgba(255,255,255,.09);
+      padding: 20px 5vw;
+      color: rgba(255,255,255,.42);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .06em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* PROOF INSANO */
+    .proof-section { padding: 86px 5vw; background: var(--white); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .proof-inner { max-width: 1220px; margin: 0 auto; }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      margin-bottom: 1px;
+    }
+    @media(max-width: 640px) { .proof-grid { grid-template-columns: 1fr; } }
+    .proof-card { background: var(--white); padding: 32px 28px; }
+    .proof-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--gray); margin-bottom: 10px; display: block; }
+    .proof-num { font-family: 'Inter', sans-serif; font-size: 44px; font-weight: 900; color: var(--blue); line-height: 1; margin-bottom: 8px; letter-spacing: -0.04em; }
+    .proof-desc { font-size: 13px; color: var(--gray); line-height: 1.65; font-weight: 300; }
+    .proof-desc strong { color: var(--ink); font-weight: 600; }
+    .proof-quote { border-left: 3px solid var(--blue); background: rgba(36,107,254,.05); padding: 22px 28px; font-size: 15px; color: var(--gray); line-height: 1.75; font-weight: 300; }
+    .proof-quote strong { color: var(--blue); font-weight: 600; }
+
+    /* LOCKED PLAN ROWS */
+    .plan-row.locked { opacity: 0.42; cursor: default; }
+    .plan-row.locked .plan-name,
+    .plan-row.locked .plan-sub { filter: blur(3.5px); user-select: none; pointer-events: none; }
+    .plan-row.locked:hover { background: var(--white); }
+    .pill.en-llamada { border: 1px solid var(--line); color: var(--gray); background: transparent; display: flex; align-items: center; gap: 6px; }
+    .pill.en-llamada svg { width: 10px; height: 10px; }
+
+    /* ANIMS */
+    @keyframes up {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: .08s; }
+    .d2 { transition-delay: .16s; }
+    .d3 { transition-delay: .24s; }
+    .d4 { transition-delay: .32s; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-brand">
+      <div class="brand-mark">BM</div>
+      Bigmoy Growth Audit
+    </div>
+    <span class="nav-pill">Diagnóstico confidencial</span>
+  </nav>
+
+  <div class="top-strip">
+    <div class="ticker">
+      <span>★ Streetwear con comunidad real</span>
+      <span>★ 20K+ seguidores</span>
+      <span>★ Drops activos</span>
+      <span>★ Producto visualmente vendible</span>
+      <span>★ Falta sistema de recompra</span>
+      <span>★ Streetwear con comunidad real</span>
+      <span>★ 20K+ seguidores</span>
+      <span>★ Drops activos</span>
+      <span>★ Producto visualmente vendible</span>
+      <span>★ Falta sistema de recompra</span>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Análisis de crecimiento · Bigmoy</div>
+      <h1>
+        La marca<br>ya se ve fuerte.<br>
+        <span class="red">El dinero</span><br>
+        se está yendo<br>
+        <span class="gold">sin volver.</span>
+      </h1>
+      <p class="hero-sub">
+        <strong>Bigmoy ya tiene comunidad, estética, drops, producto y tráfico.</strong> Lo que no se ve activo es el sistema que convierte esa atención en base de datos, recompra, retargeting y ventas repetidas.
+      </p>
+      <div class="hero-metrics">
+        <div class="metric">
+          <span class="metric-val good">20K+</span>
+          <span class="metric-label">Seguidores IG</span>
+        </div>
+        <div class="metric">
+          <span class="metric-val red">0</span>
+          <span class="metric-label">Email visible</span>
+        </div>
+        <div class="metric">
+          <span class="metric-val red">0</span>
+          <span class="metric-label">Retención clara</span>
+        </div>
+        <div class="metric">
+          <span class="metric-val red">5</span>
+          <span class="metric-label">Fugas detectadas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="audit-panel">
+        <div class="audit-top">
+          <div class="audit-title">Diagnóstico rápido del sistema</div>
+          <div class="audit-score">Potencial visual<br><b>ALTO</b></div>
+        </div>
+
+        <div class="diagnostic-row">
+          <div class="dot"></div>
+          <div class="diagnostic-label">Captura de email / SMS antes de compra</div>
+          <div class="diagnostic-status">Sin explotar</div>
+        </div>
+        <div class="diagnostic-row">
+          <div class="dot"></div>
+          <div class="diagnostic-label">Flujos automáticos de carrito y checkout</div>
+          <div class="diagnostic-status">Crítico</div>
+        </div>
+        <div class="diagnostic-row">
+          <div class="dot warn"></div>
+          <div class="diagnostic-label">Meta Ads con estructura por embudo</div>
+          <div class="diagnostic-status warn">Mejorable</div>
+        </div>
+        <div class="diagnostic-row">
+          <div class="dot"></div>
+          <div class="diagnostic-label">Recompra por drop, colección y cliente recurrente</div>
+          <div class="diagnostic-status">Sin sistema</div>
+        </div>
+        <div class="diagnostic-row">
+          <div class="dot blue"></div>
+          <div class="diagnostic-label">Contenido orgánico y comunidad</div>
+          <div class="diagnostic-status blue">Activo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-full">
+    <div class="inner">
+      <div class="tag reveal">El problema central</div>
+      <h2 class="section-h reveal">Tienen atención.<br><span class="red">No tienen suficiente captura.</span></h2>
+      <p class="section-sub reveal">
+        La tienda y el Instagram ya generan deseo. El problema es que mucha gente mira, compara, guarda, pregunta o abandona carrito. Si no queda registrada en email, SMS o retargeting, esa intención se pierde.
+      </p>
+
+      <div class="ads-grid reveal">
+        <div class="ads-card bad">
+          <span class="ads-label">Sistema actual probable</span>
+          <div class="ads-title">Drop → tráfico → visita → se va</div>
+          <div class="ads-text">
+            El usuario ve una playera, entra, duda por talla/precio/envío y se va. Sin email ni retargeting fuerte, <strong>Bigmoy paga o trabaja por una visita que no vuelve.</strong>
+          </div>
+          <div class="ads-stack">
+            <div class="ads-step"><b>Fuga:</b> visitantes sin capturar</div>
+            <div class="ads-step"><b>Fuga:</b> carritos sin recuperar</div>
+            <div class="ads-step"><b>Fuga:</b> compradores sin recompra</div>
+          </div>
+        </div>
+
+        <div class="ads-card good">
+          <span class="ads-label">Sistema recomendado</span>
+          <div class="ads-title">Drop → captura → retargeting → compra → recompra</div>
+          <div class="ads-text">
+            Cada lanzamiento debe alimentar una base propia. <strong>El tráfico orgánico, los ads y las colaboraciones tienen que convertirse en lista, no solo en likes.</strong>
+          </div>
+          <div class="ads-stack">
+            <div class="ads-step"><b>01:</b> pop-up con incentivo real</div>
+            <div class="ads-step"><b>02:</b> email/SMS automatizado</div>
+            <div class="ads-step"><b>03:</b> ads por temperatura</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="tag reveal">Las 5 fugas</div>
+    <h2 class="section-h reveal">Qué le está <span class="red">costando ventas</span><br>a Bigmoy ahora mismo.</h2>
+    <p class="section-sub reveal">
+      No es un problema de producto. Es un problema de arquitectura comercial: la marca atrae, pero no retiene ni exprime todo el valor de cada visita.
+    </p>
+
+    <div class="leak-grid reveal">
+      <div class="leak-card main">
+        <div>
+          <span class="leak-num">Fuga principal</span>
+          <div class="leak-title">No hay sistema fuerte de email marketing y recompra</div>
+          <div class="leak-body">
+            En una marca de ropa, el cliente no compra una sola vez si el sistema está bien hecho. Compra por drop, por colección, por escasez, por preventa, por acceso anticipado y por identidad.
+            <br><br>
+            <strong>Bigmoy tiene el combustible: comunidad + producto + estética. Falta la máquina que lo convierte en ventas repetidas.</strong>
+          </div>
+          <div class="cost">Impacto: <b>cada drop vende menos de lo que podría porque la lista propia no está trabajando todos los días</b></div>
+        </div>
+
+        <div class="system-list">
+          <div class="system-item"><span class="mini-dot"></span><span><strong>Welcome flow</strong> para convertir nuevos visitantes en compradores</span></div>
+          <div class="system-item"><span class="mini-dot"></span><span><strong>Abandoned cart</strong> para recuperar ventas calientes</span></div>
+          <div class="system-item"><span class="mini-dot"></span><span><strong>Back in stock / drop alerts</strong> para crear urgencia real</span></div>
+          <div class="system-item"><span class="mini-dot"></span><span><strong>Post-compra</strong> para reseñas, UGC y segunda compra</span></div>
+          <div class="system-item"><span class="mini-dot"></span><span><strong>VIP list</strong> para miembros, preventas y acceso anticipado</span></div>
+        </div>
+      </div>
+
+      <div class="leak-card">
+        <span class="leak-num">Fuga 02</span>
+        <div class="leak-title">Ads sin embudo completo</div>
+        <div class="leak-body">No basta con mandar tráfico a producto. La estructura debe separar frío, tibio, caliente, carritos, compradores y clientes VIP. <strong>Cada grupo necesita un mensaje distinto.</strong></div>
+        <div class="cost">Costo: <b>CPM/CPC gastado en audiencias sin intención clara</b></div>
+      </div>
+
+      <div class="leak-card d1">
+        <span class="leak-num">Fuga 03</span>
+        <div class="leak-title">Drops sin preventa estratégica</div>
+        <div class="leak-body">Los drops deberían empezar antes de que el producto esté disponible: lista de espera, early access, recordatorios y cierre por escasez. <strong>El hype no se improvisa el día del lanzamiento.</strong></div>
+        <div class="cost">Costo: <b>demanda fría el día que debería estar caliente</b></div>
+      </div>
+
+      <div class="leak-card d2">
+        <span class="leak-num">Fuga 04</span>
+        <div class="leak-title">UGC sin sistema de conversión</div>
+        <div class="leak-body">El contenido de gym, lifestyle y clientes usando la ropa es muy valioso. Pero debe alimentar ads, email, PDPs y retargeting. <strong>No debe vivir solo en el feed.</strong></div>
+        <div class="cost">Costo: <b>contenido bueno que no se convierte en activo comercial</b></div>
+      </div>
+
+      <div class="leak-card d3">
+        <span class="leak-num">Fuga 05</span>
+        <div class="leak-title">Página de producto sin presión comercial suficiente</div>
+        <div class="leak-body">Las playeras venden por diseño, identidad, fit, escasez, prueba social y confianza. Si la ficha solo muestra fotos y precio, <strong>deja mucho trabajo persuasivo sin hacer.</strong></div>
+        <div class="cost">Costo: <b>menos conversión en tráfico que ya tenía intención</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="email-wrap">
+    <div class="email-inner">
+      <div class="email-head">
+        <div>
+          <div class="tag gold reveal">Email marketing</div>
+          <h2 class="dark-h reveal">La lista propia es<br><span class="gold">el club que sí vende.</span></h2>
+        </div>
+        <p class="dark-sub reveal">
+          Bigmoy ya habla de comunidad y miembros. Eso debe convertirse en un sistema real de captura: <strong>VIP list, drops privados, acceso anticipado, carritos recuperados y recompra automatizada.</strong>
+        </p>
+      </div>
+
+      <div class="flow-grid reveal">
+        <div class="flow-card">
+          <span class="flow-n">Flow 01</span>
+          <div class="flow-title">Welcome / primera compra</div>
+          <div class="flow-text">Captura con incentivo y secuencia de 3 correos: identidad, best sellers y cierre con urgencia.</div>
+        </div>
+        <div class="flow-card">
+          <span class="flow-n">Flow 02</span>
+          <div class="flow-title">Carrito abandonado</div>
+          <div class="flow-text">Recordatorio visual del producto, objeciones de envío/talla y cierre con escasez.</div>
+        </div>
+        <div class="flow-card">
+          <span class="flow-n">Flow 03</span>
+          <div class="flow-title">Drop alert</div>
+          <div class="flow-text">Lista de espera antes del lanzamiento, acceso anticipado y secuencia de cierre.</div>
+        </div>
+        <div class="flow-card">
+          <span class="flow-n">Flow 04</span>
+          <div class="flow-title">Post-compra</div>
+          <div class="flow-text">Confirmación emocional, cuidado de prenda, solicitud de foto/UGC y siguiente compra.</div>
+        </div>
+        <div class="flow-card">
+          <span class="flow-n">Flow 05</span>
+          <div class="flow-title">VIP / recompra</div>
+          <div class="flow-text">Clientes que ya compraron reciben preventas, combos, packs y acceso a colección limitada.</div>
+        </div>
+      </div>
+
+      <div class="email-alert reveal">
+        El email no reemplaza los ads. <strong>Hace que los ads valgan más.</strong> Cada persona capturada deja de depender al 100% del algoritmo para volver a comprar.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="tag reveal">Mejores ads</div>
+    <h2 class="section-h reveal">Meta Ads no debería vender playeras.<br><span class="red">Debería vender pertenencia.</span></h2>
+    <p class="section-sub reveal">
+      Bigmoy tiene una estética muy clara: gym, streetwear, drop culture, colaboración, identidad mexicana y comunidad. Los ads tienen que explotar eso con estructura, no solo con catálogo.
+    </p>
+
+    <div class="ads-grid reveal">
+      <div class="ads-card bad">
+        <span class="ads-label">Ads débiles</span>
+        <div class="ads-title">Producto + precio + link</div>
+        <div class="ads-text">
+          Este enfoque depende demasiado de que la persona ya quiera comprar. Funciona con demanda caliente, pero desperdicia tráfico frío.
+        </div>
+        <div class="ads-stack">
+          <div class="ads-step"><b>Problema:</b> poco contexto</div>
+          <div class="ads-step"><b>Problema:</b> poco storytelling</div>
+          <div class="ads-step"><b>Problema:</b> poca segmentación por intención</div>
+        </div>
+      </div>
+
+      <div class="ads-card good">
+        <span class="ads-label">Ads fuertes</span>
+        <div class="ads-title">Identidad + prueba + urgencia</div>
+        <div class="ads-text">
+          Creativos con atletas, clientes, gym, outfit, unboxing, drop limitado y comparación de fit. Luego retargeting directo a producto y cierre por escasez.
+        </div>
+        <div class="ads-stack">
+          <div class="ads-step"><b>Frío:</b> UGC / lifestyle / problema de outfit</div>
+          <div class="ads-step"><b>Tibio:</b> best sellers / prueba social / colección</div>
+          <div class="ads-step"><b>Caliente:</b> carrito / descuento / envío gratis / cierre</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSANO PROOF -->
+  <section class="proof-section">
+    <div class="proof-inner">
+      <div class="tag reveal">El caso que lo respalda</div>
+      <h2 class="section-h reveal">Insano Clothing.<br><span class="red">Lo que pasa cuando se tapan las fugas.</span></h2>
+
+      <div class="proof-grid reveal">
+        <div class="proof-card">
+          <span class="proof-label">Temporada alta con sistema</span>
+          <div class="proof-num">15 días</div>
+          <div class="proof-desc">Vendieron lo que normalmente hacían en <strong>2 meses completos.</strong> El tráfico ya existía — el sistema lo capturó.</div>
+        </div>
+        <div class="proof-card">
+          <span class="proof-label">Canal de email automatizado</span>
+          <div class="proof-num">39%</div>
+          <div class="proof-desc"><strong>De las ventas mensuales</strong> generadas por flujos automáticos — sin tocar ads.</div>
+        </div>
+        <div class="proof-card">
+          <span class="proof-label">Resultado en Meta Ads</span>
+          <div class="proof-num">46×</div>
+          <div class="proof-desc">ROAS con creativos UGC + estructura correcta. <strong>El mismo presupuesto, múltiplo de resultado.</strong></div>
+        </div>
+      </div>
+
+      <div class="proof-quote reveal">
+        La marca ya tenía comunidad y producto. Solo faltaba el sistema. <strong>Bigmoy está en ese mismo punto — con el próximo drop como ventana de activación.</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="offer-band">
+    <div class="offer-inner">
+      <h2 class="offer-h reveal">El próximo drop no debería depender de suerte.</h2>
+      <p class="offer-text reveal">
+        Con una arquitectura correcta, Bigmoy puede lanzar cada colección con audiencia precalentada, lista VIP, anuncios separados por intención y correos que venden antes, durante y después del drop.
+        <br><br>
+        <strong>La diferencia no está en tener más tráfico. Está en dejar de desperdiciar el que ya tienen.</strong>
+      </p>
+    </div>
+  </section>
+
+  <section class="section-full">
+    <div class="inner">
+      <div class="tag reveal">Plan de intervención</div>
+      <h2 class="section-h reveal">6 acciones concretas<br><span class="red">para tapar las fugas.</span></h2>
+      <p class="section-sub reveal">
+        Primero se activan los puntos que más rápido recuperan dinero perdido: captura, carrito, retargeting y estructura para el próximo drop.
+      </p>
+
+      <div class="plan-list reveal">
+        <div class="plan-row">
+          <div class="plan-n">01 /</div>
+          <div>
+            <div class="plan-name">Instalar captura VIP para nuevos visitantes</div>
+            <div class="plan-sub">Pop-up estratégico: acceso anticipado, drop privado o incentivo por primera compra.</div>
+          </div>
+          <div class="pill red">Prioridad alta</div>
+        </div>
+
+        <div class="plan-row">
+          <div class="plan-n">02 /</div>
+          <div>
+            <div class="plan-name">Crear flujos base de email/SMS</div>
+            <div class="plan-sub">Welcome, carrito abandonado, checkout abandonado, post-compra, winback y drop alert.</div>
+          </div>
+          <div class="pill red">Prioridad alta</div>
+        </div>
+
+        <div class="plan-row locked">
+          <div class="plan-n">03 /</div>
+          <div>
+            <div class="plan-name">Reestructurar Meta Ads por temperatura</div>
+            <div class="plan-sub">Frío con UGC, tibio con prueba social, caliente con producto/carrito y recompra.</div>
+          </div>
+          <div class="pill en-llamada">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            En llamada
+          </div>
+        </div>
+
+        <div class="plan-row locked">
+          <div class="plan-n">04 /</div>
+          <div>
+            <div class="plan-name">Convertir UGC en activo de venta</div>
+            <div class="plan-sub">Unboxings, gym fits, pruebas de talla, clientes reales y creators para anuncios.</div>
+          </div>
+          <div class="pill en-llamada">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            En llamada
+          </div>
+        </div>
+
+        <div class="plan-row locked">
+          <div class="plan-n">05 /</div>
+          <div>
+            <div class="plan-name">Optimizar fichas de producto</div>
+            <div class="plan-sub">Fit, guía visual de talla, escasez, confianza, reseñas, bundles y envío gratis desde $999.</div>
+          </div>
+          <div class="pill en-llamada">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            En llamada
+          </div>
+        </div>
+
+        <div class="plan-row locked">
+          <div class="plan-n">06 /</div>
+          <div>
+            <div class="plan-name">Diseñar sistema de lanzamientos</div>
+            <div class="plan-sub">Pre-drop, waitlist, early access, lanzamiento, retargeting, cierre y post-drop.</div>
+          </div>
+          <div class="pill en-llamada">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            En llamada
+          </div>
+        </div>
+      </div>
+
+      <div class="plan-footer reveal">
+        <p>El objetivo no es “hacer marketing bonito”.<br><strong>El objetivo es que cada drop capture más demanda, recupere más carritos y genere más recompra.</strong></p>
+        <a href="https://wa.link/yl7fn7" class="btn sm black" target="_blank" rel="noopener">
+          Ver plan completo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="cta-eyebrow reveal">Diagnóstico para Bigmoy</div>
+    <h2 class="reveal">30 minutos.<br><span class="red">Fugas claras.</span><br>Plan accionable.</h2>
+    <p class="reveal">
+      Revisamos la tienda, el Instagram, los ads, los flujos y el próximo drop. Si no hay dinero escapándose en email, carrito, retargeting o recompra, lo digo directo.
+    </p>
+    <a href="https://wa.link/yl7fn7" class="btn light reveal" target="_blank" rel="noopener">
+      Quiero ver dónde está la fuga
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <div class="fine reveal">Auditoría estratégica · Email marketing · Meta Ads · Drops · Recompra</div>
+  </section>
+
+  <footer>
+    <span>Esaú Bonilla — Growth Digital</span>
+    <span>Diagnóstico confidencial · Bigmoy · 2025</span>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.06 });
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>
