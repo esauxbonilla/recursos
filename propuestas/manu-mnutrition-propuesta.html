@@ -291,22 +291,15 @@ nav.scrolled {
   margin-top: 6px;
 }
 
-.hero-photo-placeholder {
+.hero-photo-img {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-}
-.hero-photo-placeholder span {
-  font-family: 'DM Mono', monospace;
-  font-size: 13px;
-  letter-spacing: .28em;
-  text-transform: uppercase;
-  color: var(--muted-2);
-  text-align: center;
-  line-height: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 0;
+  opacity: .72;
 }
 
 .hero-stats-side {
@@ -894,6 +887,16 @@ nav.scrolled {
     linear-gradient(to bottom, transparent 55%, rgba(0,0,0,.85) 100%);
   z-index: 1;
 }
+.bio-frame-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 0;
+}
+
 .bio-frame-ph {
   font-family: 'DM Mono', monospace;
   font-size: 12px;
@@ -1301,9 +1304,7 @@ footer {
   <div class="hero-right">
     <div class="hero-right-bg"></div>
     <div class="hero-right-grid"></div>
-    <div class="hero-photo-placeholder">
-      <span>FOTO<br>MANU<br>MENDOZA</span>
-    </div>
+    <img class="hero-photo-img" src="../img/artem-beliaikin-L4vmA1-W00A-unsplash.jpg" alt="Atleta fitness">
     <div class="hero-vertical-text">Atleta · CEO · Coach</div>
     <div class="hero-stats-side">
       <div class="h-stat">
@@ -1568,7 +1569,7 @@ footer {
 <section class="bio" id="coach">
   <div class="bio-left">
     <div class="bio-frame">
-      <span class="bio-frame-ph">FOTO<br>MANU<br>MENDOZA</span>
+      <img class="bio-frame-img" src="../img/pexels-felix-young-449360607-16911590.jpg" alt="Manu Mendoza">
       <div class="bio-frame-info">
         <div class="bio-frame-name">Manu Mendoza</div>
         <div class="bio-frame-handle">@manumendoza.fit</div>
