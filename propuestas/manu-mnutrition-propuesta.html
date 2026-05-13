@@ -1,1332 +1,1792 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MNutrition — @manumendoza.fit</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MNutrition · @manumendoza.fit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --gold:       #D6A84B;
-    --gold-2:     #F4D27A;
-    --gold-soft:  rgba(214,168,75,0.10);
-    --gold-line:  rgba(214,168,75,0.28);
-    --gold-glow:  rgba(214,168,75,0.18);
-    --black:      #050505;
-    --dark:       #0A0A0A;
-    --dark-2:     #111111;
-    --dark-3:     #181818;
-    --dark-4:     #1F1F1F;
-    --ink:        #ECECEC;
-    --ink-2:      #BDBDBD;
-    --muted:      #8C8C8C;
-    --muted-2:    #575757;
-    --line:       rgba(255,255,255,0.08);
-    --white:      #FFFFFF;
-    --green:      #25D366;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background:
-      radial-gradient(ellipse at 80% 0%,   rgba(214,168,75,.22), transparent 38%),
-      radial-gradient(ellipse at 10% 60%,  rgba(214,168,75,.07), transparent 32%),
-      linear-gradient(180deg, #050505 0%, #0A0A0A 60%, #050505 100%);
-    color: var(--ink);
-    font-family: 'Inter', sans-serif;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: .55;
-    mix-blend-mode: screen;
-  }
-
-  a { color: inherit; text-decoration: none; }
-  .page { position: relative; z-index: 1; }
-  .wrap { width: min(1100px, calc(100% - 48px)); margin: 0 auto; }
-
-  /* ─── NAV ─── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 200;
-    height: 68px;
-    display: flex;
-    align-items: center;
-    background: rgba(5,5,5,0.82);
-    backdrop-filter: blur(18px);
-    border-bottom: 1px solid var(--gold-line);
-  }
-
-  nav .wrap {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 26px;
-    letter-spacing: 0.12em;
-    color: var(--white);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .nav-logo span {
-    color: var(--gold);
-  }
-
-  .nav-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 6px 14px;
-    border: 1px solid var(--gold-line);
-    background: var(--gold-soft);
-  }
-
-  .nav-cta {
-    background: var(--gold);
-    color: var(--black);
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    padding: 10px 20px;
-    transition: opacity 0.2s, transform 0.2s;
-    cursor: pointer;
-  }
-
-  .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
-
-  /* ─── HERO ─── */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 0 0 86px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(to bottom, rgba(5,5,5,0.28) 0%, rgba(5,5,5,0.15) 40%, rgba(5,5,5,0.92) 100%),
-      linear-gradient(135deg, #0A0A0A 0%, #111111 100%);
-    z-index: 0;
-  }
-
-  .hero-bg::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse at 70% 30%, rgba(214,168,75,.30), transparent 55%),
-      radial-gradient(ellipse at 20% 80%, rgba(214,168,75,.08), transparent 40%);
-  }
-
-  .hero-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(214,168,75,0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(214,168,75,0.05) 1px, transparent 1px);
-    background-size: 64px 64px;
-    mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%);
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 2;
-  }
-
-  .hero-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.34em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .hero-eyebrow::before {
-    content: '';
-    display: block;
-    width: 40px;
-    height: 1px;
-    background: var(--gold);
-  }
-
-  .hero h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(80px, 13vw, 168px);
-    font-weight: 400;
-    line-height: 0.85;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-    margin-bottom: 32px;
-  }
-
-  .hero h1 .outline {
-    color: transparent;
-    -webkit-text-stroke: 1.5px rgba(214,168,75,0.55);
-  }
-
-  .hero h1 .solid {
-    color: var(--white);
-    display: block;
-  }
-
-  .hero h1 .gold-fill {
-    color: var(--gold);
-    display: block;
-  }
-
-  .hero-desc {
-    max-width: 520px;
-    font-size: 16px;
-    color: var(--ink-2);
-    line-height: 1.7;
-    font-weight: 400;
-    margin-bottom: 44px;
-  }
-
-  .hero-desc strong { color: var(--white); font-weight: 600; }
-
-  .hero-actions {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-
-  .btn-gold {
-    background: var(--gold);
-    color: var(--black);
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    padding: 16px 32px;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
-    border: none;
-  }
-
-  .btn-gold:hover {
-    opacity: 0.90;
-    transform: translateY(-2px);
-    box-shadow: 0 16px 40px rgba(214,168,75,0.30);
-  }
-
-  .btn-ghost {
-    color: var(--ink-2);
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: color 0.2s;
-  }
-
-  .btn-ghost:hover { color: var(--gold); }
-
-  .hero-stats {
-    position: absolute;
-    right: 0;
-    bottom: 86px;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .hero-stat {
-    background: rgba(10,10,10,0.72);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--gold-line);
-    border-right: none;
-    padding: 18px 28px;
-    text-align: right;
-  }
-
-  .hero-stat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 42px;
-    line-height: 1;
-    color: var(--gold);
-    letter-spacing: 0.02em;
-  }
-
-  .hero-stat-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    margin-top: 4px;
-  }
-
-  /* ─── SECTION COMMONS ─── */
-  section { padding: 96px 0; }
-
-  .section-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.30em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .section-tag::before {
-    content: '';
-    display: block;
-    width: 28px;
-    height: 1px;
-    background: var(--gold);
-    flex-shrink: 0;
-  }
-
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 7vw, 84px);
-    font-weight: 400;
-    line-height: 0.9;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-
-  .section-sub {
-    font-size: 16px;
-    color: var(--muted);
-    line-height: 1.65;
-    max-width: 560px;
-  }
-
-  .gold-line-divider {
-    width: 48px;
-    height: 2px;
-    background: var(--gold);
-    margin: 20px 0 40px;
-  }
-
-  /* ─── SERVICES ─── */
-  .services { background: var(--dark); }
-
-  .services-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 40px;
-    margin-bottom: 56px;
-    flex-wrap: wrap;
-  }
-
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2px;
-  }
-
-  .service-card {
-    background: var(--dark-2);
-    border: 1px solid var(--line);
-    padding: 40px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.3s, background 0.3s;
-  }
-
-  .service-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 3px;
-    background: linear-gradient(90deg, var(--gold), transparent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.35s ease;
-  }
-
-  .service-card:hover {
-    border-color: var(--gold-line);
-    background: var(--dark-3);
-  }
-
-  .service-card:hover::before { transform: scaleX(1); }
-
-  .service-icon {
-    width: 48px;
-    height: 48px;
-    border: 1px solid var(--gold-line);
-    background: var(--gold-soft);
-    display: grid;
-    place-items: center;
-    margin-bottom: 28px;
-    font-size: 22px;
-  }
-
-  .service-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 72px;
-    color: rgba(214,168,75,0.07);
-    position: absolute;
-    right: 24px;
-    bottom: 8px;
-    line-height: 1;
-    pointer-events: none;
-  }
-
-  .service-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 32px;
-    letter-spacing: 0.02em;
-    margin-bottom: 14px;
-    color: var(--white);
-  }
-
-  .service-desc {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.7;
-  }
-
-  .service-tag {
-    display: inline-block;
-    margin-top: 20px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--gold);
-    border: 1px solid var(--gold-line);
-    padding: 5px 10px;
-    background: var(--gold-soft);
-  }
-
-  /* ─── BIO ─── */
-  .bio-section { padding: 96px 0; }
-
-  .bio-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 80px;
-    align-items: center;
-  }
-
-  .bio-visual {
-    position: relative;
-  }
-
-  .bio-frame {
-    aspect-ratio: 3/4;
-    background: var(--dark-2);
-    border: 1px solid var(--gold-line);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .bio-frame::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse at 50% 30%, rgba(214,168,75,.18), transparent 60%),
-      linear-gradient(to bottom, transparent 50%, rgba(5,5,5,0.8) 100%);
-    z-index: 1;
-  }
-
-  .bio-frame-placeholder {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    color: var(--gold-line);
-    letter-spacing: 0.3em;
-    text-align: center;
-    z-index: 2;
-    position: relative;
-  }
-
-  .bio-corner {
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    border-color: var(--gold);
-    border-style: solid;
-  }
-
-  .bio-corner.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
-  .bio-corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
-
-  .bio-badge {
-    position: absolute;
-    bottom: 28px;
-    left: -20px;
-    background: var(--dark-3);
-    border: 1px solid var(--gold-line);
-    padding: 16px 24px;
-    z-index: 3;
-  }
-
-  .bio-badge-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    color: var(--white);
-    letter-spacing: 0.06em;
-  }
-
-  .bio-badge-handle {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--gold);
-    letter-spacing: 0.14em;
-    margin-top: 2px;
-  }
-
-  .bio-content {}
-
-  .bio-text {
-    font-size: 16px;
-    color: var(--ink-2);
-    line-height: 1.75;
-    margin-bottom: 40px;
-  }
-
-  .bio-text strong { color: var(--white); font-weight: 600; }
-
-  .certs-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    margin-bottom: 40px;
-  }
-
-  .cert-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
-    background: var(--dark-2);
-    border: 1px solid var(--line);
-    transition: border-color 0.2s;
-  }
-
-  .cert-item:hover { border-color: var(--gold-line); }
-
-  .cert-dot {
-    width: 6px;
-    height: 6px;
-    background: var(--gold);
-    flex-shrink: 0;
-  }
-
-  .cert-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ink);
-    flex: 1;
-  }
-
-  .cert-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    color: var(--gold);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .bio-affiliates {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .affiliate-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    padding: 8px 14px;
-    border: 1px solid var(--line);
-    color: var(--muted);
-    transition: border-color 0.2s, color 0.2s;
-  }
-
-  .affiliate-tag:hover { border-color: var(--gold-line); color: var(--gold); }
-
-  /* ─── PROCESO ─── */
-  .proceso { background: var(--dark); }
-
-  .proceso-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    margin-top: 56px;
-  }
-
-  .paso-card {
-    background: var(--dark-2);
-    border: 1px solid var(--line);
-    padding: 36px 28px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .paso-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 86px;
-    color: rgba(214,168,75,0.08);
-    line-height: 1;
-    position: absolute;
-    right: 12px;
-    top: 8px;
-    pointer-events: none;
-  }
-
-  .paso-index {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--gold);
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-
-  .paso-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 0.02em;
-    color: var(--white);
-    margin-bottom: 12px;
-  }
-
-  .paso-desc {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.65;
-  }
-
-  .paso-connector {
-    display: none;
-  }
-
-  /* ─── TESTIMONIOS ─── */
-  .testimonios { padding: 96px 0; }
-
-  .testi-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    margin-top: 56px;
-  }
-
-  .testi-card {
-    background: var(--dark-2);
-    border: 1px solid var(--line);
-    padding: 36px 32px;
-    position: relative;
-    transition: border-color 0.25s;
-  }
-
-  .testi-card:hover { border-color: var(--gold-line); }
-
-  .testi-quote {
-    font-size: 56px;
-    font-family: 'Bebas Neue', sans-serif;
-    color: var(--gold);
-    line-height: 1;
-    margin-bottom: 16px;
-    opacity: 0.4;
-  }
-
-  .testi-text {
-    font-size: 15px;
-    color: var(--ink-2);
-    line-height: 1.7;
-    margin-bottom: 28px;
-    font-style: italic;
-  }
-
-  .testi-stars {
-    color: var(--gold);
-    font-size: 14px;
-    letter-spacing: 3px;
-    margin-bottom: 20px;
-  }
-
-  .testi-footer {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding-top: 20px;
-    border-top: 1px solid var(--line);
-  }
-
-  .testi-avatar {
-    width: 42px;
-    height: 42px;
-    border: 1px solid var(--gold-line);
-    background: var(--dark-3);
-    display: grid;
-    place-items: center;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    color: var(--gold);
-    flex-shrink: 0;
-  }
-
-  .testi-handle {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--gold);
-    letter-spacing: 0.12em;
-  }
-
-  .testi-result {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 2px;
-  }
-
-  /* ─── FAQ ─── */
-  .faq { background: var(--dark); }
-
-  .faq-list {
-    margin-top: 56px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .faq-item {
-    background: var(--dark-2);
-    border: 1px solid var(--line);
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-
-  .faq-item.open { border-color: var(--gold-line); }
-
-  .faq-q {
-    width: 100%;
-    background: transparent;
-    border: none;
-    color: var(--ink);
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    padding: 24px 28px;
-    text-align: left;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 24px;
-    transition: color 0.2s;
-  }
-
-  .faq-q:hover { color: var(--gold); }
-  .faq-item.open .faq-q { color: var(--gold); }
-
-  .faq-icon {
-    width: 28px;
-    height: 28px;
-    border: 1px solid var(--gold-line);
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    font-size: 16px;
-    color: var(--gold);
-    transition: transform 0.25s;
-  }
-
-  .faq-item.open .faq-icon { transform: rotate(45deg); }
-
-  .faq-a {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.35s ease, padding 0.25s ease;
-    padding: 0 28px;
-  }
-
-  .faq-item.open .faq-a {
-    max-height: 300px;
-    padding: 0 28px 24px;
-  }
-
-  .faq-a p {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.75;
-    border-top: 1px solid var(--line);
-    padding-top: 20px;
-  }
-
-  /* ─── CTA FINAL ─── */
-  .cta-final {
-    padding: 120px 0;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .cta-final::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(214,168,75,.14), transparent 65%);
-    pointer-events: none;
-  }
-
-  .cta-final-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 28px;
-  }
-
-  .cta-final-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(56px, 8vw, 110px);
-    line-height: 0.88;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-    margin-bottom: 28px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .cta-final-title .outline {
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(214,168,75,0.40);
-  }
-
-  .cta-final-sub {
-    font-size: 16px;
-    color: var(--muted);
-    max-width: 440px;
-    margin: 0 auto 48px;
-    line-height: 1.65;
-  }
-
-  .cta-final-actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-    flex-wrap: wrap;
-    position: relative;
-    z-index: 1;
-  }
-
-  .btn-wa {
-    background: var(--green);
-    color: var(--white);
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    padding: 16px 32px;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
-  }
-
-  .btn-wa:hover {
-    opacity: 0.90;
-    transform: translateY(-2px);
-    box-shadow: 0 14px 36px rgba(37,211,102,0.25);
-  }
-
-  /* ─── FOOTER ─── */
-  footer {
-    border-top: 1px solid var(--gold-line);
-    padding: 40px 0;
-    background: var(--black);
-  }
-
-  footer .wrap {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 24px;
-    flex-wrap: wrap;
-  }
-
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 0.12em;
-    color: var(--ink);
-  }
-
-  .footer-logo span { color: var(--gold); }
-
-  .footer-copy {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted-2);
-    letter-spacing: 0.10em;
-  }
-
-  /* ─── WHATSAPP FLOAT ─── */
-  .wa-float {
-    position: fixed;
-    bottom: 28px;
-    right: 28px;
-    z-index: 300;
-    width: 54px;
-    height: 54px;
-    background: var(--green);
-    display: grid;
-    place-items: center;
-    box-shadow: 0 8px 28px rgba(37,211,102,0.35);
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-
-  .wa-float:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 36px rgba(37,211,102,0.40);
-  }
-
-  .wa-float svg { width: 26px; height: 26px; fill: white; }
-
-  /* ─── ANIMATIONS ─── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .hero-content > * {
-    animation: fadeUp 0.7s ease both;
-  }
-
-  .hero-content > *:nth-child(1) { animation-delay: 0.1s; }
-  .hero-content > *:nth-child(2) { animation-delay: 0.22s; }
-  .hero-content > *:nth-child(3) { animation-delay: 0.34s; }
-  .hero-content > *:nth-child(4) { animation-delay: 0.44s; }
-
-  /* ─── RESPONSIVE ─── */
-  @media (max-width: 960px) {
-    .services-grid { grid-template-columns: 1fr; }
-    .bio-grid { grid-template-columns: 1fr; gap: 48px; }
-    .bio-visual { display: none; }
-    .proceso-grid { grid-template-columns: repeat(2, 1fr); }
-    .testi-grid { grid-template-columns: 1fr; }
-  }
-
-  @media (max-width: 640px) {
-    .wrap { width: calc(100% - 32px); }
-    section { padding: 72px 0; }
-    nav { height: 60px; }
-    .nav-tag { display: none; }
-    .proceso-grid { grid-template-columns: 1fr; }
-    .hero-stats { display: none; }
-    .hero { padding-bottom: 64px; }
-  }
+/* ─── RESET ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+img { display: block; max-width: 100%; }
+
+/* ─── TOKENS ─── */
+:root {
+  --black:       #000000;
+  --dark:        #0C0C0C;
+  --dark-2:      #151515;
+  --dark-3:      #1E1E1E;
+  --gold:        #C9A84C;
+  --gold-2:      #E8C87A;
+  --gold-pale:   rgba(201,168,76,.11);
+  --gold-border: rgba(201,168,76,.22);
+  --cream:       #F0E8D8;
+  --white:       #FFFFFF;
+  --muted:       #7A7A7A;
+  --muted-2:     #484848;
+  --green:       #25D366;
+  --line:        rgba(255,255,255,.07);
+}
+
+/* ─── GLOBAL ─── */
+body {
+  background: var(--black);
+  color: var(--cream);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── CUSTOM CURSOR ─── */
+#cursor-dot {
+  position: fixed;
+  top: 0; left: 0;
+  width: 8px; height: 8px;
+  background: var(--gold);
+  border-radius: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .15s, height .15s, background .15s;
+}
+#cursor-ring {
+  position: fixed;
+  top: 0; left: 0;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(201,168,76,.5);
+  border-radius: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform .12s ease, width .2s, height .2s, border-color .2s;
+}
+body.cursor-hover #cursor-dot { width: 14px; height: 14px; background: var(--gold-2); }
+body.cursor-hover #cursor-ring { width: 52px; height: 52px; border-color: var(--gold); }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 500;
+  padding: 0 clamp(24px,5vw,72px);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background .4s, border-color .4s;
+  border-bottom: 1px solid transparent;
+}
+nav.scrolled {
+  background: rgba(0,0,0,.88);
+  backdrop-filter: blur(20px);
+  border-bottom-color: var(--gold-border);
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: .14em;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.nav-logo .m { color: var(--gold); }
+.nav-logo .rest { color: var(--white); }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.nav-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color .2s;
+}
+.nav-link:hover { color: var(--gold); }
+.nav-cta-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--gold);
+  padding: 11px 24px;
+  transition: opacity .2s, transform .2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-cta-btn:hover { opacity: .85; transform: translateY(-1px); }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(100px,12vh,140px) clamp(24px,5vw,72px) clamp(60px,8vh,90px);
+  position: relative;
+  z-index: 2;
+}
+
+.hero-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .30em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  animation: revealUp .8s .2s ease both;
+}
+.hero-label::before {
+  content: '';
+  width: 32px; height: 1px;
+  background: var(--gold);
+}
+
+.hero-h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(86px, 12.5vw, 178px);
+  line-height: .84;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+  margin-bottom: 36px;
+  overflow: hidden;
+}
+.hero-h1 .line-wrap {
+  overflow: hidden;
+  display: block;
+}
+.hero-h1 .line {
+  display: block;
+  opacity: 0;
+  animation: revealUp .7s ease both;
+}
+.hero-h1 .line:nth-child(1) { animation-delay: .3s; }
+.hero-h1 .line:nth-child(2) { animation-delay: .42s; color: var(--gold); }
+.hero-h1 .line:nth-child(3) { animation-delay: .54s; color: transparent; -webkit-text-stroke: 1.5px rgba(201,168,76,.5); }
+
+.hero-tagline {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(16px, 1.8vw, 22px);
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 420px;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: revealUp .7s .64s ease both;
+}
+.hero-tagline strong { color: var(--cream); font-style: normal; }
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  opacity: 0;
+  animation: revealUp .7s .74s ease both;
+}
+.btn-gold {
+  background: var(--gold);
+  color: var(--black);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: 18px 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: opacity .2s, transform .2s, box-shadow .25s;
+  border: 1px solid transparent;
+}
+.btn-gold:hover {
+  opacity: .88;
+  transform: translateY(-2px);
+  box-shadow: 0 18px 48px rgba(201,168,76,.28);
+}
+.btn-text-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color .2s;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 3px;
+}
+.btn-text-link:hover { color: var(--cream); border-bottom-color: var(--gold-border); }
+
+/* Hero right panel */
+.hero-right {
+  position: relative;
+  background: var(--dark-2);
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeIn 1s .5s ease both;
+}
+
+.hero-right-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 60% 30%, rgba(201,168,76,.22), transparent 55%),
+    radial-gradient(ellipse at 20% 80%, rgba(201,168,76,.06), transparent 40%),
+    linear-gradient(135deg, #141414 0%, #0C0C0C 100%);
+}
+
+.hero-right-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.hero-right-name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px;
+  background: linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 100%);
+  z-index: 2;
+}
+.hero-right-name h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: .06em;
+  color: var(--white);
+  line-height: 1;
+}
+.hero-right-name p {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: .18em;
+  margin-top: 6px;
+}
+
+.hero-photo-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+.hero-photo-placeholder span {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  text-align: center;
+  line-height: 2;
+}
+
+.hero-stats-side {
+  position: absolute;
+  right: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 3;
+}
+.h-stat {
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--gold-border);
+  padding: 16px 24px;
+  text-align: right;
+}
+.h-stat-n {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 38px;
+  line-height: 1;
+  color: var(--gold);
+  letter-spacing: .02em;
+}
+.h-stat-l {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.hero-vertical-text {
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .38em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  white-space: nowrap;
+  z-index: 3;
+}
+
+/* Diagonal separator */
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent 0%, var(--gold-border) 25%, var(--gold) 50%, var(--gold-border) 75%, transparent 100%);
+  z-index: 10;
+  transform: skewX(-3deg);
+}
+
+/* ─── MARQUEE ─── */
+.marquee-strip {
+  background: var(--gold);
+  padding: 14px 0;
+  overflow: hidden;
+  display: flex;
+}
+.marquee-track {
+  display: flex;
+  gap: 0;
+  animation: marqueeScroll 22s linear infinite;
+  white-space: nowrap;
+}
+.marquee-track span {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--black);
+  padding: 0 40px;
+  font-weight: 500;
+}
+.marquee-track .dot {
+  color: rgba(0,0,0,.35);
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+}
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─── MANIFESTO ─── */
+.manifesto {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px clamp(24px,6vw,100px);
+  background: var(--dark);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+.manifesto::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(201,168,76,.10), transparent 60%);
+  pointer-events: none;
+}
+.manifesto-quote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(32px, 5.5vw, 78px);
+  line-height: 1.18;
+  color: var(--cream);
+  max-width: 1000px;
+  position: relative;
+  z-index: 1;
+}
+.manifesto-quote em {
+  color: var(--gold);
+  font-style: italic;
+}
+.manifesto-author {
+  margin-top: 40px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  position: relative;
+  z-index: 1;
+}
+.manifesto-author::before, .manifesto-author::after {
+  content: '';
+  width: 40px; height: 1px;
+  background: var(--gold-border);
+}
+
+/* ─── SERVICIOS ─── */
+.servicios { background: var(--black); padding: 0; }
+
+.section-intro {
+  padding: 96px clamp(24px,5vw,72px) 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 40px;
+  border-bottom: 1px solid var(--line);
+}
+.section-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.section-tag::before {
+  content: '';
+  width: 24px; height: 1px;
+  background: var(--gold);
+}
+.section-h {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 7vw, 92px);
+  line-height: .88;
+  letter-spacing: -.01em;
+  color: var(--white);
+}
+.section-sub {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 400px;
+  flex-shrink: 0;
+}
+
+.service-row {
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr;
+  align-items: center;
+  padding: 52px clamp(24px,5vw,72px);
+  border-bottom: 1px solid var(--line);
+  gap: 48px;
+  transition: background .3s;
+  position: relative;
+  overflow: hidden;
+}
+.service-row::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: var(--gold-pale);
+  transition: width .4s ease;
+}
+.service-row:hover::before { width: 100%; }
+.service-row:hover { background: transparent; }
+
+.service-row-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(86px, 10vw, 128px);
+  color: rgba(201,168,76,.12);
+  line-height: 1;
+  letter-spacing: -.02em;
+  transition: color .3s, transform .3s;
+  position: relative;
+  z-index: 1;
+}
+.service-row:hover .service-row-num {
+  color: rgba(201,168,76,.28);
+  transform: scale(1.04);
+}
+
+.service-row-content { position: relative; z-index: 1; }
+.service-row-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px, 4vw, 46px);
+  letter-spacing: .02em;
+  color: var(--white);
+  margin-bottom: 12px;
+  transition: color .2s;
+}
+.service-row:hover .service-row-title { color: var(--gold-2); }
+
+.service-row-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.72;
+}
+.service-row-tag {
+  display: inline-flex;
+  margin-top: 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding: 5px 12px;
+  border: 1px solid var(--gold-border);
+  background: var(--gold-pale);
+}
+
+.service-row-icon {
+  font-size: 48px;
+  position: relative;
+  z-index: 1;
+  opacity: .7;
+  transition: opacity .2s, transform .3s;
+}
+.service-row:hover .service-row-icon { opacity: 1; transform: scale(1.1); }
+
+/* ─── STATS ─── */
+.stats-section {
+  background: var(--dark);
+  padding: 100px clamp(24px,5vw,72px);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+}
+.stat-block {
+  padding: 48px 0 32px;
+  text-align: center;
+  position: relative;
+}
+.stat-block + .stat-block::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 20%; bottom: 20%;
+  width: 1px;
+  background: var(--line);
+}
+.stat-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(72px, 9vw, 128px);
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--white);
+}
+.stat-number .plus { color: var(--gold); }
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 12px;
+}
+
+/* ─── PRICING ─── */
+.pricing {
+  background: var(--black);
+  padding: 96px clamp(24px,5vw,72px) 120px;
+}
+.pricing-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: end;
+  margin-bottom: 72px;
+}
+.pricing-note {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.pricing-note strong { color: var(--cream); }
+
+.plans-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  gap: 2px;
+  align-items: end;
+}
+
+.plan-card {
+  background: var(--dark-2);
+  border: 1px solid var(--line);
+  padding: 40px 36px;
+  position: relative;
+  transition: border-color .3s;
+}
+.plan-card:hover { border-color: var(--gold-border); }
+
+.plan-card.featured {
+  background: var(--dark-3);
+  border: 1px solid var(--gold);
+  padding-top: 56px;
+  padding-bottom: 56px;
+  transform: translateY(-24px);
+  box-shadow: 0 24px 72px rgba(201,168,76,.12);
+}
+.plan-featured-badge {
+  position: absolute;
+  top: -1px; left: -1px; right: -1px;
+  background: var(--gold);
+  padding: 10px;
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--black);
+  font-weight: 500;
+}
+
+.plan-tier {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.plan-duration {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 5vw, 68px);
+  line-height: 1;
+  color: var(--gold);
+  letter-spacing: .01em;
+  margin-bottom: 24px;
+}
+.plan-divider {
+  height: 1px;
+  background: var(--line);
+  margin-bottom: 24px;
+}
+.plan-card.featured .plan-divider { background: var(--gold-border); }
+
+.plan-price-mxn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(36px, 4vw, 52px);
+  color: var(--white);
+  line-height: 1;
+}
+.plan-price-usd {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 6px;
+  letter-spacing: .08em;
+}
+
+.plan-features {
+  list-style: none;
+  margin: 28px 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.plan-features li {
+  font-size: 13px;
+  color: var(--muted);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  line-height: 1.5;
+}
+.plan-features li::before {
+  content: '—';
+  color: var(--gold);
+  flex-shrink: 0;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+}
+.plan-card.featured .plan-features li { color: var(--cream); }
+
+.plan-cta {
+  width: 100%;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: 16px;
+  border: 1px solid var(--gold-border);
+  color: var(--gold);
+  background: transparent;
+  transition: background .25s, color .25s, transform .2s;
+  display: block;
+  text-align: center;
+}
+.plan-cta:hover { background: var(--gold-pale); transform: translateY(-1px); }
+
+.plan-card.featured .plan-cta {
+  background: var(--gold);
+  color: var(--black);
+  border-color: var(--gold);
+}
+.plan-card.featured .plan-cta:hover { opacity: .9; }
+
+.pricing-disclaimer {
+  margin-top: 40px;
+  font-size: 12px;
+  color: var(--muted-2);
+  line-height: 1.6;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ─── TESTIMONIOS ─── */
+.testimonios {
+  background: var(--dark);
+  padding: 96px 0;
+  overflow: hidden;
+}
+.testimonios .section-intro {
+  padding-bottom: 0;
+  border-bottom: none;
+  padding-left: clamp(24px,5vw,72px);
+  padding-right: clamp(24px,5vw,72px);
+  margin-bottom: 56px;
+}
+
+.testi-drag {
+  display: flex;
+  gap: 3px;
+  padding: 0 clamp(24px,5vw,72px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+.testi-drag::-webkit-scrollbar { display: none; }
+.testi-drag.dragging { cursor: grabbing; }
+
+.testi-card {
+  min-width: 520px;
+  background: var(--dark-2);
+  border: 1px solid var(--line);
+  padding: 48px 44px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  transition: border-color .25s;
+  position: relative;
+}
+.testi-card:hover { border-color: var(--gold-border); }
+
+.testi-mark {
+  font-family: 'Playfair Display', serif;
+  font-size: 96px;
+  line-height: .7;
+  color: var(--gold);
+  opacity: .18;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+.testi-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--cream);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+.testi-stars { color: var(--gold); font-size: 15px; letter-spacing: 4px; margin-bottom: 24px; }
+.testi-foot {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.testi-av {
+  width: 46px; height: 46px;
+  background: var(--dark-3);
+  border: 1px solid var(--gold-border);
+  display: grid;
+  place-items: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+.testi-handle {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: .12em;
+}
+.testi-result { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+.testi-nav {
+  display: flex;
+  gap: 10px;
+  padding: 28px clamp(24px,5vw,72px) 0;
+}
+.testi-btn {
+  width: 48px; height: 48px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  transition: border-color .2s, color .2s, background .2s;
+}
+.testi-btn:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-pale); }
+
+/* ─── BIO / COACH ─── */
+.bio {
+  background: var(--black);
+  padding: 100px clamp(24px,5vw,72px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.bio-left { position: relative; }
+
+.bio-frame {
+  aspect-ratio: 3/4;
+  background: var(--dark-2);
+  border: 1px solid var(--gold-border);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bio-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 25%, rgba(201,168,76,.18), transparent 55%),
+    linear-gradient(to bottom, transparent 55%, rgba(0,0,0,.85) 100%);
+  z-index: 1;
+}
+.bio-frame-ph {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: .28em;
+  color: var(--muted-2);
+  text-align: center;
+  line-height: 2.2;
+  z-index: 2;
+  position: relative;
+}
+.bio-frame-info {
+  position: absolute;
+  bottom: 28px;
+  left: 24px;
+  right: 24px;
+  z-index: 3;
+}
+.bio-frame-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  letter-spacing: .04em;
+  color: var(--white);
+}
+.bio-frame-handle {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: .16em;
+  margin-top: 4px;
+}
+
+.bio-accent {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 120px;
+  height: 120px;
+  border: 1px solid var(--gold-border);
+  background: var(--gold-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+.bio-accent-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 44px;
+  color: var(--gold);
+  line-height: 1;
+}
+.bio-accent-txt {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .14em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.bio-right { display: flex; flex-direction: column; }
+.bio-intro {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.78;
+  margin-bottom: 40px;
+}
+.bio-intro strong { color: var(--cream); font-weight: 600; }
+
+.bio-certs {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 40px;
+}
+.bio-cert {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--dark-2);
+  border: 1px solid var(--line);
+  transition: border-color .2s, background .2s;
+}
+.bio-cert:hover { border-color: var(--gold-border); background: var(--dark-3); }
+.bio-cert-dot {
+  width: 5px; height: 5px;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+.bio-cert-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cream);
+  flex: 1;
+}
+.bio-cert-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .14em;
+  color: var(--gold);
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border: 1px solid var(--gold-border);
+  background: var(--gold-pale);
+}
+
+.bio-affiliates {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.bio-affiliate {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  transition: border-color .2s, color .2s;
+}
+.bio-affiliate:hover { border-color: var(--gold-border); color: var(--gold); }
+
+/* ─── FAQ ─── */
+.faq {
+  background: var(--dark);
+  padding: 96px clamp(24px,5vw,72px);
+}
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 80px;
+  align-items: start;
+}
+.faq-sticky {
+  position: sticky;
+  top: 100px;
+}
+.faq-list { display: flex; flex-direction: column; gap: 2px; }
+.faq-item {
+  background: var(--dark-2);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.faq-item.open { border-color: var(--gold-border); }
+.faq-q {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--cream);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 24px 28px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  transition: color .2s;
+}
+.faq-q:hover, .faq-item.open .faq-q { color: var(--gold); }
+.faq-icon {
+  width: 26px; height: 26px;
+  border: 1px solid var(--gold-border);
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  color: var(--gold);
+  flex-shrink: 0;
+  transition: transform .25s;
+}
+.faq-item.open .faq-icon { transform: rotate(45deg); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .25s ease; padding: 0 28px; }
+.faq-item.open .faq-a { max-height: 280px; padding: 0 28px 24px; }
+.faq-a p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.78;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+
+/* ─── CTA FINAL ─── */
+.cta-final {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--black);
+  padding: 80px clamp(24px,5vw,72px);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-final::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 70vw; height: 70vw;
+  max-width: 900px; max-height: 900px;
+  background: radial-gradient(circle, rgba(201,168,76,.10), transparent 60%);
+  pointer-events: none;
+}
+.cta-final-inner { position: relative; z-index: 1; }
+.cta-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+.cta-eyebrow::before, .cta-eyebrow::after {
+  content: '';
+  width: 40px; height: 1px;
+  background: var(--gold-border);
+}
+.cta-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(72px, 12vw, 160px);
+  line-height: .86;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+.cta-title .line-1 { display: block; color: var(--white); }
+.cta-title .line-2 { display: block; color: transparent; -webkit-text-stroke: 1.5px rgba(201,168,76,.45); }
+.cta-title .line-3 { display: block; color: var(--gold); }
+
+.cta-sub {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(16px, 2vw, 22px);
+  color: var(--muted);
+  margin-bottom: 56px;
+  max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.55;
+}
+.cta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.btn-wa {
+  background: var(--green);
+  color: var(--white);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 18px 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  transition: opacity .2s, transform .2s, box-shadow .25s;
+}
+.btn-wa:hover {
+  opacity: .9;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(37,211,102,.25);
+}
+.btn-wa svg { width: 22px; height: 22px; fill: white; flex-shrink: 0; }
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--gold-border);
+  background: var(--black);
+  padding: 40px clamp(24px,5vw,72px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: .12em;
+}
+.footer-logo .m { color: var(--gold); }
+.footer-copy {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted-2);
+  letter-spacing: .10em;
+}
+
+/* ─── WA FLOAT ─── */
+.wa-float {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  z-index: 400;
+  width: 56px; height: 56px;
+  background: var(--green);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 32px rgba(37,211,102,.32);
+  transition: transform .2s, box-shadow .2s;
+}
+.wa-float:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(37,211,102,.38); }
+.wa-float svg { width: 26px; height: 26px; fill: white; }
+
+/* ─── ANIMATIONS ─── */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .65s ease, transform .65s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: .1s; }
+.reveal-delay-2 { transition-delay: .2s; }
+.reveal-delay-3 { transition-delay: .3s; }
+.reveal-delay-4 { transition-delay: .4s; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .hero::after { display: none; }
+  .bio { grid-template-columns: 1fr; }
+  .bio-left { display: none; }
+  .faq-grid { grid-template-columns: 1fr; gap: 48px; }
+  .faq-sticky { position: static; }
+  .plans-wrap { grid-template-columns: 1fr; gap: 16px; }
+  .plan-card.featured { transform: none; }
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+}
+
+@media (max-width: 680px) {
+  .service-row { grid-template-columns: 80px 1fr; }
+  .service-row-icon { display: none; }
+  .testi-card { min-width: 320px; }
+  .section-intro { flex-direction: column; align-items: flex-start; }
+  .pricing-head { grid-template-columns: 1fr; }
+  nav .nav-right .nav-link { display: none; }
+}
 </style>
 </head>
 <body>
-<div class="page">
 
-  <!-- NAV -->
-  <nav>
-    <div class="wrap">
-      <div class="nav-logo">M<span>NUTRITION</span></div>
-      <div style="display:flex;align-items:center;gap:14px;">
-        <span class="nav-tag">@manumendoza.fit</span>
-        <a class="nav-cta" href="https://wa.me/52XXXXXXXXXX" target="_blank">Empezar →</a>
-      </div>
-    </div>
-  </nav>
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-bg">
-      <div class="hero-grid"></div>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-num">4+</div>
-        <div class="hero-stat-label">Certificaciones</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">500+</div>
-        <div class="hero-stat-label">Clientes</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">100%</div>
-        <div class="hero-stat-label">En línea</div>
-      </div>
-    </div>
-    <div class="wrap">
-      <div class="hero-content">
-        <p class="hero-eyebrow">Asesoría de élite · MNutrition</p>
-        <h1>
-          <span class="solid">Tu mejor</span>
-          <span class="outline">versión</span>
-          <span class="gold-fill">empieza</span>
-          <span class="solid">aquí.</span>
-        </h1>
-        <p class="hero-desc">
-          <strong>Nutrición. Entrenamiento. Resultados reales.</strong><br>
-          Asesoría 100% personalizada con Manu Mendoza — CEO de MNutrition, atleta competitivo y referente en preparación física.
-        </p>
-        <div class="hero-actions">
-          <a class="btn-gold" href="https://wa.me/52XXXXXXXXXX" target="_blank">
-            Quiero asesoría →
-          </a>
-          <a class="btn-ghost" href="#servicios">Ver programas ↓</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SERVICIOS -->
-  <section class="services" id="servicios">
-    <div class="wrap">
-      <div class="services-head">
-        <div>
-          <p class="section-tag">Programas</p>
-          <h2 class="section-title">Todo lo que<br>necesitas.</h2>
-          <div class="gold-line-divider"></div>
-        </div>
-        <p class="section-sub">Cada programa es diseñado desde cero para tu cuerpo, objetivos y estilo de vida. Sin planes genéricos.</p>
-      </div>
-      <div class="services-grid">
-        <div class="service-card">
-          <div class="service-icon">🥩</div>
-          <div class="service-title">Plan Alimenticio</div>
-          <p class="service-desc">Nutrición completamente personalizada adaptada a tus objetivos, restricciones y horarios. Ajustes cada 15 días según tu progreso.</p>
-          <span class="service-tag">Nutrición deportiva</span>
-          <div class="service-num">01</div>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">🏋️</div>
-          <div class="service-title">Plan de Entrenamiento</div>
-          <p class="service-desc">Rutinas diseñadas específicamente para ti, con videos demostrativos de cada ejercicio, técnica y ajustes mensuales.</p>
-          <span class="service-tag">Fuerza & musculación</span>
-          <div class="service-num">02</div>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">💊</div>
-          <div class="service-title">Guía de Suplementación</div>
-          <p class="service-desc">Recomendaciones individualizadas basadas en tus objetivos y condición. Solo lo que realmente necesitas, sin gastos innecesarios.</p>
-          <span class="service-tag">Evidencia basada</span>
-          <div class="service-num">03</div>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">📲</div>
-          <div class="service-title">Atención 24/7 WhatsApp</div>
-          <p class="service-desc">Canal directo con Manu. Chequeos y actualizaciones cada 15 días, soporte continuo para resolver dudas en tiempo real.</p>
-          <span class="service-tag">Acceso directo</span>
-          <div class="service-num">04</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BIO -->
-  <section class="bio-section" id="manu">
-    <div class="wrap">
-      <div class="bio-grid">
-        <div class="bio-visual">
-          <div class="bio-frame">
-            <span class="bio-frame-placeholder">FOTO<br>MANU</span>
-            <div class="bio-corner tl"></div>
-            <div class="bio-corner br"></div>
-          </div>
-          <div class="bio-badge">
-            <div class="bio-badge-name">Manu Mendoza</div>
-            <div class="bio-badge-handle">@manumendoza.fit</div>
-          </div>
-        </div>
-        <div class="bio-content">
-          <p class="section-tag">El coach</p>
-          <h2 class="section-title">Manu<br>Mendoza.</h2>
-          <div class="gold-line-divider"></div>
-          <p class="bio-text">
-            CEO de <strong>MNutrition</strong>, atleta competitivo de bodybuilding y manager de <strong>Dark Matter</strong>. Más de 500 clientes transformados con un método que combina ciencia aplicada, experiencia en competencia y seguimiento real.
-          </p>
-          <div class="certs-list">
-            <div class="cert-item">
-              <div class="cert-dot"></div>
-              <span class="cert-name">Nutrición Deportiva</span>
-              <span class="cert-badge">Certificado</span>
-            </div>
-            <div class="cert-item">
-              <div class="cert-dot"></div>
-              <span class="cert-name">Entrenamiento Deportivo</span>
-              <span class="cert-badge">Certificado</span>
-            </div>
-            <div class="cert-item">
-              <div class="cert-dot"></div>
-              <span class="cert-name">Farmacología & Preparación para Competencias</span>
-              <span class="cert-badge">Certificado</span>
-            </div>
-            <div class="cert-item">
-              <div class="cert-dot"></div>
-              <span class="cert-name">Biomecánica, Anatomía & Composición Corporal</span>
-              <span class="cert-badge">Certificado</span>
-            </div>
-          </div>
-          <div class="bio-affiliates">
-            <span class="affiliate-tag">@mnutrition_official</span>
-            <span class="affiliate-tag">@1more_bodybuilding</span>
-            <span class="affiliate-tag">@dark_matter_lab</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROCESO -->
-  <section class="proceso" id="proceso">
-    <div class="wrap">
-      <p class="section-tag">Cómo funciona</p>
-      <h2 class="section-title">4 pasos<br>para empezar.</h2>
-      <div class="gold-line-divider"></div>
-      <div class="proceso-grid">
-        <div class="paso-card">
-          <p class="paso-index">Paso — 01</p>
-          <h3 class="paso-title">Elige tu programa</h3>
-          <p class="paso-desc">Selecciona el plan que más se adapte a tus objetivos y presupuesto. Todos incluyen seguimiento personalizado.</p>
-          <div class="paso-num">01</div>
-        </div>
-        <div class="paso-card">
-          <p class="paso-index">Paso — 02</p>
-          <h3 class="paso-title">Completa tu datos</h3>
-          <p class="paso-desc">Llena el formulario de valoración inicial y realiza tu pago de forma segura.</p>
-          <div class="paso-num">02</div>
-        </div>
-        <div class="paso-card">
-          <p class="paso-index">Paso — 03</p>
-          <h3 class="paso-title">Agenda tu valoración</h3>
-          <p class="paso-desc">Recibes por WhatsApp la confirmación y el link para agendar tu consulta inicial con Manu.</p>
-          <div class="paso-num">03</div>
-        </div>
-        <div class="paso-card">
-          <p class="paso-index">Paso — 04</p>
-          <h3 class="paso-title">¡Bienvenid@ al team!</h3>
-          <p class="paso-desc">Arranca tu transformación con acceso completo a tu plan personalizado y soporte directo.</p>
-          <div class="paso-num">04</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIOS -->
-  <section class="testimonios" id="resultados">
-    <div class="wrap">
-      <p class="section-tag">Casos de éxito</p>
-      <h2 class="section-title">Resultados<br>que hablan.</h2>
-      <div class="gold-line-divider"></div>
-      <div class="testi-grid">
-        <div class="testi-card">
-          <div class="testi-quote">"</div>
-          <p class="testi-text">Subí más de 15 kilos de masa muscular en año y medio básicamente de la mano de Manu. El seguimiento es real, no como otros coaches que desaparecen.</p>
-          <div class="testi-stars">★★★★★</div>
-          <div class="testi-footer">
-            <div class="testi-avatar">AR</div>
-            <div>
-              <div class="testi-handle">@arturo.rubin</div>
-              <div class="testi-result">+15 kg masa muscular · 18 meses</div>
-            </div>
-          </div>
-        </div>
-        <div class="testi-card">
-          <div class="testi-quote">"</div>
-          <p class="testi-text">Llegué sin saber nada de nutrición y en 6 meses bajé 12 kg de grasa sin perder músculo. El plan de alimentación es súper práctico para el día a día.</p>
-          <div class="testi-stars">★★★★★</div>
-          <div class="testi-footer">
-            <div class="testi-avatar">LC</div>
-            <div>
-              <div class="testi-handle">@luis.coaching</div>
-              <div class="testi-result">−12 kg grasa · 6 meses</div>
-            </div>
-          </div>
-        </div>
-        <div class="testi-card">
-          <div class="testi-quote">"</div>
-          <p class="testi-text">Me preparé para mi primera competencia con Manu. Su conocimiento en farmacología y posing hizo toda la diferencia. Quedé en top 3.</p>
-          <div class="testi-stars">★★★★★</div>
-          <div class="testi-footer">
-            <div class="testi-avatar">MV</div>
-            <div>
-              <div class="testi-handle">@mv_fitness</div>
-              <div class="testi-result">Top 3 competencia · Preparación 20 semanas</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="faq" id="faq">
-    <div class="wrap">
-      <p class="section-tag">Preguntas</p>
-      <h2 class="section-title">Lo que<br>preguntan.</h2>
-      <div class="gold-line-divider"></div>
-      <div class="faq-list">
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)">
-            ¿Cómo funcionan las asesorías en línea?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-a">
-            <p>Todo es 100% en línea. Primero recibes un formulario para conocer tus objetivos, alimentación y rutina actual. Luego agendas una consulta virtual inicial con Manu para construir tu plan personalizado. A partir de ahí, seguimiento cada 15 días por WhatsApp.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)">
-            ¿Qué incluye el plan de entrenamiento?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-a">
-            <p>Rutinas diseñadas para tus objetivos específicos (volumen, definición, fuerza), nivel de condición y equipo disponible. Incluye videos demostrativos de cada ejercicio, indicaciones de técnica y ajustes mensuales según tu progreso.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)">
-            ¿Necesito equipo especial o ir a un gym?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-a">
-            <p>No necesariamente. Los planes se adaptan a tu contexto: gym completo, gym básico o entrenamiento en casa. Lo importante es ser constante con lo que tienes disponible.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)">
-            ¿Cómo es el seguimiento de progreso?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-a">
-            <p>Cada 15 días mandas fotos de progreso y medidas. Manu revisa y ajusta tu plan según cómo está respondiendo tu cuerpo. Tienes acceso directo por WhatsApp para cualquier duda entre revisiones.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)">
-            ¿Hacen preparación para competencias?
-            <span class="faq-icon">+</span>
-          </button>
-          <div class="faq-a">
-            <p>Sí. Manu tiene certificación en Farmacología y Preparación para Competencias. Si tienes un objetivo de competir, el programa se estructura con peak week, posing y todo el protocolo necesario.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA FINAL -->
-  <section class="cta-final">
-    <div class="wrap">
-      <p class="cta-final-eyebrow">Cupo limitado · Inicio inmediato</p>
-      <h2 class="cta-final-title">
-        Empieza<br>
-        <span class="outline">hoy.</span>
-      </h2>
-      <p class="cta-final-sub">No hay mejor momento. Manda mensaje directo y en menos de 24 horas tienes tu valoración agendada.</p>
-      <div class="cta-final-actions">
-        <a class="btn-gold" href="https://wa.me/52XXXXXXXXXX" target="_blank">
-          Quiero mi asesoría →
-        </a>
-        <a class="btn-wa" href="https://wa.me/52XXXXXXXXXX" target="_blank">
-          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          WhatsApp
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="wrap">
-      <div class="footer-logo">M<span>NUTRITION</span></div>
-      <span class="footer-copy">© 2024 MNutrition · @manumendoza.fit · Todos los derechos reservados</span>
-    </div>
-  </footer>
-
-</div>
-
-<!-- WHATSAPP FLOAT -->
+<!-- WA FLOAT -->
 <a class="wa-float" href="https://wa.me/52XXXXXXXXXX" target="_blank" aria-label="WhatsApp">
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
 
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo"><span class="m">M</span><span class="rest">NUTRITION</span></div>
+  <div class="nav-right">
+    <a class="nav-link" href="#servicios">Servicios</a>
+    <a class="nav-link" href="#planes">Planes</a>
+    <a class="nav-link" href="#coach">Coach</a>
+    <a class="nav-cta-btn" href="https://wa.me/52XXXXXXXXXX" target="_blank">Empezar →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-label">Asesoría de élite · Online</p>
+    <h1 class="hero-h1">
+      <span class="line-wrap"><span class="line">MNUTRI</span></span>
+      <span class="line-wrap"><span class="line">TION</span></span>
+      <span class="line-wrap"><span class="line">FIT.</span></span>
+    </h1>
+    <p class="hero-tagline">
+      <strong>Nutrición. Entrenamiento. Resultados reales.</strong><br>
+      Asesoría 100% personalizada con Manu Mendoza — atleta competitivo, CEO de MNutrition y referente en preparación física de alto rendimiento.
+    </p>
+    <div class="hero-actions">
+      <a class="btn-gold" href="https://wa.me/52XXXXXXXXXX" target="_blank">Quiero asesoría →</a>
+      <a class="btn-text-link" href="#planes">Ver planes ↓</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-right-bg"></div>
+    <div class="hero-right-grid"></div>
+    <div class="hero-photo-placeholder">
+      <span>FOTO<br>MANU<br>MENDOZA</span>
+    </div>
+    <div class="hero-vertical-text">Atleta · CEO · Coach</div>
+    <div class="hero-stats-side">
+      <div class="h-stat">
+        <div class="h-stat-n">4+</div>
+        <div class="h-stat-l">Certificaciones</div>
+      </div>
+      <div class="h-stat">
+        <div class="h-stat-n">500+</div>
+        <div class="h-stat-l">Clientes</div>
+      </div>
+      <div class="h-stat">
+        <div class="h-stat-n">100%</div>
+        <div class="h-stat-l">En línea</div>
+      </div>
+    </div>
+    <div class="hero-right-name">
+      <h2>Manu Mendoza</h2>
+      <p>@manumendoza.fit</p>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Nutrición deportiva</span><span class="dot">·</span>
+    <span>Entrenamiento personalizado</span><span class="dot">·</span>
+    <span>Farmacología aplicada</span><span class="dot">·</span>
+    <span>Preparación para competencias</span><span class="dot">·</span>
+    <span>CEO @mnutrition_official</span><span class="dot">·</span>
+    <span>Atleta @1more_bodybuilding</span><span class="dot">·</span>
+    <span>MGMT @dark_matter_lab</span><span class="dot">·</span>
+    <span>Nutrición deportiva</span><span class="dot">·</span>
+    <span>Entrenamiento personalizado</span><span class="dot">·</span>
+    <span>Farmacología aplicada</span><span class="dot">·</span>
+    <span>Preparación para competencias</span><span class="dot">·</span>
+    <span>CEO @mnutrition_official</span><span class="dot">·</span>
+    <span>Atleta @1more_bodybuilding</span><span class="dot">·</span>
+    <span>MGMT @dark_matter_lab</span><span class="dot">·</span>
+  </div>
+</div>
+
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <div>
+    <blockquote class="manifesto-quote reveal">
+      "No existe un atajo que llegue a donde importa. Solo existe <em>el trabajo, la ciencia</em> y el compromiso de hacerlo bien."
+    </blockquote>
+    <p class="manifesto-author reveal reveal-delay-2">Manu Mendoza · @manumendoza.fit</p>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section class="servicios" id="servicios">
+  <div class="section-intro reveal">
+    <div>
+      <p class="section-tag">Lo que incluye</p>
+      <h2 class="section-h">Todo lo<br>que<br>necesitas.</h2>
+    </div>
+    <p class="section-sub">Cada programa se construye desde cero. Tu cuerpo, tus objetivos, tu horario. Sin copiar y pegar de nadie más.</p>
+  </div>
+
+  <div class="service-row reveal">
+    <div class="service-row-num">01</div>
+    <div class="service-row-content">
+      <h3 class="service-row-title">Plan Alimenticio</h3>
+      <p class="service-row-desc">Nutrición completamente personalizada adaptada a tus objetivos, restricciones y horarios. Macros calculados, ajustes cada 15 días según cómo responde tu cuerpo.</p>
+      <span class="service-row-tag">Nutrición deportiva</span>
+    </div>
+    <div class="service-row-icon">🥩</div>
+  </div>
+
+  <div class="service-row reveal reveal-delay-1">
+    <div class="service-row-num">02</div>
+    <div class="service-row-content">
+      <h3 class="service-row-title">Plan de Entrenamiento</h3>
+      <p class="service-row-desc">Rutinas diseñadas para tus objetivos específicos con videos demostrativos de cada ejercicio. Técnica correcta desde el primer día. Actualización mensual.</p>
+      <span class="service-row-tag">Fuerza & musculación</span>
+    </div>
+    <div class="service-row-icon">🏋️</div>
+  </div>
+
+  <div class="service-row reveal reveal-delay-2">
+    <div class="service-row-num">03</div>
+    <div class="service-row-content">
+      <h3 class="service-row-title">Guía de Suplementación</h3>
+      <p class="service-row-desc">Recomendaciones individualizadas basadas en tus metas y condición. Nada de suplementos de moda. Solo lo que funciona y tiene evidencia.</p>
+      <span class="service-row-tag">Evidencia aplicada</span>
+    </div>
+    <div class="service-row-icon">💊</div>
+  </div>
+
+  <div class="service-row reveal reveal-delay-3">
+    <div class="service-row-num">04</div>
+    <div class="service-row-content">
+      <h3 class="service-row-title">Seguimiento 24/7</h3>
+      <p class="service-row-desc">Canal directo con Manu por WhatsApp. Chequeos cada 15 días, ajustes en tiempo real y soporte continuo para no dejar que ninguna duda te detenga.</p>
+      <span class="service-row-tag">Acceso directo</span>
+    </div>
+    <div class="service-row-icon">📲</div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-block reveal">
+      <div class="stat-number"><span class="counter" data-target="500">0</span><span class="plus">+</span></div>
+      <div class="stat-label">Clientes transformados</div>
+    </div>
+    <div class="stat-block reveal reveal-delay-1">
+      <div class="stat-number"><span class="counter" data-target="4">0</span><span class="plus">+</span></div>
+      <div class="stat-label">Certificaciones</div>
+    </div>
+    <div class="stat-block reveal reveal-delay-2">
+      <div class="stat-number"><span class="counter" data-target="100">0</span><span class="plus">%</span></div>
+      <div class="stat-label">En línea, todo México</div>
+    </div>
+    <div class="stat-block reveal reveal-delay-3">
+      <div class="stat-number"><span class="counter" data-target="2">0</span><span class="plus">+</span></div>
+      <div class="stat-label">Años de resultados</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="planes">
+  <div class="pricing-head">
+    <div>
+      <p class="section-tag">Planes y precios</p>
+      <h2 class="section-h reveal">Elige tu<br>nivel.</h2>
+    </div>
+    <p class="pricing-note reveal">
+      <strong>Todos los planes incluyen</strong> plan alimenticio, entrenamiento, guía de suplementación y seguimiento directo. La diferencia es el tiempo de acompañamiento.
+    </p>
+  </div>
+
+  <div class="plans-wrap">
+    <div class="plan-card reveal">
+      <div class="plan-tier">Básico</div>
+      <div class="plan-duration">1 MES</div>
+      <div class="plan-divider"></div>
+      <div class="plan-price-mxn">$999 MXN</div>
+      <div class="plan-price-usd">≈ $57 USD</div>
+      <ul class="plan-features">
+        <li>Plan alimenticio personalizado</li>
+        <li>Rutina de entrenamiento</li>
+        <li>Guía de suplementación</li>
+        <li>Seguimiento cada 15 días</li>
+        <li>WhatsApp directo con Manu</li>
+      </ul>
+      <a class="plan-cta" href="https://wa.me/52XXXXXXXXXX" target="_blank">Empezar ahora →</a>
+    </div>
+
+    <div class="plan-card featured reveal reveal-delay-1">
+      <div class="plan-featured-badge">⭐ Más elegido</div>
+      <div class="plan-tier">Intermedio</div>
+      <div class="plan-duration">2 MESES</div>
+      <div class="plan-divider"></div>
+      <div class="plan-price-mxn">$1,799 MXN</div>
+      <div class="plan-price-usd">≈ $105 USD</div>
+      <ul class="plan-features">
+        <li>Todo lo del plan básico</li>
+        <li>Ajuste de macros mensual</li>
+        <li>Actualización de rutina al mes</li>
+        <li>Seguimiento prioritario</li>
+        <li>Valoración inicial en video</li>
+      </ul>
+      <a class="plan-cta" href="https://wa.me/52XXXXXXXXXX" target="_blank">Elegir Intermedio →</a>
+    </div>
+
+    <div class="plan-card reveal reveal-delay-2">
+      <div class="plan-tier">Premium</div>
+      <div class="plan-duration">3 MESES</div>
+      <div class="plan-divider"></div>
+      <div class="plan-price-mxn">$2,599 MXN</div>
+      <div class="plan-price-usd">≈ $149 USD</div>
+      <ul class="plan-features">
+        <li>Todo lo del plan intermedio</li>
+        <li>Preparación para competencia</li>
+        <li>Protocolo farmacológico (si aplica)</li>
+        <li>Acceso 24/7 sin límite</li>
+        <li>Sesión de posing mensual</li>
+      </ul>
+      <a class="plan-cta" href="https://wa.me/52XXXXXXXXXX" target="_blank">Empezar ahora →</a>
+    </div>
+  </div>
+
+  <p class="pricing-disclaimer">
+    Aviso: este programa está enfocado en acondicionamiento físico y rendimiento, no tiene fines médicos. El plan de alimentación es personalizado por un nutriólogo con enfoque deportivo y no sustituye atención médica.
+  </p>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="testimonios">
+  <div class="section-intro">
+    <div class="reveal">
+      <p class="section-tag">Casos de éxito</p>
+      <h2 class="section-h">Resultados<br>que hablan.</h2>
+    </div>
+    <p class="section-sub reveal reveal-delay-2">Los números son reales. Las transformaciones también.</p>
+  </div>
+
+  <div class="testi-drag" id="testiDrag">
+    <div class="testi-card">
+      <div class="testi-mark">"</div>
+      <p class="testi-text">Subí más de 15 kilos de masa muscular en año y medio básicamente de la mano de Manu. El seguimiento es real, no como otros coaches que desaparecen después del pago.</p>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-foot">
+        <div class="testi-av">AR</div>
+        <div>
+          <div class="testi-handle">@arturo.rubin</div>
+          <div class="testi-result">+15 kg masa muscular · 18 meses</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-mark">"</div>
+      <p class="testi-text">Llegué sin saber nada de nutrición y en 6 meses bajé 12 kg de grasa sin perder músculo. El plan de alimentación es práctico de verdad, no el típico "come pollo y arroz".</p>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-foot">
+        <div class="testi-av">LC</div>
+        <div>
+          <div class="testi-handle">@luis.coaching</div>
+          <div class="testi-result">−12 kg grasa · 6 meses</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-mark">"</div>
+      <p class="testi-text">Me preparé para mi primera competencia con Manu. Su conocimiento en farmacología y posing hizo toda la diferencia. Top 3 en mi primera vez en escenario.</p>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-foot">
+        <div class="testi-av">MV</div>
+        <div>
+          <div class="testi-handle">@mv_fitness</div>
+          <div class="testi-result">Top 3 en competencia · Prep 20 semanas</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-mark">"</div>
+      <p class="testi-text">Llevo 3 meses con el plan premium. Jamás pensé que la nutrición haría tanta diferencia en el rendimiento en gym. Los pesos que muevo ahorita son otro nivel.</p>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-foot">
+        <div class="testi-av">DG</div>
+        <div>
+          <div class="testi-handle">@diego.grg</div>
+          <div class="testi-result">Aumento de rendimiento · 3 meses plan premium</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="testi-nav">
+    <button class="testi-btn" id="testiPrev" aria-label="Anterior">←</button>
+    <button class="testi-btn" id="testiNext" aria-label="Siguiente">→</button>
+  </div>
+</section>
+
+<!-- BIO -->
+<section class="bio" id="coach">
+  <div class="bio-left">
+    <div class="bio-frame">
+      <span class="bio-frame-ph">FOTO<br>MANU<br>MENDOZA</span>
+      <div class="bio-frame-info">
+        <div class="bio-frame-name">Manu Mendoza</div>
+        <div class="bio-frame-handle">@manumendoza.fit</div>
+      </div>
+    </div>
+    <div class="bio-accent">
+      <div class="bio-accent-num">500+</div>
+      <div class="bio-accent-txt">Clientes<br>activos</div>
+    </div>
+  </div>
+
+  <div class="bio-right">
+    <p class="section-tag reveal">El coach</p>
+    <h2 class="section-h reveal" style="margin-bottom:20px">Manu<br>Mendoza.</h2>
+    <div style="width:40px;height:2px;background:var(--gold);margin-bottom:36px" class="reveal"></div>
+    <p class="bio-intro reveal">
+      CEO de <strong>MNutrition</strong>, atleta competitivo de bodybuilding y manager de <strong>Dark Matter</strong>. Más de 2 años transformando cuerpos con un método que combina ciencia aplicada, experiencia real en competencia y seguimiento honesto.
+    </p>
+    <div class="bio-certs">
+      <div class="bio-cert reveal reveal-delay-1">
+        <div class="bio-cert-dot"></div>
+        <span class="bio-cert-name">Nutrición Deportiva</span>
+        <span class="bio-cert-badge">Certificado</span>
+      </div>
+      <div class="bio-cert reveal reveal-delay-2">
+        <div class="bio-cert-dot"></div>
+        <span class="bio-cert-name">Entrenamiento Deportivo</span>
+        <span class="bio-cert-badge">Certificado</span>
+      </div>
+      <div class="bio-cert reveal reveal-delay-3">
+        <div class="bio-cert-dot"></div>
+        <span class="bio-cert-name">Farmacología & Preparación para Competencias</span>
+        <span class="bio-cert-badge">Certificado</span>
+      </div>
+      <div class="bio-cert reveal reveal-delay-4">
+        <div class="bio-cert-dot"></div>
+        <span class="bio-cert-name">Biomecánica, Anatomía & Composición Corporal</span>
+        <span class="bio-cert-badge">Certificado</span>
+      </div>
+    </div>
+    <div class="bio-affiliates reveal">
+      <span class="bio-affiliate">@mnutrition_official</span>
+      <span class="bio-affiliate">@1more_bodybuilding</span>
+      <span class="bio-affiliate">@dark_matter_lab</span>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="faq-grid">
+    <div class="faq-sticky">
+      <p class="section-tag reveal">Preguntas</p>
+      <h2 class="section-h reveal" style="margin-bottom:20px">Todo<br>claro.</h2>
+      <div style="width:40px;height:2px;background:var(--gold);margin-bottom:28px" class="reveal"></div>
+      <p class="section-sub reveal">Si tienes alguna duda que no está aquí, manda mensaje directo por WhatsApp.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          ¿Cómo funcionan las asesorías en línea?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a"><p>Todo 100% en línea. Primero recibes un formulario para conocer tus objetivos, alimentación y rutina actual. Luego agendas una valoración inicial con Manu. A partir de ahí, seguimiento cada 15 días con ajustes reales.</p></div>
+      </div>
+      <div class="faq-item reveal reveal-delay-1">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          ¿Necesito ir al gym o puedo entrenar en casa?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a"><p>Los planes se adaptan a tu contexto: gym completo, gym básico o entrenamiento en casa con lo que tengas disponible. Lo importante es la constancia, no el equipo.</p></div>
+      </div>
+      <div class="faq-item reveal reveal-delay-2">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          ¿Cuánto tiempo pasa hasta ver resultados?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a"><p>Depende del punto de partida y el objetivo, pero la mayoría de clientes reportan cambios visibles entre las semanas 3 y 6. La clave es el seguimiento constante y aplicar los ajustes que Manu indica.</p></div>
+      </div>
+      <div class="faq-item reveal reveal-delay-3">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          ¿Hacen preparación para competencias?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a"><p>Sí. Manu tiene certificación en Farmacología y Preparación para Competencias. Si tu objetivo es competir, el programa se estructura con peak week, protocolo específico y preparación de posing.</p></div>
+      </div>
+      <div class="faq-item reveal reveal-delay-4">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          ¿Qué pasa si termino el plan y quiero continuar?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-a"><p>Puedes renovar cuando quieras. La mayoría de clientes continúan porque los resultados son progresivos. Al renovar, el plan se actualiza completamente basado en tu nueva condición.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="cta-final-inner">
+    <p class="cta-eyebrow reveal">Cupo limitado · Inicio inmediato</p>
+    <h2 class="cta-title reveal">
+      <span class="line-1">Empieza</span>
+      <span class="line-2">hoy,</span>
+      <span class="line-3">güey.</span>
+    </h2>
+    <p class="cta-sub reveal">No hay mejor momento. Manda mensaje y en menos de 24 horas tienes tu valoración agendada con Manu.</p>
+    <div class="cta-actions reveal">
+      <a class="btn-gold" href="https://wa.me/52XXXXXXXXXX" target="_blank">Quiero mi asesoría →</a>
+      <a class="btn-wa" href="https://wa.me/52XXXXXXXXXX" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><span class="m">M</span><span>NUTRITION</span></div>
+  <span class="footer-copy">© 2024 MNutrition · @manumendoza.fit · Todos los derechos reservados</span>
+</footer>
+
 <script>
-  function toggleFaq(btn) {
-    const item = btn.closest('.faq-item');
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
-    if (!isOpen) item.classList.add('open');
-  }
+/* ── Custom Cursor ── */
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
 
-  // Nav shadow on scroll
-  const nav = document.querySelector('nav');
-  window.addEventListener('scroll', () => {
-    nav.style.boxShadow = window.scrollY > 20
-      ? '0 4px 32px rgba(0,0,0,0.55)'
-      : 'none';
-  }, { passive: true });
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left = mx + 'px';
+  dot.style.top  = my + 'px';
+});
 
-  // Animate sections on scroll
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.animation = 'fadeUp 0.6s ease both';
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
+(function animRing() {
+  rx += (mx - rx) * .13;
+  ry += (my - ry) * .13;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animRing);
+})();
 
-  document.querySelectorAll('.service-card, .paso-card, .testi-card, .cert-item').forEach(el => {
-    el.style.opacity = '0';
-    observer.observe(el);
+document.querySelectorAll('a, button, .service-row, .plan-card, .faq-q').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+});
+
+/* ── Scroll reveal ── */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+/* ── Nav on scroll ── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+/* ── Counter animation ── */
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  const duration = 1600;
+  const start = performance.now();
+  const update = (now) => {
+    const progress = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.floor(eased * target);
+    if (progress < 1) requestAnimationFrame(update);
+    else el.textContent = target;
+  };
+  requestAnimationFrame(update);
+}
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCounter(e.target);
+      counterObs.unobserve(e.target);
+    }
   });
+}, { threshold: 0.5 });
+document.querySelectorAll('.counter').forEach(el => counterObs.observe(el));
+
+/* ── FAQ ── */
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const open = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!open) item.classList.add('open');
+}
+
+/* ── Testimonial drag scroll ── */
+const drag = document.getElementById('testiDrag');
+let isDown = false, startX, scrollLeft;
+
+drag.addEventListener('mousedown', e => {
+  isDown = true;
+  drag.classList.add('dragging');
+  startX = e.pageX - drag.offsetLeft;
+  scrollLeft = drag.scrollLeft;
+});
+drag.addEventListener('mouseleave', () => { isDown = false; drag.classList.remove('dragging'); });
+drag.addEventListener('mouseup', () => { isDown = false; drag.classList.remove('dragging'); });
+drag.addEventListener('mousemove', e => {
+  if (!isDown) return;
+  e.preventDefault();
+  const x = e.pageX - drag.offsetLeft;
+  drag.scrollLeft = scrollLeft - (x - startX) * 1.6;
+});
+
+const cardW = () => drag.querySelector('.testi-card').offsetWidth + 3;
+document.getElementById('testiNext').addEventListener('click', () => {
+  drag.scrollBy({ left: cardW(), behavior: 'smooth' });
+});
+document.getElementById('testiPrev').addEventListener('click', () => {
+  drag.scrollBy({ left: -cardW(), behavior: 'smooth' });
+});
 </script>
 </body>
 </html>
