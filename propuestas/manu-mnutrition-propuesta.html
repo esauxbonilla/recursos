@@ -1259,9 +1259,9 @@ footer {
   .hero-left {
     position: relative;
     z-index: 2;
-    justify-content: flex-end;
-    padding-top: 68px;
-    padding-bottom: 40px;
+    justify-content: flex-start;
+    padding-top: 100px;
+    padding-bottom: 52px;
     min-height: 100svh;
   }
   .hero-right { display: none; }
@@ -1292,10 +1292,11 @@ footer {
   nav .nav-right .nav-link { display: none; }
 
   /* Hero */
-  .hero-left { padding: 88px 20px 48px; }
-  .hero-h1 { font-size: calc((100vw - 40px) / 5.6); }
-  .hero-tagline { font-size: 15px; }
-  .hero-actions { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .hero-left { padding: 96px 20px 52px; }
+  .hero-label { margin-bottom: 12px; }
+  .hero-h1 { font-size: clamp(68px, 20vw, 90px); margin-bottom: auto; }
+  .hero-tagline { font-size: 15px; margin-top: 32px; }
+  .hero-actions { flex-direction: column; align-items: flex-start; gap: 14px; margin-top: 20px; }
   .btn-gold { width: 100%; justify-content: center; padding: 16px 24px; }
 
   /* Sections */
