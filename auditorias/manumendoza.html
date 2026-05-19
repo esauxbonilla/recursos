@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manu Mendoza — Sistema de Crecimiento</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --negro: #0A0A0A;
+    --dorado: #D4A017;
+    --dorado-claro: #F0C040;
+    --gris: #1A1A1A;
+    --gris-medio: #2A2A2A;
+    --texto: #E0E0E0;
+    --texto-suave: #888;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--negro);
+    color: var(--texto);
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: var(--negro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 80px 24px;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,160,23,0.08) 0%, transparent 70%);
+    top: -200px;
+    right: -200px;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 60px,
+      rgba(255,255,255,0.015) 60px,
+      rgba(255,255,255,0.015) 61px
+    );
+    pointer-events: none;
+  }
+
+  .hero-content {
+    max-width: 720px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(212,160,23,0.3);
+    background: rgba(212,160,23,0.08);
+    color: var(--dorado);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+  }
+
+  .hero-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(52px, 10vw, 96px);
+    font-weight: 900;
+    line-height: 0.9;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    letter-spacing: -1px;
+  }
+
+  .hero-title span {
+    color: var(--dorado);
+    display: block;
+  }
+
+  .hero-desc {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--texto-suave);
+    max-width: 540px;
+    margin: 0 auto 2.5rem;
+  }
+
+  .hero-desc strong { color: var(--texto); font-weight: 500; }
+
+  .hero-divider {
+    width: 60px;
+    height: 3px;
+    background: var(--dorado);
+    margin: 0 auto 2.5rem;
+  }
+
+  /* PROBLEMA */
+  .problema {
+    padding: 100px 24px;
+    background: var(--gris);
+    position: relative;
+  }
+
+  .problema::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--dorado), transparent);
+  }
+
+  .section-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--dorado);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-tag::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(212,160,23,0.3);
+    max-width: 60px;
+  }
+
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(32px, 6vw, 56px);
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title em {
+    color: var(--dorado);
+    font-style: normal;
+  }
+
+  .section-text {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--texto-suave);
+    margin-bottom: 2rem;
+  }
+
+  .problema-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 12px;
+    margin-top: 2.5rem;
+  }
+
+  @media (max-width: 500px) {
+    .problema-cards { grid-template-columns: 1fr; }
+    .sistema-steps { flex-direction: column; }
+    .sistema-arrow { transform: rotate(90deg); }
+  }
+
+  .problema-card {
+    background: var(--negro);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 4px;
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .problema-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--dorado);
+    opacity: 0.5;
+  }
+
+  .problema-card-icon {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .problema-card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .problema-card-desc {
+    font-size: 13px;
+    color: var(--texto-suave);
+    line-height: 1.5;
+  }
+
+  /* SISTEMA */
+  .sistema {
+    padding: 100px 24px;
+    background: var(--negro);
+    position: relative;
+  }
+
+  .sistema-steps {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .sistema-step {
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+    padding: 0 12px;
+  }
+
+  .sistema-step-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--dorado);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .sistema-step-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--gris-medio);
+    border: 1px solid rgba(212,160,23,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin: 0 auto 12px;
+  }
+
+  .sistema-step-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .sistema-step-desc {
+    font-size: 12px;
+    color: var(--texto-suave);
+    line-height: 1.5;
+  }
+
+  .sistema-arrow {
+    color: var(--dorado);
+    font-size: 18px;
+    padding-top: 28px;
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  .sistema-highlight {
+    margin-top: 3rem;
+    background: rgba(212,160,23,0.06);
+    border: 1px solid rgba(212,160,23,0.2);
+    border-radius: 4px;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .sistema-highlight-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .sistema-highlight-text {
+    font-size: 15px;
+    color: var(--texto-suave);
+    line-height: 1.65;
+  }
+
+  .sistema-highlight-text strong { color: var(--dorado-claro); font-weight: 500; }
+
+  /* RETO */
+  .reto {
+    padding: 100px 24px;
+    background: var(--gris);
+    position: relative;
+  }
+
+  .reto::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--dorado), transparent);
+  }
+
+  .reto-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 16px;
+    margin-top: 2.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .reto-grid { grid-template-columns: 1fr; }
+  }
+
+  .reto-card {
+    background: var(--negro);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 4px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .reto-card-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--dorado);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .reto-card-label {
+    font-size: 13px;
+    color: var(--texto-suave);
+    line-height: 1.4;
+  }
+
+  .reto-desc {
+    margin-top: 2rem;
+    font-size: 15px;
+    color: var(--texto-suave);
+    line-height: 1.7;
+  }
+
+  .reto-desc strong { color: var(--texto); font-weight: 500; }
+
+  /* CTA */
+  .cta-section {
+    padding: 100px 24px;
+    background: var(--negro);
+    text-align: center;
+    position: relative;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,160,23,0.06) 0%, transparent 70%);
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .cta-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(36px, 7vw, 64px);
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .cta-title span { color: var(--dorado); }
+
+  .cta-sub {
+    font-size: 16px;
+    color: var(--texto-suave);
+    margin-bottom: 2.5rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-firma {
+    margin-top: 3rem;
+    font-size: 12px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* INSANO CASE */
+  .case {
+    padding: 80px 24px;
+    background: var(--negro);
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .case-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 2.5rem;
+  }
+
+  @media (max-width: 500px) {
+    .case-stats { grid-template-columns: 1fr; }
+  }
+
+  .case-stat {
+    background: var(--negro);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+
+  .case-stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--dorado);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .case-stat-label {
+    font-size: 12px;
+    color: var(--texto-suave);
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">⚡ Propuesta estratégica · @manumendoza.fit</div>
+    <h1 class="hero-title">
+      El sistema que
+      <span>cierra solo.</span>
+    </h1>
+    <div class="hero-divider"></div>
+    <p class="hero-desc">
+      Tienes <strong>+5,000 cambios reales</strong>, 245K seguidores y una agenda que no alcanza. El problema no es el producto — es que el sistema de captación está costando tiempo y dinero todos los días.
+    </p>
+  </div>
+</section>
+
+<!-- PROBLEMA -->
+<section class="problema">
+  <div class="section-inner">
+    <p class="section-tag">El problema</p>
+    <h2 class="section-title">Tiempo invertido en quien <em>no va a comprar.</em></h2>
+    <p class="section-text">
+      Ahorita, cualquiera puede escribirte. Y tú, o alguien de tu equipo, tiene que contestar, cualificar, convencer y cerrar — uno por uno. Eso no escala. Y mientras estás respondiendo mensajes de gente que no tiene presupuesto, los que sí pueden pagar no reciben atención.
+    </p>
+    <div class="problema-cards">
+      <div class="problema-card">
+        <div class="problema-card-icon">⏰</div>
+        <p class="problema-card-title">Tiempo en mensajes que no cierran</p>
+        <p class="problema-card-desc">Horas respondiendo a personas que no son tu cliente ideal y nunca van a comprar.</p>
+      </div>
+      
+      <div class="problema-card">
+        <div class="problema-card-icon">🎯</div>
+        <p class="problema-card-title">Sin cliente ideal definido</p>
+        <p class="problema-card-desc">Sin filtro claro, llega de todo — y tú pierdes energía en quien no valora lo que ofreces.</p>
+      </div>
+      <div class="problema-card">
+        <div class="problema-card-icon">📉</div>
+        <p class="problema-card-title">Precio que no refleja tu nivel</p>
+        <p class="problema-card-desc">Con el sistema correcto y el cliente correcto, puedes cobrar más y trabajar con menos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SISTEMA -->
+<section class="sistema">
+  <div class="section-inner">
+    <p class="section-tag">La solución</p>
+    <h2 class="section-title">Un sistema que <em>trabaja</em><br>mientras tú entrenas.</h2>
+    <p class="section-text">
+      Construimos un embudo que atrae al perfil correcto, lo cualifica automáticamente y te lo entrega listo para cerrar. Tú solo apareces en la llamada.
+    </p>
+
+    <div class="sistema-steps">
+      <div class="sistema-step">
+        <p class="sistema-step-num">01</p>
+        <div class="sistema-step-icon">🎯</div>
+        <p class="sistema-step-title">Oferta diferenciada</p>
+        <p class="sistema-step-desc">Definimos a quién le hablas — artistas, influencers, personas con poco tiempo y alto poder adquisitivo.</p>
+      </div>
+      <div class="sistema-arrow">→</div>
+      <div class="sistema-step">
+        <p class="sistema-step-num">02</p>
+        <div class="sistema-step-icon">📲</div>
+        <p class="sistema-step-title">Captación con contenido</p>
+        <p class="sistema-step-desc">Lead magnets en historias que solo activan a tu cliente ideal. Los demás pasan de largo.</p>
+      </div>
+      <div class="sistema-arrow">→</div>
+      <div class="sistema-step">
+        <p class="sistema-step-num">03</p>
+        <div class="sistema-step-icon">🤖</div>
+        <p class="sistema-step-title">Filtración automática</p>
+        <p class="sistema-step-desc">Sistema que responde, cualifica y agenda — sin que toques el teléfono.</p>
+      </div>
+      <div class="sistema-arrow">→</div>
+      <div class="sistema-step">
+        <p class="sistema-step-num">04</p>
+        <div class="sistema-step-icon">🤝</div>
+        <p class="sistema-step-title">Tú solo cierras</p>
+        <p class="sistema-step-desc">Llega a la llamada sabiendo quién es, qué necesita y cuánto puede pagar. El cierre es obvio.</p>
+      </div>
+    </div>
+
+    <div class="sistema-highlight">
+      <div class="sistema-highlight-icon">⚡</div>
+      <p class="sistema-highlight-text">
+        <strong>El resultado:</strong> menos tiempo en DMs, más tiempo con clientes que sí pagan. El sistema trabaja de noche, en el gym, en viajes — tú decides cuándo aparecer.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CASO INSANO -->
+
+
+<!-- RETO -->
+<section class="reto">
+  <div class="section-inner">
+    <p class="section-tag">El siguiente nivel</p>
+    <h2 class="section-title">Cuando el sistema funciona,<br><em>escalamos.</em></h2>
+    <p class="section-text">
+      Una vez que el flujo de asesorías individuales está corriendo solo, el siguiente paso es multiplicar sin multiplicar tu tiempo.
+    </p>
+    <div class="reto-grid">
+      <div class="reto-card">
+        <p class="reto-card-num">🔥</p>
+        <p class="reto-card-label">Reto grupal — muchas personas, un solo sistema, máximo impacto</p>
+      </div>
+      <div class="reto-card">
+        <p class="reto-card-num">📦</p>
+        <p class="reto-card-label">Programa digital — tu conocimiento empaquetado, vendiéndose solo</p>
+      </div>
+      <div class="reto-card">
+        <p class="reto-card-num">♾️</p>
+        <p class="reto-card-label">Evergreen — el sistema genera ingresos mientras tú haces lo que te gusta</p>
+      </div>
+    </div>
+    <p class="reto-desc">
+      <strong>No es trabajo extra.</strong> Es el mismo sistema que ya construimos, aplicado a escala. Tú pones el conocimiento — nosotros ponemos la estructura.
+    </p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2 class="cta-title">¿Listo para que<br><span>el sistema trabaje</span><br>por ti?</h2>
+  <p class="cta-sub">En esta llamada definimos el plan exacto para tu negocio y los números reales de lo que esto puede generar.</p>
+  <p class="cta-firma">Shadow Ops System · Growth Digital</p>
+</section>
+
+</body>
+</html>
