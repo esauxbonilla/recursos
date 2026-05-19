@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BÉLICO Pre-Workout · Kartel Supplements</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+img { display: block; max-width: 100%; }
+
+:root {
+  --black:   #080808;
+  --dark:    #111111;
+  --dark-2:  #1A1A1A;
+  --dark-3:  #242424;
+  --gold:    #D4A017;
+  --gold-2:  #F0C040;
+  --gold-dim: rgba(212,160,23,.15);
+  --gold-border: rgba(212,160,23,.28);
+  --white:   #FFFFFF;
+  --cream:   #F2EAD8;
+  --muted:   #6A6A6A;
+  --muted-2: #444;
+  --green:   #25D366;
+  --line:    rgba(255,255,255,.07);
+  --red:     #E53935;
+}
+
+body {
+  background: var(--black);
+  color: var(--cream);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── ANNOUNCEMENT BAR ─── */
+.announce {
+  background: var(--gold);
+  color: var(--black);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 10px 20px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.announce-track {
+  display: inline-flex;
+  gap: 60px;
+  animation: ticker 22s linear infinite;
+}
+.announce-track span::before { content: '✦  '; }
+@keyframes ticker { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(8,8,8,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(20px,4vw,60px);
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: .1em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nav-logo-ks {
+  width: 34px; height: 34px;
+  border: 1.5px solid var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: .06em;
+}
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.nav-link {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color .2s;
+}
+.nav-link:hover { color: var(--cream); }
+.btn-nav {
+  background: var(--gold);
+  color: var(--black);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 9px 20px;
+  display: flex; align-items: center; gap: 8px;
+  transition: background .2s, transform .15s;
+}
+.btn-nav:hover { background: var(--gold-2); transform: translateY(-1px); }
+
+/* ─── HERO ─── */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: calc(100vh - 100px);
+  gap: 0;
+}
+
+/* LEFT — product visual */
+.hero-visual {
+  position: relative;
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 60px 40px;
+}
+.hero-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 70% at 50% 60%, rgba(212,160,23,.13) 0%, transparent 70%);
+}
+.hero-visual-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(212,160,23,.04) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(212,160,23,.04) 40px);
+}
+
+/* CSS product can */
+.can-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+.can {
+  position: relative;
+  width: 180px;
+  height: 240px;
+  filter: drop-shadow(0 32px 64px rgba(0,0,0,.8)) drop-shadow(0 0 40px rgba(212,160,23,.25));
+  transition: transform .4s ease;
+}
+.can:hover { transform: translateY(-8px) rotate(2deg); }
+.can-body {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, #1C1C1C 0%, #0A0A0A 40%, #1A1A1A 60%, #2A2208 80%, #111 100%);
+  border-radius: 18px 18px 22px 22px;
+  border: 1px solid rgba(212,160,23,.3);
+  overflow: hidden;
+}
+.can-body::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 12px; right: 12px; height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-2), var(--gold));
+  border-radius: 0 0 4px 4px;
+}
+.can-body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.06) 0%, transparent 40%, rgba(212,160,23,.06) 80%, transparent 100%);
+}
+.can-stripe {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 8px; right: 8px;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0px, transparent 4px,
+    rgba(212,160,23,.04) 4px, rgba(212,160,23,.04) 5px
+  );
+}
+.can-logo-area {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  z-index: 2;
+}
+.can-crown {
+  font-size: 22px;
+  filter: drop-shadow(0 0 8px rgba(212,160,23,.6));
+}
+.can-ks {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .3em;
+  color: var(--gold);
+}
+.can-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  letter-spacing: .08em;
+  color: var(--gold-2);
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(212,160,23,.5);
+}
+.can-type {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: .25em;
+  color: rgba(240,192,64,.7);
+  text-transform: uppercase;
+}
+.can-flavor-badge {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(212,160,23,.12);
+  border: 1px solid var(--gold-border);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+  white-space: nowrap;
+  z-index: 3;
+}
+.can-lid {
+  position: absolute;
+  top: -12px; left: -8px; right: -8px;
+  height: 22px;
+  background: linear-gradient(180deg, #D4A017 0%, #B8880E 50%, #8A640A 100%);
+  border-radius: 8px 8px 0 0;
+  z-index: 3;
+}
+.can-lid::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0; height: 3px;
+  background: rgba(0,0,0,.4);
+}
+.can-weight {
+  position: absolute;
+  bottom: 10px;
+  right: 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 7px;
+  letter-spacing: .1em;
+  color: var(--muted);
+  z-index: 3;
+}
+
+/* Floating badges around can */
+.can-badges {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+.badge-float {
+  position: absolute;
+  background: var(--dark-2);
+  border: 1px solid var(--line);
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.badge-float span { color: var(--gold); }
+.badge-float.b1 { top: 25%; left: -20px; animation: floatA 4s ease-in-out infinite; }
+.badge-float.b2 { top: 48%; right: -20px; animation: floatB 4s ease-in-out infinite .8s; }
+.badge-float.b3 { bottom: 22%; left: -10px; animation: floatA 4s ease-in-out infinite 1.6s; }
+@keyframes floatA { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+@keyframes floatB { 0%,100% { transform: translateY(0) } 50% { transform: translateY(6px) } }
+
+.product-img {
+  width: clamp(200px, 28vw, 340px);
+  height: auto;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 32px 64px rgba(0,0,0,.85)) drop-shadow(0 0 40px rgba(212,160,23,.3));
+  transition: transform .4s ease;
+}
+.product-img:hover { transform: translateY(-10px) scale(1.02); }
+
+.flavor-tag {
+  background: rgba(212,160,23,.1);
+  border: 1px solid var(--gold-border);
+  color: var(--gold-2);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  border-radius: 40px;
+}
+
+/* RIGHT — purchase widget */
+.hero-widget {
+  padding: clamp(40px, 6vh, 80px) clamp(24px, 4vw, 56px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  border-left: 1px solid var(--line);
+  background: var(--black);
+  overflow-y: auto;
+}
+
+.widget-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.widget-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 6vw, 80px);
+  letter-spacing: .06em;
+  line-height: .9;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+.widget-title span { color: var(--gold); }
+.widget-sub {
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* Stars */
+.stars-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.stars { color: var(--gold); font-size: 14px; letter-spacing: 2px; }
+.stars-count { font-size: 12px; color: var(--muted); }
+.stars-count a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Steps */
+.step-block { margin-bottom: 20px; }
+.step-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.step-num {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 9px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.step-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+
+/* Bundle cards */
+.bundle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.bundle-card {
+  border: 1.5px solid var(--dark-3);
+  background: var(--dark);
+  padding: 12px 8px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s, background .2s, transform .15s;
+  position: relative;
+}
+.bundle-card:hover { border-color: rgba(212,160,23,.5); transform: translateY(-1px); }
+.bundle-card.active {
+  border-color: var(--gold);
+  background: rgba(212,160,23,.07);
+}
+.bundle-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--black);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+.bundle-img {
+  font-size: 28px;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+.bundle-qty {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  letter-spacing: .06em;
+  color: var(--cream);
+  margin-bottom: 2px;
+}
+.bundle-price {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--gold);
+  margin-bottom: 1px;
+}
+.bundle-per {
+  font-size: 10px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+}
+.bundle-old {
+  font-size: 11px;
+  color: var(--muted-2);
+  text-decoration: line-through;
+}
+
+/* Gift cards */
+.gift-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.gift-card {
+  border: 1.5px solid var(--dark-3);
+  background: var(--dark);
+  padding: 12px 8px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+}
+.gift-card:hover { border-color: rgba(212,160,23,.4); }
+.gift-card.active {
+  border-color: var(--gold);
+  background: rgba(212,160,23,.07);
+}
+.gift-icon { font-size: 26px; margin-bottom: 4px; line-height: 1; }
+.gift-name { font-size: 11px; font-weight: 600; color: var(--cream); letter-spacing: .04em; }
+
+/* Subscription toggle */
+.sub-options { display: flex; flex-direction: column; gap: 8px; }
+.sub-card {
+  border: 1.5px solid var(--dark-3);
+  background: var(--dark);
+  padding: 14px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: border-color .2s, background .2s;
+  position: relative;
+}
+.sub-card:hover { border-color: rgba(212,160,23,.4); }
+.sub-card.active { border-color: var(--gold); background: rgba(212,160,23,.07); }
+.sub-radio {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--dark-3);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .2s;
+}
+.sub-card.active .sub-radio { border-color: var(--gold); }
+.sub-radio::after {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0;
+  transition: opacity .2s;
+}
+.sub-card.active .sub-radio::after { opacity: 1; }
+.sub-info { flex: 1; }
+.sub-title { font-size: 13px; font-weight: 700; color: var(--cream); margin-bottom: 2px; }
+.sub-desc { font-size: 11px; color: var(--muted); }
+.sub-price { font-size: 16px; font-weight: 800; color: var(--gold); }
+.sub-save {
+  position: absolute;
+  top: -10px; right: 14px;
+  background: var(--red);
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+}
+
+/* Price summary */
+.price-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin: 16px 0;
+}
+.price-total {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 44px;
+  color: var(--gold);
+  letter-spacing: .04em;
+  line-height: 1;
+}
+.price-compare {
+  font-size: 18px;
+  color: var(--muted-2);
+  text-decoration: line-through;
+}
+.price-shipping {
+  font-size: 11px;
+  color: var(--muted);
+  margin-left: auto;
+  text-align: right;
+  line-height: 1.5;
+}
+.price-shipping strong { color: var(--gold); display: block; }
+
+/* CTA */
+.btn-cta {
+  width: 100%;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: background .2s, transform .15s;
+  margin-bottom: 10px;
+}
+.btn-cta:hover { background: var(--gold-2); transform: translateY(-2px); }
+.btn-wa {
+  width: 100%;
+  background: rgba(37,211,102,.1);
+  border: 1px solid rgba(37,211,102,.3);
+  color: #25D366;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background .2s;
+}
+.btn-wa:hover { background: rgba(37,211,102,.18); }
+
+/* Trust row */
+.trust-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.trust-item span:first-child { font-size: 14px; }
+
+/* ─── BENEFITS STRIP ─── */
+.benefits-strip {
+  background: var(--gold);
+  padding: 18px clamp(20px,4vw,60px);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--black);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.benefit-item .bi-icon { font-size: 20px; }
+.benefit-divider { width: 1px; height: 30px; background: rgba(0,0,0,.2); }
+
+/* ─── WHAT'S INSIDE ─── */
+.inside {
+  padding: clamp(64px,8vh,100px) clamp(24px,5vw,80px);
+  background: var(--dark);
+}
+.section-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.section-h {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(44px, 6vw, 72px);
+  letter-spacing: .04em;
+  color: var(--white);
+  line-height: .95;
+  margin-bottom: 48px;
+}
+.section-h em { color: var(--gold); font-style: normal; }
+.ingr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2px;
+}
+.ingr-card {
+  background: var(--dark-2);
+  padding: 28px 24px;
+  border-left: 3px solid transparent;
+  transition: border-color .3s, background .3s;
+}
+.ingr-card:hover { border-color: var(--gold); background: var(--dark-3); }
+.ingr-dose {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  color: var(--gold);
+  letter-spacing: .04em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.ingr-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 6px;
+}
+.ingr-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* ─── HOW IT WORKS ─── */
+.how {
+  padding: clamp(64px,8vh,100px) clamp(24px,5vw,80px);
+  background: var(--black);
+}
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 40px;
+  margin-top: 48px;
+}
+.how-step { position: relative; }
+.how-step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 80px;
+  color: rgba(212,160,23,.12);
+  line-height: 1;
+  margin-bottom: -12px;
+}
+.how-step-icon { font-size: 32px; margin-bottom: 12px; }
+.how-step-title {
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.how-step-desc { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+/* ─── TESTIMONIALS ─── */
+.testimonials {
+  padding: clamp(64px,8vh,100px) 0;
+  background: var(--dark);
+  overflow: hidden;
+}
+.testimonials .section-eyebrow,
+.testimonials .section-h {
+  padding: 0 clamp(24px,5vw,80px);
+}
+.testi-track-wrap {
+  overflow: hidden;
+  margin-top: 40px;
+  cursor: grab;
+  user-select: none;
+}
+.testi-track-wrap:active { cursor: grabbing; }
+.testi-track {
+  display: flex;
+  gap: 16px;
+  padding: 0 clamp(24px,5vw,80px) 8px;
+  width: max-content;
+}
+.testi-card {
+  width: 280px;
+  flex-shrink: 0;
+  background: var(--dark-2);
+  border: 1px solid var(--line);
+  padding: 24px;
+}
+.testi-stars { color: var(--gold); font-size: 13px; letter-spacing: 2px; margin-bottom: 12px; }
+.testi-text { font-size: 13px; color: var(--cream); line-height: 1.7; margin-bottom: 16px; }
+.testi-author { display: flex; align-items: center; gap: 10px; }
+.testi-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--dark-3);
+  border: 1px solid var(--gold-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.testi-name { font-size: 12px; font-weight: 700; color: var(--cream); }
+.testi-handle { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.testi-verified {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* ─── RESULTS ─── */
+.results {
+  padding: clamp(64px,8vh,100px) clamp(24px,5vw,80px);
+  background: var(--black);
+}
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 2px;
+  margin-top: 48px;
+}
+.result-stat {
+  background: var(--dark);
+  padding: 32px 24px;
+  text-align: center;
+  border: 1px solid var(--line);
+}
+.result-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  color: var(--gold);
+  letter-spacing: .04em;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.result-label { font-size: 12px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+
+/* ─── FAQ ─── */
+.faq {
+  padding: clamp(64px,8vh,100px) clamp(24px,5vw,80px);
+  background: var(--dark);
+}
+.faq-list { margin-top: 48px; max-width: 700px; }
+.faq-item {
+  border-bottom: 1px solid var(--line);
+}
+.faq-q {
+  width: 100%;
+  text-align: left;
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cream);
+  letter-spacing: .02em;
+}
+.faq-icon {
+  width: 24px; height: 24px;
+  border: 1px solid var(--gold-border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 14px;
+  color: var(--gold);
+  transition: transform .3s;
+}
+.faq-item.open .faq-icon { transform: rotate(45deg); }
+.faq-a {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.8;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .4s ease, padding .3s;
+}
+.faq-item.open .faq-a { max-height: 200px; padding-bottom: 20px; }
+
+/* ─── FINAL CTA ─── */
+.final-cta {
+  padding: clamp(80px,10vh,120px) clamp(24px,5vw,80px);
+  background: var(--dark-2);
+  border-top: 1px solid var(--gold-border);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.final-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(212,160,23,.08) 0%, transparent 70%);
+}
+.final-cta-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+  position: relative;
+}
+.final-cta-h {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(60px, 9vw, 110px);
+  letter-spacing: .04em;
+  color: var(--white);
+  line-height: .92;
+  margin-bottom: 40px;
+  position: relative;
+}
+.final-cta-h span { color: var(--gold); }
+.final-cta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  position: relative;
+}
+.btn-cta-lg {
+  background: var(--gold);
+  color: var(--black);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 18px 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  transition: background .2s, transform .15s;
+}
+.btn-cta-lg:hover { background: var(--gold-2); transform: translateY(-2px); }
+.btn-wa-lg {
+  background: rgba(37,211,102,.1);
+  border: 1px solid rgba(37,211,102,.3);
+  color: #25D366;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 18px 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: background .2s;
+}
+.btn-wa-lg:hover { background: rgba(37,211,102,.18); }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--black);
+  border-top: 1px solid var(--line);
+  padding: 28px clamp(24px,5vw,80px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.footer-copy { font-size: 12px; color: var(--muted); }
+.footer-right { display: flex; gap: 24px; align-items: center; }
+.footer-link { font-size: 12px; color: var(--muted); transition: color .2s; }
+.footer-link:hover { color: var(--gold); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 960px) {
+  .hero { grid-template-columns: 1fr; min-height: auto; }
+  .hero-visual {
+    min-height: 360px;
+    padding: 40px 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-widget { border-left: none; padding: 32px 20px 48px; }
+  .badge-float.b1 { left: 10px; }
+  .badge-float.b2 { right: 10px; }
+  .badge-float.b3 { display: none; }
+  .benefit-divider { display: none; }
+  .benefits-strip { justify-content: flex-start; gap: 16px; }
+  .nav-link { display: none; }
+}
+
+@media (max-width: 600px) {
+  .widget-title { font-size: 52px; }
+  .bundle-grid, .gift-grid { gap: 6px; }
+  .bundle-card, .gift-card { padding: 10px 6px 8px; }
+  .bundle-price { font-size: 14px; }
+  .price-total { font-size: 36px; }
+  .trust-row { gap: 12px; }
+  .results-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announce">
+  <div class="announce-track">
+    <span>Envíos a todo México 24hrs</span>
+    <span>Pre-entreno de nivel élite</span>
+    <span>Sabor Manzana Verde</span>
+    <span>Fórmula sin rellenos</span>
+    <span>Envíos a todo México 24hrs</span>
+    <span>Pre-entreno de nivel élite</span>
+    <span>Sabor Manzana Verde</span>
+    <span>Fórmula sin rellenos</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-ks">KS</div>
+    KARTEL SUPPLEMENTS
+  </div>
+  <div class="nav-right">
+    <a class="nav-link" href="#inside">Fórmula</a>
+    <a class="nav-link" href="#resultados">Resultados</a>
+    <a class="nav-link" href="#faq">FAQ</a>
+    <a class="btn-nav" href="https://wa.me/527207410877">
+      Ordenar →
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+
+  <!-- Visual -->
+  <div class="hero-visual">
+    <div class="hero-visual-bg"></div>
+    <div class="can-badges">
+      <div class="badge-float b1">⚡ <span>Energía Brutal</span></div>
+      <div class="badge-float b2">🎯 <span>Enfoque Total</span></div>
+      <div class="badge-float b3">🔥 <span>300g · 30 dosis</span></div>
+    </div>
+    <div class="can-wrap">
+      <img class="product-img" src="../img/Beliko.png" alt="BÉLICO Pre-Workout · Kartel Supplements">
+      <div class="flavor-tag">🍏 Manzana Verde · Disponible</div>
+    </div>
+  </div>
+
+  <!-- Widget -->
+  <div class="hero-widget">
+    <p class="widget-brand">Kartel Supplements · Pre-Workout</p>
+    <h1 class="widget-title">BÉLICO<span>.</span></h1>
+    <p class="widget-sub">Pre-Workout · Fórmula Sin Cortes · 300g</p>
+
+    <div class="stars-row">
+      <span class="stars">★★★★★</span>
+      <span class="stars-count"><a href="#testimonios">4.9 · 84 reseñas</a></span>
+    </div>
+
+    <!-- STEP 1: Bundle -->
+    <div class="step-block">
+      <div class="step-label">
+        <span class="step-num">1</span>
+        <span class="step-title">Elige tu pack</span>
+      </div>
+      <div class="bundle-grid">
+        <div class="bundle-card" data-qty="1" data-price="449" data-compare="0" onclick="selectBundle(this)">
+          <div class="bundle-img">🥫</div>
+          <div class="bundle-qty">1 Bote</div>
+          <div class="bundle-price" id="bp1">$449</div>
+          <div class="bundle-per">MXN · $449/bote</div>
+        </div>
+        <div class="bundle-card active" data-qty="3" data-price="1149" data-compare="1347" onclick="selectBundle(this)">
+          <div class="bundle-badge">Más popular</div>
+          <div class="bundle-img">🥫🥫🥫</div>
+          <div class="bundle-qty">3 Botes</div>
+          <div class="bundle-price" id="bp3">$1,149</div>
+          <div class="bundle-per">MXN · $383/bote</div>
+          <div class="bundle-old">$1,347</div>
+        </div>
+        <div class="bundle-card" data-qty="6" data-price="1999" data-compare="2694" onclick="selectBundle(this)">
+          <div class="bundle-badge" style="background:var(--red);color:#fff">Mayor ahorro</div>
+          <div class="bundle-img">🥫🥫🥫🥫🥫🥫</div>
+          <div class="bundle-qty">6 Botes</div>
+          <div class="bundle-price" id="bp6">$1,999</div>
+          <div class="bundle-per">MXN · $333/bote</div>
+          <div class="bundle-old">$2,694</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Gift -->
+    <div class="step-block">
+      <div class="step-label">
+        <span class="step-num">2</span>
+        <span class="step-title">Elige tu regalo gratis</span>
+      </div>
+      <div class="gift-grid">
+        <div class="gift-card active" onclick="selectGift(this)">
+          <div class="gift-icon">🥤</div>
+          <div class="gift-name">Shaker Kartel</div>
+        </div>
+        <div class="gift-card" onclick="selectGift(this)">
+          <div class="gift-icon">🧢</div>
+          <div class="gift-name">Cap Kartel</div>
+        </div>
+        <div class="gift-card" onclick="selectGift(this)">
+          <div class="gift-icon">🎁</div>
+          <div class="gift-name">Sticker Pack</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Subscription -->
+    <div class="step-block">
+      <div class="step-label">
+        <span class="step-num">3</span>
+        <span class="step-title">Frecuencia</span>
+      </div>
+      <div class="sub-options">
+        <div class="sub-card" onclick="selectSub(this, false)">
+          <div class="sub-radio"></div>
+          <div class="sub-info">
+            <div class="sub-title">Una vez</div>
+            <div class="sub-desc">Sin compromisos</div>
+          </div>
+          <div class="sub-price" id="price-once">$1,149</div>
+        </div>
+        <div class="sub-card active" onclick="selectSub(this, true)">
+          <div class="sub-save">Ahorra 15%</div>
+          <div class="sub-radio"></div>
+          <div class="sub-info">
+            <div class="sub-title">Suscripción mensual</div>
+            <div class="sub-desc">Cancela cuando quieras · Envío gratis</div>
+          </div>
+          <div class="sub-price" id="price-sub">$977</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Price summary -->
+    <div class="price-summary">
+      <div class="price-total" id="display-price">$977</div>
+      <div class="price-compare" id="display-compare">$1,347</div>
+      <div class="price-shipping">
+        <strong>Envío GRATIS</strong>
+        a todo México · 24hrs
+      </div>
+    </div>
+
+    <!-- CTA buttons -->
+    <button class="btn-cta" onclick="orderNow()">
+      Pedir ahorita → <span style="font-size:18px">⚡</span>
+    </button>
+    <a class="btn-wa" href="https://wa.me/527207410877">
+      <span style="font-size:18px">💬</span>
+      Preguntar por WhatsApp
+    </a>
+
+    <!-- Trust -->
+    <div class="trust-row">
+      <div class="trust-item"><span>🔒</span> Pago seguro</div>
+      <div class="trust-item"><span>🚚</span> 24hrs México</div>
+      <div class="trust-item"><span>✅</span> Garantía 30 días</div>
+      <div class="trust-item"><span>🏆</span> Fórmula real</div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS STRIP -->
+<div class="benefits-strip">
+  <div class="benefit-item"><span class="bi-icon">⚡</span> Energía de impacto</div>
+  <div class="benefit-divider"></div>
+  <div class="benefit-item"><span class="bi-icon">🎯</span> Enfoque extremo</div>
+  <div class="benefit-divider"></div>
+  <div class="benefit-item"><span class="bi-icon">🔥</span> Quema de grasa</div>
+  <div class="benefit-divider"></div>
+  <div class="benefit-item"><span class="bi-icon">💪</span> Pumps brutales</div>
+  <div class="benefit-divider"></div>
+  <div class="benefit-item"><span class="bi-icon">🚫</span> Sin rellenos</div>
+</div>
+
+<!-- WHAT'S INSIDE -->
+<section class="inside" id="inside">
+  <p class="section-eyebrow">Fórmula</p>
+  <h2 class="section-h">LO QUE<br><em>LLEVA.</em></h2>
+  <div class="ingr-grid">
+    <div class="ingr-card">
+      <div class="ingr-dose">6G</div>
+      <div class="ingr-name">L-Citrulina</div>
+      <div class="ingr-desc">Máximo flujo sanguíneo y pumps que se sienten desde el primer rep.</div>
+    </div>
+    <div class="ingr-card">
+      <div class="ingr-dose">3.2G</div>
+      <div class="ingr-name">Beta-Alanina</div>
+      <div class="ingr-desc">Retrasa la fatiga muscular. Más reps, más peso, más resultados.</div>
+    </div>
+    <div class="ingr-card">
+      <div class="ingr-dose">300MG</div>
+      <div class="ingr-name">Cafeína Anhidra</div>
+      <div class="ingr-desc">Energía limpia y sostenida sin el crash de los pre-entrenos genéricos.</div>
+    </div>
+    <div class="ingr-card">
+      <div class="ingr-dose">2G</div>
+      <div class="ingr-name">Creatina HCL</div>
+      <div class="ingr-desc">Fuerza y volumen desde la primera semana. Absorción superior.</div>
+    </div>
+    <div class="ingr-card">
+      <div class="ingr-dose">200MG</div>
+      <div class="ingr-name">L-Teanina</div>
+      <div class="ingr-desc">Equilibra la cafeína para enfoque puro, sin ansiedad, sin temblores.</div>
+    </div>
+    <div class="ingr-card">
+      <div class="ingr-dose">500MG</div>
+      <div class="ingr-name">Extracto de Remolacha</div>
+      <div class="ingr-desc">Resistencia y oxigenación muscular mejorada de forma natural.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <p class="section-eyebrow">Cómo se usa</p>
+  <h2 class="section-h">3 PASOS.<br><em>1 RESULTADO.</em></h2>
+  <div class="steps-grid">
+    <div class="how-step">
+      <div class="how-step-num">01</div>
+      <div class="how-step-icon">💧</div>
+      <div class="how-step-title">Mezcla</div>
+      <div class="how-step-desc">1 scoop (10g) en 300-400ml de agua fría. Agita bien por 10 segundos.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">02</div>
+      <div class="how-step-icon">⏱️</div>
+      <div class="how-step-title">Espera 20 min</div>
+      <div class="how-step-desc">Tómalo 20–30 minutos antes de entrenar. Deja que la fórmula active.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">03</div>
+      <div class="how-step-icon">💥</div>
+      <div class="how-step-title">Revienta</div>
+      <div class="how-step-desc">Energía, enfoque y fuerza. Entrena como nunca lo habías hecho.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonios">
+  <p class="section-eyebrow">Reseñas reales</p>
+  <h2 class="section-h">LO QUE<br><em>DICEN.</em></h2>
+  <div class="testi-track-wrap" id="testiWrap">
+    <div class="testi-track" id="testiTrack">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Llevo 3 meses tomándolo y no he vuelto a agarrar otro pre. La energía dura todo el entreno sin caída. El sabor manzana está brutal."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">🏋️</div>
+          <div><div class="testi-name">Carlos R.</div><div class="testi-handle">@carlosfit_mx</div></div>
+          <div class="testi-verified">✓ Verificado</div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Por fin un pre-entreno hecho en México que no se queda corto. El pump que da la citrulina es de otro nivel. Lo recomiendo al 100."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">💪</div>
+          <div><div class="testi-name">Daniel M.</div><div class="testi-handle">@dmendoza_entrena</div></div>
+          <div class="testi-verified">✓ Verificado</div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Llegó al día siguiente como prometieron. El empaque está increíble y el producto cumple. Ya hice el pedido del pack de 6."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">🔥</div>
+          <div><div class="testi-name">Sofía T.</div><div class="testi-handle">@sofit_gym</div></div>
+          <div class="testi-verified">✓ Verificado</div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Lo probé por primera vez en casa de un amigo y al día siguiente ordené el pack de 3. No compro otra marca. Bélico es el único."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">⚡</div>
+          <div><div class="testi-name">Miguel A.</div><div class="testi-handle">@miguelfit</div></div>
+          <div class="testi-verified">✓ Verificado</div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Sin jitters, sin crash, sabor increíble. Justo lo que necesitaba para mis entrenos dobles. No vuelvo a los suplementos genéricos."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">🏆</div>
+          <div><div class="testi-name">Andrea L.</div><div class="testi-handle">@andrealfit_pue</div></div>
+          <div class="testi-verified">✓ Verificado</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="results" id="resultados">
+  <p class="section-eyebrow">Números</p>
+  <h2 class="section-h">HABLAN<br><em>SOLOS.</em></h2>
+  <div class="results-grid">
+    <div class="result-stat">
+      <div class="result-num" data-target="84">0</div>
+      <div class="result-label">Reseñas 5 estrellas</div>
+    </div>
+    <div class="result-stat">
+      <div class="result-num" data-target="4.9">0</div>
+      <div class="result-label">Rating promedio</div>
+    </div>
+    <div class="result-stat">
+      <div class="result-num" data-target="24">0</div>
+      <div class="result-label">Horas de envío</div>
+    </div>
+    <div class="result-stat">
+      <div class="result-num" data-target="30">0</div>
+      <div class="result-label">Dosis por bote</div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <p class="section-eyebrow">Preguntas</p>
+  <h2 class="section-h">RESOLVEMOS<br><em>TUS DUDAS.</em></h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        ¿En cuánto tiempo llega mi pedido?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Hacemos envíos a todo México. La mayoría de los pedidos llegan en 24–48 horas hábiles después de confirmar tu pago. Te mandamos el tracking por WhatsApp.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        ¿Cómo pago mi pedido?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Aceptamos transferencia bancaria, OXXO, tarjeta y pago por WhatsApp. Escríbenos al 720 741 0877 y te guiamos en el proceso.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        ¿Tiene efectos secundarios?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Bélico es un pre-entreno para adultos sanos y activos. La beta-alanina puede causar un ligero hormigueo en piel (normal y temporal). Si tienes condición médica, consulta antes con tu médico.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        ¿Cuántos días dura un bote?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Cada bote tiene 30 dosis de 10g. Si entrenas 5 días a la semana, te dura 6 semanas. El pack de 3 botes te da ~4.5 meses.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        ¿La suscripción tiene permanencia?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Cero permanencia. Cancelas cuando quieras con un mensaje de WhatsApp. La suscripción solo existe para darte el 15% de descuento automático en cada pedido.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <p class="final-cta-eyebrow">No esperes más</p>
+  <h2 class="final-cta-h">ENTRENA<br><span>BÉLICO.</span></h2>
+  <div class="final-cta-actions">
+    <a class="btn-cta-lg" href="#hero-widget" onclick="document.querySelector('.hero-widget').scrollIntoView({behavior:'smooth'}); return false;">
+      Ordenar ahorita ⚡
+    </a>
+    <a class="btn-wa-lg" href="https://wa.me/527207410877">
+      💬 WhatsApp directo
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="nav-logo">
+    <div class="nav-logo-ks">KS</div>
+    Kartel Supplements
+  </div>
+  <div class="footer-copy">© 2025 Kartel Supplements · Puebla, México</div>
+  <div class="footer-right">
+    <a class="footer-link" href="https://instagram.com/kartel_supplements">Instagram</a>
+    <a class="footer-link" href="https://wa.me/527207410877">WhatsApp</a>
+  </div>
+</footer>
+
+<script>
+// Bundle state
+let currentPrice = 1149;
+let currentCompare = 1347;
+let isSub = true;
+
+function selectBundle(card) {
+  document.querySelectorAll('.bundle-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  const price = parseInt(card.dataset.price);
+  const compare = parseInt(card.dataset.compare);
+  currentPrice = price;
+  currentCompare = compare;
+  updatePrice();
+  // Update sub/once prices
+  document.getElementById('price-once').textContent = formatMXN(price);
+  document.getElementById('price-sub').textContent = formatMXN(Math.round(price * 0.85));
+}
+
+function selectGift(card) {
+  document.querySelectorAll('.gift-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+}
+
+function selectSub(card, sub) {
+  document.querySelectorAll('.sub-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  isSub = sub;
+  updatePrice();
+}
+
+function updatePrice() {
+  const finalPrice = isSub ? Math.round(currentPrice * 0.85) : currentPrice;
+  document.getElementById('display-price').textContent = formatMXN(finalPrice);
+  document.getElementById('display-compare').textContent = currentCompare > 0 ? formatMXN(currentCompare) : '';
+}
+
+function formatMXN(n) {
+  return '$' + n.toLocaleString('es-MX');
+}
+
+function orderNow() {
+  const bundle = document.querySelector('.bundle-card.active');
+  const gift = document.querySelector('.gift-card.active');
+  const qty = bundle ? bundle.dataset.qty : '1';
+  const giftName = gift ? gift.querySelector('.gift-name').textContent : '';
+  const type = isSub ? 'Suscripción' : 'Una vez';
+  const price = document.getElementById('display-price').textContent;
+  const msg = encodeURIComponent(`¡Hola! Quiero ordenar BÉLICO Pre-Workout:\n\n• Pack: ${qty} bote(s)\n• Regalo: ${giftName}\n• Frecuencia: ${type}\n• Total: ${price} MXN\n\n¿Cómo procedo?`);
+  window.open(`https://wa.me/527207410877?text=${msg}`, '_blank');
+}
+
+// FAQ
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+// Drag scroll testimonials
+const wrap = document.getElementById('testiWrap');
+const track = document.getElementById('testiTrack');
+let isDragging = false, startX, scrollLeft;
+wrap.addEventListener('mousedown', e => { isDragging = true; startX = e.pageX - wrap.offsetLeft; scrollLeft = wrap.scrollLeft; wrap.style.cursor = 'grabbing'; });
+wrap.addEventListener('mouseleave', () => { isDragging = false; wrap.style.cursor = 'grab'; });
+wrap.addEventListener('mouseup', () => { isDragging = false; wrap.style.cursor = 'grab'; });
+wrap.addEventListener('mousemove', e => { if (!isDragging) return; e.preventDefault(); const x = e.pageX - wrap.offsetLeft; wrap.scrollLeft = scrollLeft - (x - startX) * 1.5; });
+
+// Counter animation
+const counters = document.querySelectorAll('[data-target]');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = parseFloat(el.dataset.target);
+    const isDecimal = target % 1 !== 0;
+    let start = 0;
+    const duration = 1400;
+    const step = timestamp => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const val = progress * target;
+      el.textContent = isDecimal ? val.toFixed(1) : Math.floor(val);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = isDecimal ? target.toFixed(1) : target;
+    };
+    requestAnimationFrame(step);
+    observer.unobserve(el);
+  });
+}, { threshold: .5 });
+counters.forEach(c => observer.observe(c));
+</script>
+</body>
+</html>
