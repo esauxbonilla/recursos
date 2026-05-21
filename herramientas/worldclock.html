@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Clock</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: #191919;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    transition: background .3s;
+  }
+
+  body.light { background: #ffffff; }
+
+  .clocks {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    gap: 8px;
+  }
+
+  .clock-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+
+  /* Divisor entre relojes */
+  .divider {
+    width: 1px;
+    height: 80px;
+    background: rgba(255,255,255,.08);
+    flex-shrink: 0;
+    transition: background .3s;
+  }
+  body.light .divider { background: rgba(0,0,0,.1); }
+
+  /* ── RELOJ ANALÓGICO ── */
+  .clock-face {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #2a2a2a;
+    border: 2px solid #333;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,.4), 0 2px 12px rgba(0,0,0,.3);
+    transition: background .3s, border-color .3s;
+    cursor: pointer;
+  }
+  body.light .clock-face { background: #f0f0f0; border-color: #ddd; box-shadow: inset 0 2px 6px rgba(0,0,0,.08), 0 2px 12px rgba(0,0,0,.1); }
+
+  /* Números */
+  .clock-face .nums {
+    position: absolute;
+    inset: 0;
+  }
+  .clock-face .num {
+    position: absolute;
+    font-size: 8px;
+    font-weight: 600;
+    color: rgba(255,255,255,.45);
+    width: 12px;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 50%;
+    top: 50%;
+    transform-origin: 0 0;
+    transition: color .3s;
+  }
+  body.light .clock-face .num { color: rgba(0,0,0,.4); }
+
+  /* Marcas de minuto */
+  .tick {
+    position: absolute;
+    width: 1px;
+    height: 4px;
+    background: rgba(255,255,255,.2);
+    left: 50%;
+    top: 4px;
+    transform-origin: 0 32px;
+    transition: background .3s;
+  }
+  .tick.big { height: 6px; width: 1.5px; background: rgba(255,255,255,.35); }
+  body.light .tick { background: rgba(0,0,0,.15); }
+  body.light .tick.big { background: rgba(0,0,0,.3); }
+
+  /* Centro */
+  .center-dot {
+    position: absolute;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #C0392B;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+
+  /* Manecillas */
+  .hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: bottom center;
+    border-radius: 4px;
+  }
+  .hand-hour {
+    width: 3px;
+    height: 22px;
+    margin-left: -1.5px;
+    background: #ffffff;
+    transition: background .3s;
+  }
+  .hand-min {
+    width: 2px;
+    height: 28px;
+    margin-left: -1px;
+    background: #ffffff;
+    transition: background .3s;
+  }
+  .hand-sec {
+    width: 1px;
+    height: 30px;
+    margin-left: -0.5px;
+    background: #C0392B;
+  }
+  body.light .hand-hour,
+  body.light .hand-min { background: #111111; }
+
+  /* Info bajo el reloj */
+  .clock-city {
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: .02em;
+    text-align: center;
+    transition: color .3s;
+  }
+  body.light .clock-city { color: #111111; }
+
+  .clock-day {
+    font-size: 10px;
+    font-weight: 500;
+    color: #C0392B;
+    letter-spacing: .04em;
+    margin-top: -6px;
+    text-align: center;
+  }
+
+  .clock-time {
+    font-size: 10px;
+    color: #555;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: .04em;
+    margin-top: -4px;
+    transition: color .3s;
+  }
+  body.light .clock-time { color: #aaa; }
+</style>
+</head>
+<body>
+
+<div class="clocks" id="clocksWrap"></div>
+
+<script>
+const cities = [
+  { name: 'Puebla',     tz: 'America/Mexico_City' },
+  { name: 'Los Ángeles', tz: 'America/Los_Angeles'  },
+  { name: 'Madrid',     tz: 'Europe/Madrid'         },
+  { name: 'Dubai',      tz: 'Asia/Dubai'            },
+  { name: 'Bali',       tz: 'Asia/Makassar'         },
+];
+
+// Theme toggle — comparte localStorage con reminder
+const saved = localStorage.getItem('reminder-theme');
+if (saved === 'light') document.body.classList.add('light');
+document.getElementById('clocksWrap').addEventListener('click', () => {
+  document.body.classList.toggle('light');
+  localStorage.setItem('reminder-theme', document.body.classList.contains('light') ? 'light' : 'dark');
+});
+
+// Render estructura de relojes
+const wrap = document.getElementById('clocksWrap');
+
+cities.forEach((city, i) => {
+  if (i > 0) {
+    const div = document.createElement('div');
+    div.className = 'divider';
+    wrap.appendChild(div);
+  }
+
+  const item = document.createElement('div');
+  item.className = 'clock-item';
+  item.innerHTML = `
+    <div class="clock-face" id="face-${i}">
+      <div class="nums" id="nums-${i}"></div>
+      <div class="hand hand-hour" id="h-${i}"></div>
+      <div class="hand hand-min"  id="m-${i}"></div>
+      <div class="hand hand-sec"  id="s-${i}"></div>
+      <div class="center-dot"></div>
+    </div>
+    <div class="clock-city">${city.name}</div>
+    <div class="clock-day"  id="day-${i}"></div>
+    <div class="clock-time" id="t-${i}"></div>
+  `;
+  wrap.appendChild(item);
+
+  // Marcas de minuto
+  const numsEl = document.getElementById(`nums-${i}`);
+  for (let t = 0; t < 60; t++) {
+    const tick = document.createElement('div');
+    tick.className = t % 5 === 0 ? 'tick big' : 'tick';
+    tick.style.transform = `rotate(${t * 6}deg)`;
+    numsEl.appendChild(tick);
+  }
+
+  // Números 12,3,6,9
+  [
+    { n: '12', deg: 0,   r: 26 },
+    { n: '3',  deg: 90,  r: 26 },
+    { n: '6',  deg: 180, r: 26 },
+    { n: '9',  deg: 270, r: 26 },
+  ].forEach(({ n, deg, r }) => {
+    const rad = (deg - 90) * Math.PI / 180;
+    const x = 36 + r * Math.cos(rad);
+    const y = 36 + r * Math.sin(rad);
+    const num = document.createElement('div');
+    num.className = 'num';
+    num.textContent = n;
+    num.style.left = x + 'px';
+    num.style.top  = y + 'px';
+    num.style.transform = 'translate(-50%, -50%)';
+    numsEl.appendChild(num);
+  });
+});
+
+// Referencia local para el día relativo
+const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+function getDateInTz(tz) {
+  const now = new Date();
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz,
+    hour: 'numeric', minute: 'numeric', second: 'numeric',
+    hour12: false,
+    year: 'numeric', month: 'numeric', day: 'numeric',
+  });
+  const parts = {};
+  fmt.formatToParts(now).forEach(p => { parts[p.type] = p.value; });
+  return {
+    h: parseInt(parts.hour)   % 24,
+    m: parseInt(parts.minute),
+    s: parseInt(parts.second),
+    day: parseInt(parts.day),
+    month: parseInt(parts.month),
+    year: parseInt(parts.year),
+  };
+}
+
+function tick() {
+  const localDate = getDateInTz(localTz);
+
+  cities.forEach((city, i) => {
+    const d = getDateInTz(city.tz);
+
+    // Manecillas
+    const sDeg = d.s * 6;
+    const mDeg = d.m * 6 + d.s * 0.1;
+    const hDeg = (d.h % 12) * 30 + d.m * 0.5;
+
+    document.getElementById(`h-${i}`).style.transform = `rotate(${hDeg}deg)`;
+    document.getElementById(`m-${i}`).style.transform = `rotate(${mDeg}deg)`;
+    document.getElementById(`s-${i}`).style.transform = `rotate(${sDeg}deg)`;
+
+    // Hora digital
+    const hh = String(d.h).padStart(2,'0');
+    const mm = String(d.m).padStart(2,'0');
+    document.getElementById(`t-${i}`).textContent = `${hh}:${mm}`;
+
+    // Hoy / Mañana / Ayer relativo al local
+    const localDay = new Date(localDate.year, localDate.month - 1, localDate.day);
+    const cityDay  = new Date(d.year, d.month - 1, d.day);
+    const diff = Math.round((cityDay - localDay) / 86400000);
+    const labels = { '-1': 'Ayer', 0: 'Hoy', 1: 'Mañana' };
+    document.getElementById(`day-${i}`).textContent = labels[diff] ?? '';
+  });
+
+  setTimeout(tick, 1000);
+}
+
+tick();
+</script>
+</body>
+</html>
