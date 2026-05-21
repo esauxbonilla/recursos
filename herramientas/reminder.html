@@ -107,8 +107,9 @@
       localStorage.setItem('reminder-theme', document.body.classList.contains('light') ? 'light' : 'dark');
     }
 
-    // Typewriter
+    // Typewriter — setInterval + Date.now() para que no se rompa en iframes throttleados
     let qi = Math.floor(Math.random() * quotes.length), ci = 0, del = false;
+    let waitUntil = 0;
     const el = document.getElementById('tw');
 
     function nextIndex() {
@@ -117,20 +118,25 @@
       return next;
     }
 
-    function tick() {
+    setInterval(() => {
+      const now = Date.now();
+      if (now < waitUntil) return;
       const q = quotes[qi];
       if (!del) {
         el.textContent = q.slice(0, ++ci);
-        if (ci === q.length) { del = true; setTimeout(tick, 2000); return; }
-        setTimeout(tick, 60);
+        waitUntil = now + 65;
+        if (ci >= q.length) { del = true; waitUntil = now + 2000; }
       } else {
-        el.textContent = q.slice(0, --ci);
-        if (ci === 0) { del = false; qi = nextIndex(); setTimeout(tick, 400); return; }
-        setTimeout(tick, 32);
+        if (ci <= 0) {
+          del = false;
+          qi = nextIndex();
+          waitUntil = now + 400;
+        } else {
+          el.textContent = q.slice(0, --ci);
+          waitUntil = now + 35;
+        }
       }
-    }
-
-    tick();
+    }, 20);
   </script>
 </body>
 </html>
