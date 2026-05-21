@@ -9,13 +9,11 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
+  html, body {
     background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 1.5rem;
+    margin: 0;
+    padding: 0;
+    width: 100%;
   }
 
   .card {
@@ -24,7 +22,6 @@
     border-radius: 10px;
     padding: 1.4rem 1.8rem;
     width: 100%;
-    max-width: 580px;
     border-left: 3px solid #C0392B;
   }
 
@@ -78,12 +75,13 @@
 
   <script>
     const quotes = [
-      "Progress, not perfection.",
+      "Progreso, no perfección.",
       "Winners Win",
-      "Win the morning, win the day.",
-      "Discipline is freedom.",
+      "Gana la mañana, gana el día.",
+      "La disciplina es libertad.",
       "Show up. Every single day.",
-      "Small moves, compounding fast.",
+      "Las victorias son interés compuesto — acumúlalas.",
+      "GTA 6 en una villa en Bali",
     ];
 
     let qi = Math.floor(Math.random() * quotes.length), ci = 0, del = false;
