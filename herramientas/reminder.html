@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Reminder</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600&family=DM+Serif+Display:ital@0;1&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0f1117;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1.5rem;
+  }
+
+  .card {
+    background: #16181f;
+    border: 1px solid #242630;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    width: 100%;
+    max-width: 580px;
+  }
+
+  .label {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4a4d5c;
+    margin-bottom: 1rem;
+  }
+
+  .quote-line {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: #6b7aff;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: #6b7aff;
+    vertical-align: middle;
+    animation: blink 0.7s step-end infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <p class="label">A daily reminder to your future self</p>
+    <p class="quote-line">
+      <span id="tw"></span>
+      <span class="cursor"></span>
+    </p>
+  </div>
+
+  <script>
+    const quotes = [
+      "Progress, not perfection.",
+      "Win the morning, win the day.",
+      "Discipline is freedom.",
+      "Show up. Every single day.",
+      "Carpe diem — no te quedes esperando.",
+      "Small moves, compounding fast.",
+      "Winners win. Simple."
+    ];
+
+    let qi = 0, ci = 0, del = false;
+    const el = document.getElementById('tw');
+
+    function tick() {
+      const q = quotes[qi];
+      if (!del) {
+        el.textContent = q.slice(0, ++ci);
+        if (ci === q.length) { del = true; setTimeout(tick, 2000); return; }
+        setTimeout(tick, 60);
+      } else {
+        el.textContent = q.slice(0, --ci);
+        if (ci === 0) { del = false; qi = (qi + 1) % quotes.length; setTimeout(tick, 400); return; }
+        setTimeout(tick, 32);
+      }
+    }
+
+    tick();
+  </script>
+</body>
+</html>
