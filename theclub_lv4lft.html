@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE CLUB — LV4LFT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0A0A0A;
+    --black-2: #111111;
+    --black-3: #1A1A1A;
+    --gold: #C9A84C;
+    --gold-dim: #8B6E2A;
+    --white: #FFFFFF;
+    --gray: #888888;
+    --gray-light: #CCCCCC;
+    --border: rgba(255,255,255,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--gold); }
+
+  .nav-cta {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 0.55rem 1.2rem;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .nav-cta:hover { background: var(--gold); color: var(--black); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 2.5rem 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 70% 40%, rgba(201,168,76,0.06) 0%, transparent 60%),
+                linear-gradient(to bottom, transparent 40%, rgba(10,10,10,0.95) 100%);
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2rem;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 16vw, 14rem);
+    line-height: 0.88;
+    letter-spacing: 0.02em;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-title .the { color: var(--white); display: block; }
+  .hero-title .club { color: var(--gold); display: block; }
+
+  .hero-sub {
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    color: var(--gray-light);
+    max-width: 480px;
+    position: relative;
+    z-index: 2;
+    line-height: 1.7;
+  }
+
+  .hero-sub strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    right: 2.5rem;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  .hero-scroll::after {
+    content: '';
+    width: 1px;
+    height: 3rem;
+    background: linear-gradient(to bottom, var(--gray), transparent);
+    animation: scrollLine 1.8s ease-in-out infinite;
+  }
+
+  @keyframes scrollLine {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.15); }
+  }
+
+  /* ── SECTION BASE ── */
+  section {
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 7rem 2.5rem;
+  }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 1.5rem;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  /* ── BRAND IDENTITY ── */
+  .brand { background: var(--black-2); }
+
+  .brand-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .brand-left {}
+
+  .brand-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    letter-spacing: 0.03em;
+    line-height: 0.92;
+    margin-bottom: 2rem;
+    color: var(--white);
+  }
+
+  .brand-headline em {
+    color: var(--gold);
+    font-style: normal;
+    display: block;
+  }
+
+  .brand-manifesto {
+    font-size: 1.05rem;
+    color: var(--gray-light);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .brand-manifesto strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .brand-quote {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .brand-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .brand-pillar {
+    background: var(--black-2);
+    padding: 1.75rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.25s;
+  }
+
+  .brand-pillar:hover { background: var(--black-3); }
+
+  .brand-pillar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .brand-pillar:hover::before { transform: scaleX(1); }
+
+  .pillar-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+
+  .pillar-text {
+    font-size: 0.92rem;
+    color: var(--gray-light);
+    line-height: 1.6;
+  }
+
+  .pillar-text strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  @media (max-width: 700px) {
+    .brand-grid { grid-template-columns: 1fr; gap: 3rem; }
+  }
+
+  /* ── INTRO SECTION ── */
+  .intro { background: var(--black); }
+
+  .intro-text {
+    font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+    font-weight: 300;
+    line-height: 1.4;
+    max-width: 820px;
+    color: var(--gray-light);
+  }
+
+  .intro-text strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .intro-text em {
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  /* ── LEVELS ── */
+  .levels { background: var(--black-2); }
+
+  .levels-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: 0.04em;
+    margin-bottom: 3.5rem;
+    line-height: 1;
+  }
+
+  .level-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    border: 1px solid var(--border);
+  }
+
+  .level-card {
+    padding: 2.5rem 2rem;
+    background: var(--black-2);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .level-card:last-child { border-bottom: none; }
+
+  .level-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--gold);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+    transform-origin: top;
+  }
+
+  .level-card:hover::before,
+  .level-card.active::before { transform: scaleY(1); }
+
+  .level-card:hover,
+  .level-card.active { background: var(--black-3); }
+
+  .level-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 0;
+  }
+
+  .level-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    color: var(--border);
+    line-height: 1;
+    transition: color 0.25s;
+    min-width: 4rem;
+  }
+
+  .level-card:hover .level-num,
+  .level-card.active .level-num { color: var(--gold); }
+
+  .level-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.06em;
+    color: var(--white);
+  }
+
+  .level-tagline {
+    font-size: 0.8rem;
+    color: var(--gray);
+    letter-spacing: 0.05em;
+    margin-left: auto;
+  }
+
+  .level-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, margin-top 0.3s ease, padding-top 0.3s ease;
+  }
+
+  .level-card.active .level-body {
+    max-height: 400px;
+  }
+
+  .level-body-col h4 {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .benefit-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .benefit-list li {
+    font-size: 0.9rem;
+    color: var(--gray-light);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .benefit-list li::before {
+    content: '—';
+    color: var(--gold);
+    font-size: 0.8rem;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+  }
+
+  .level-locked {
+    font-size: 0.95rem;
+    color: var(--gray);
+    font-style: italic;
+    grid-column: 1 / -1;
+    padding: 1.5rem 0;
+  }
+
+  .level-locked strong { color: var(--white); font-style: normal; }
+
+  /* ── POINTS SYSTEM ── */
+  .points { background: var(--black); }
+
+  .points-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: 0.04em;
+    margin-bottom: 1rem;
+    line-height: 1;
+  }
+
+  .points-sub {
+    color: var(--gray);
+    font-size: 0.95rem;
+    margin-bottom: 4rem;
+    max-width: 480px;
+  }
+
+  .points-requirement {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 4rem;
+    padding: 2.5rem;
+    background: var(--black-3);
+    border: 1px solid var(--border);
+  }
+
+  .req-item { flex: 1; }
+
+  .req-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .req-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  .req-divider {
+    width: 1px;
+    background: var(--border);
+    align-self: stretch;
+  }
+
+  .points-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .point-card {
+    background: var(--black-2);
+    padding: 2rem 1.75rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .point-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: left;
+  }
+
+  .point-card:hover::after { transform: scaleX(1); }
+
+  .point-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .point-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+  }
+
+  .point-desc {
+    font-size: 0.8rem;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  .points-note {
+    margin-top: 2.5rem;
+    font-size: 0.85rem;
+    color: var(--gray);
+    border-left: 2px solid var(--gold);
+    padding-left: 1.2rem;
+    line-height: 1.7;
+  }
+
+  /* ── STEPS ── */
+  .steps-section { background: var(--black-2); }
+
+  .steps-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: 0.04em;
+    margin-bottom: 4rem;
+    line-height: 1;
+  }
+
+  .steps-list {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .steps-list::before {
+    content: '';
+    position: absolute;
+    left: 1.5rem;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+
+  .step-item {
+    display: flex;
+    gap: 2.5rem;
+    padding: 0 0 3rem 0;
+    position: relative;
+  }
+
+  .step-dot {
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid var(--gold);
+    background: var(--black-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-num-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+  }
+
+  .step-content { padding-top: 0.5rem; }
+
+  .step-title {
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: var(--white);
+    margin-bottom: 0.35rem;
+  }
+
+  .step-desc {
+    font-size: 0.88rem;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  .step-keyword {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--black);
+    background: var(--gold);
+    padding: 0.2rem 0.7rem;
+    font-weight: 500;
+  }
+
+  /* ── WHAT WE EXPECT ── */
+  .expect { background: var(--black); }
+
+  .expect-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    margin-bottom: 3.5rem;
+  }
+
+  .expect-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--border);
+    margin-bottom: 3rem;
+  }
+
+  .expect-item {
+    background: var(--black);
+    padding: 2rem 1.75rem;
+  }
+
+  .expect-icon {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+
+  .expect-item p {
+    font-size: 0.92rem;
+    color: var(--gray-light);
+    line-height: 1.6;
+  }
+
+  .expect-item strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .expect-note {
+    font-size: 1.1rem;
+    color: var(--gray-light);
+    line-height: 1.7;
+    max-width: 700px;
+    border-left: 2px solid var(--gold);
+    padding-left: 1.5rem;
+  }
+
+  .expect-note strong { color: var(--white); font-weight: 500; }
+
+  /* ── CTA FINAL ── */
+  .cta-section {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+  }
+
+  .cta-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 8rem 2.5rem;
+    text-align: center;
+  }
+
+  .cta-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2rem;
+  }
+
+  .cta-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    letter-spacing: 0.04em;
+    line-height: 0.9;
+    margin-bottom: 2rem;
+    color: var(--white);
+  }
+
+  .cta-title span { color: var(--gold); }
+
+  .cta-sub {
+    font-size: 1rem;
+    color: var(--gray);
+    max-width: 440px;
+    margin: 0 auto 3.5rem;
+    line-height: 1.7;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.2em;
+    color: var(--black);
+    background: var(--gold);
+    padding: 1.1rem 3.5rem;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .cta-btn:hover {
+    background: #E0BB5A;
+    transform: translateY(-2px);
+  }
+
+  .cta-note {
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    color: var(--gray);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .cta-signature {
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .cta-signature p {
+    font-size: 0.85rem;
+    color: var(--gray);
+    line-height: 1.8;
+  }
+
+  .cta-signature strong {
+    color: var(--white);
+    font-weight: 500;
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 2rem 2.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer span {
+    font-size: 0.75rem;
+    color: var(--gray);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── FADE IN ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .hero { padding: 0 1.5rem 5rem; }
+    .section-inner { padding: 5rem 1.5rem; }
+    .level-body { grid-template-columns: 1fr; }
+    .points-requirement { flex-direction: column; gap: 2rem; }
+    .req-divider { width: 100%; height: 1px; }
+    .points-grid { grid-template-columns: 1fr; }
+    .expect-grid { grid-template-columns: 1fr; }
+    .level-tagline { display: none; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">LV<span>4</span>LFT</a>
+  <a href="#cta" class="nav-cta">Estoy dentro</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <p class="hero-eyebrow">LV4LFT · Private Program</p>
+  <h1 class="hero-title">
+    <span class="the">THE</span>
+    <span class="club">CLUB</span>
+  </h1>
+  <p class="hero-sub">
+    <strong>No es para todos.</strong><br>
+    Es para los que ya viven esto.
+  </p>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- BRAND IDENTITY -->
+<section class="brand">
+  <div class="section-inner">
+    <p class="section-label">Quiénes somos</p>
+    <div class="brand-grid">
+
+      <div class="brand-left">
+        <h2 class="brand-headline fade-in">
+          Una forma<br>de vivir.
+          <em>No solo de vestir.</em>
+        </h2>
+        <p class="brand-manifesto fade-in">
+          LV4LFT no es solo ropa. No es solo suplementos.<br>
+          <strong>Es una forma de vivir, de entrenar, de presentarte al mundo.</strong><br><br>
+          Desde 2013 en Puebla, hemos construido una comunidad de personas que no necesitan que les expliquen por qué vale la pena. Ya lo saben. Ya lo viven.<br><br>
+          Esta oportunidad existe para las personas que entienden eso sin que se los digamos.
+        </p>
+        <div class="brand-quote fade-in">
+          "Si tienes que preguntar si es para ti,<br>probablemente no lo es."
+        </div>
+      </div>
+
+      <div class="brand-right fade-in">
+        <div class="brand-pillar">
+          <div class="pillar-label">Disciplina</div>
+          <p class="pillar-text">No representamos resultados de fin de semana. Representamos a quienes <strong>se presentan todos los días</strong> — sin excusas, sin atajos.</p>
+        </div>
+        <div class="brand-pillar">
+          <div class="pillar-label">Constancia</div>
+          <p class="pillar-text">El progreso no es lineal. Pero la presencia sí. <strong>Quien está aquí, está siempre.</strong> Eso es lo que distingue a un WTS Member.</p>
+        </div>
+        <div class="brand-pillar">
+          <div class="pillar-label">Mentalidad</div>
+          <p class="pillar-text">El cuerpo sigue a la mente. LV4LFT existe para las personas que ya decidieron <strong>quiénes quieren ser</strong> — y van por ello.</p>
+        </div>
+        <div class="brand-pillar">
+          <div class="pillar-label">Estilo de vida</div>
+          <p class="pillar-text">No es una estética. Es una identidad. <strong>LV4LFT se usa cuando nadie te ve,</strong> porque así es como se vive de verdad.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section class="intro">
+  <div class="section-inner">
+    <p class="section-label">Sobre el programa</p>
+    <p class="intro-text fade-in">
+      THE CLUB es el <em>núcleo de LV4LFT</em>. 
+      No es ropa ni suplementos — es una forma de presentarte al mundo.<br><br>
+      <strong>Si tienes que preguntar si es para ti, probablemente no lo es.</strong>
+    </p>
+  </div>
+</section>
+
+<!-- LEVELS -->
+<section class="levels">
+  <div class="section-inner">
+    <p class="section-label">Estructura</p>
+    <h2 class="levels-title fade-in">Tres niveles.<br>Cada uno se gana.</h2>
+
+    <div class="level-cards">
+
+      <!-- NIVEL 1 -->
+      <div class="level-card active" onclick="toggleLevel(this)">
+        <div class="level-header">
+          <span class="level-num">01</span>
+          <div>
+            <div class="level-name">WTS Members</div>
+            <div style="font-size:0.75rem;color:var(--gray);margin-top:0.2rem;">We The Standard · Nivel de entrada</div>
+          </div>
+          <span class="level-tagline">15% descuento personal · Código 10% off</span>
+        </div>
+        <div class="level-body">
+          <div class="level-body-col">
+            <h4>Beneficios</h4>
+            <ul class="benefit-list">
+              <li>Acceso al grupo privado de THE CLUB</li>
+              <li>15% de descuento permanente en ropa y suplementos</li>
+              <li>Acceso anticipado a drops y preventas</li>
+              <li>Tu propio código de descuento para tu comunidad</li>
+              <li>Participación en dinámicas y activaciones de marca</li>
+              <li>Cercanía directa con el equipo de LV4LFT</li>
+            </ul>
+          </div>
+          <div class="level-body-col">
+            <h4>Lo que pedimos</h4>
+            <ul class="benefit-list">
+              <li>Que lo vivas de verdad — no como anuncio</li>
+              <li>Sin exclusividad en este nivel</li>
+              <li>Sin mínimo de seguidores</li>
+              <li>Constancia y presencia activa</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- NIVEL 2 -->
+      <div class="level-card" onclick="toggleLevel(this)">
+        <div class="level-header">
+          <span class="level-num">02</span>
+          <div>
+            <div class="level-name">Lift Elite</div>
+            <div style="font-size:0.75rem;color:var(--gray);margin-top:0.2rem;">Para los que no solo están. Para los que mueven.</div>
+          </div>
+          <span class="level-tagline">20% descuento personal · Código 10% off</span>
+        </div>
+        <div class="level-body">
+          <div class="level-body-col">
+            <h4>Beneficios</h4>
+            <ul class="benefit-list">
+              <li>Todo lo de WTS Members, elevado</li>
+              <li>20% de descuento permanente en toda la tienda</li>
+              <li>Acceso preferencial a colaboraciones</li>
+              <li>Productos de edición limitada antes que nadie</li>
+              <li>Participación prioritaria en eventos y activaciones</li>
+              <li>Comunicación directa con el equipo para proyectos especiales</li>
+            </ul>
+          </div>
+          <div class="level-body-col">
+            <h4>Cómo se llega</h4>
+            <ul class="benefit-list">
+              <li>4 meses activo en el programa</li>
+              <li>200 puntos acumulados</li>
+              <li>Mínimo 3 reels o publicaciones en colaboración</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- NIVEL 3 -->
+      <div class="level-card" onclick="toggleLevel(this)">
+        <div class="level-header">
+          <span class="level-num">03</span>
+          <div>
+            <div class="level-name">ICONS</div>
+            <div style="font-size:0.75rem;color:var(--gray);margin-top:0.2rem;">No se solicita. Se construye.</div>
+          </div>
+          <span class="level-tagline">El nivel más alto</span>
+        </div>
+        <div class="level-body">
+          <p class="level-locked">
+            ICONS representa a quienes han demostrado consistencia, liderazgo e influencia genuina dentro del ecosistema LV4LFT.<br><br>
+            <strong>Los requisitos y beneficios de este nivel se comunican personalmente cuando llegas a Lift Elite.</strong><br><br>
+            Porque si tienes que preguntar si ya eres un ICON, todavía no lo eres.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- POINTS -->
+<section class="points">
+  <div class="section-inner">
+    <p class="section-label">Sistema de progresión</p>
+    <h2 class="points-title fade-in">Así subes<br>de nivel.</h2>
+    <p class="points-sub">Para pasar de WTS Members a Lift Elite necesitas dos cosas:</p>
+
+    <div class="points-requirement fade-in">
+      <div class="req-item">
+        <div class="req-num">4</div>
+        <div class="req-label">Meses activo en el programa</div>
+      </div>
+      <div class="req-divider"></div>
+      <div class="req-item">
+        <div class="req-num">200</div>
+        <div class="req-label">Puntos acumulados</div>
+      </div>
+      <div class="req-divider"></div>
+      <div class="req-item">
+        <div class="req-num">50</div>
+        <div class="req-label">Puntos mínimos por mes</div>
+      </div>
+    </div>
+
+    <div class="points-grid fade-in">
+      <div class="point-card">
+        <div class="point-value">+10</div>
+        <div class="point-label">Venta con tu código</div>
+        <div class="point-desc">Cada vez que alguien de tu comunidad usa tu código personal.</div>
+      </div>
+      <div class="point-card">
+        <div class="point-value">+5</div>
+        <div class="point-label">Reel publicado</div>
+        <div class="point-desc">Cada reel en Instagram representando LV4LFT y su estilo de vida.</div>
+      </div>
+      <div class="point-card">
+        <div class="point-value">+5</div>
+        <div class="point-label">TikTok publicado</div>
+        <div class="point-desc">Cada TikTok representando LV4LFT con contenido de calidad.</div>
+      </div>
+    </div>
+
+    <p class="points-note fade-in">
+      50 puntos por mes durante 4 meses. No es difícil. <strong style="color:var(--white);">Es constancia.</strong>
+    </p>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="steps-section">
+  <div class="section-inner">
+    <p class="section-label">Cómo entrar</p>
+    <h2 class="steps-title fade-in">El proceso<br>es simple.</h2>
+
+    <div class="steps-list">
+
+      <div class="step-item fade-in">
+        <div class="step-dot"><span class="step-num-label">01</span></div>
+        <div class="step-content">
+          <div class="step-title">Comentaste WTS en nuestro post</div>
+          <div class="step-desc">Ya diste el primer paso. ManyChat te mandó este link automáticamente.</div>
+          <span class="step-keyword">WTS</span>
+        </div>
+      </div>
+
+      <div class="step-item fade-in">
+        <div class="step-dot"><span class="step-num-label">02</span></div>
+        <div class="step-content">
+          <div class="step-title">Lees todo el programa</div>
+          <div class="step-desc">Niveles, beneficios, sistema de puntos. Todo está aquí. Si conecta contigo, sigue adelante.</div>
+        </div>
+      </div>
+
+      <div class="step-item fade-in">
+        <div class="step-dot"><span class="step-num-label">03</span></div>
+        <div class="step-content">
+          <div class="step-title">Respondes "ESTOY DENTRO" en el DM</div>
+          <div class="step-desc">Vuelves al DM de Instagram y mandas esas dos palabras. El equipo de LV4LFT te atiende personalmente.</div>
+          <span class="step-keyword">ESTOY DENTRO</span>
+        </div>
+      </div>
+
+      <div class="step-item fade-in">
+        <div class="step-dot"><span class="step-num-label">04</span></div>
+        <div class="step-content">
+          <div class="step-title">Recibes tu beneficio exclusivo de entrada</div>
+          <div class="step-desc">Te mandamos un código de descuento para tu primera prenda LV4LFT. Aquí empieza todo.</div>
+        </div>
+      </div>
+
+      <div class="step-item fade-in">
+        <div class="step-dot"><span class="step-num-label">05</span></div>
+        <div class="step-content">
+          <div class="step-title">Haces tu pedido y mandas captura</div>
+          <div class="step-desc">Completas tu primera compra y nos mandas screenshot del pedido confirmado en el DM.</div>
+        </div>
+      </div>
+
+      <div class="step-item fade-in">
+        <div class="step-dot"><span class="step-num-label">06</span></div>
+        <div class="step-content">
+          <div class="step-title">Se activa tu código de afiliado</div>
+          <div class="step-desc">Tu código personalizado queda activo. Tu comunidad puede usarlo para obtener 10% off en toda la tienda.</div>
+        </div>
+      </div>
+
+      <div class="step-item fade-in">
+        <div class="step-dot"><span class="step-num-label">07</span></div>
+        <div class="step-content">
+          <div class="step-title">Recibes tu banco de contenido</div>
+          <div class="step-desc">Te mandamos referencias de anuncios ganadores y ejemplos visuales para tu primer reel. Primeros puntos, primera semana.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE EXPECT -->
+<section class="expect">
+  <div class="section-inner">
+    <p class="section-label">Lo que pedimos</p>
+    <h2 class="expect-title fade-in">Ser parte de<br>THE CLUB no es pasivo.</h2>
+
+    <div class="expect-grid fade-in">
+      <div class="expect-item">
+        <div class="expect-icon">Autenticidad</div>
+        <p>Que cuando uses LV4LFT <strong>se note que no es un anuncio</strong>. Tu comunidad debe sentirlo como una recomendación real, no como contenido pagado.</p>
+      </div>
+      <div class="expect-item">
+        <div class="expect-icon">Presencia</div>
+        <p>No te pedimos exclusividad. No te pedimos un número mínimo de seguidores. Te pedimos algo más difícil: <strong>que lo vivas de verdad.</strong></p>
+      </div>
+      <div class="expect-item">
+        <div class="expect-icon">Constancia</div>
+        <p>50 puntos por mes durante 4 meses. Reels, TikToks, ventas con tu código. <strong>No es cantidad — es consistencia.</strong></p>
+      </div>
+      <div class="expect-item">
+        <div class="expect-icon">Estándar</div>
+        <p><strong>We The Standard no es un slogan.</strong> Es una forma de ser. Representa el estándar que da nombre a este nivel dentro y fuera del gimnasio.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="cta-inner">
+    <p class="cta-eyebrow">THE CLUB · LV4LFT</p>
+    <h2 class="cta-title fade-in">Ya leíste todo.<br>Ya sabes si es <span>para ti.</span></h2>
+    <p class="cta-sub">Si esto conectó contigo, ya sabes qué hacer. Regresa al DM y manda las dos palabras.</p>
+
+    <a href="https://instagram.com/live4lift" target="_blank" class="cta-btn">ESTOY DENTRO</a>
+
+    <p class="cta-note">Al hacer clic vas al DM de Instagram donde inició esta conversación. Ahí el equipo de LV4LFT te atiende personalmente.</p>
+
+    <div class="cta-signature">
+      <p>
+        No lo pienses demasiado.<br>
+        Si estás leyendo esto, algo en ti quiere más.<br>
+        Este es el momento de decidir.
+        <strong>— Jesús Muñoz, CEO & Fundador · LV4LFT</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 LV4LFT · All rights reserved</span>
+  <span>Shadow Ops System</span>
+</footer>
+
+<script>
+  // Toggle level cards
+  function toggleLevel(card) {
+    const cards = document.querySelectorAll('.level-card');
+    cards.forEach(c => {
+      if (c !== card) c.classList.remove('active');
+    });
+    card.classList.toggle('active');
+  }
+
+  // Fade in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
