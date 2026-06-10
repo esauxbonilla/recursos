@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Ads — Insano</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --surface: #111111;
+    --card: #181818;
+    --border: #252525;
+    --accent: #E8FF2A;
+    --accent-dim: rgba(232, 255, 42, 0.12);
+    --accent-glow: rgba(232, 255, 42, 0.25);
+    --text: #f0f0f0;
+    --muted: #888;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    padding: 32px 24px 24px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 50%;
+    transform: translateX(-50%);
+    width: 80px; height: 2px;
+    background: var(--accent);
+  }
+  .logo-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(34px, 8vw, 58px);
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+  }
+  .header h1 span { color: var(--accent); }
+  .header-sub {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* ── PROOF BANNER ── */
+  .proof-banner {
+    background: var(--accent-dim);
+    border: 1px solid rgba(232,255,42,0.2);
+    border-left: 3px solid var(--accent);
+    margin: 24px 16px;
+    border-radius: 6px;
+    padding: 16px 20px;
+  }
+  .proof-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .proof-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .proof-stat { text-align: center; }
+  .proof-stat .val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(22px, 5vw, 32px);
+    color: var(--accent);
+    line-height: 1;
+  }
+  .proof-stat .lbl {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+
+  /* ── SECTION ── */
+  .section { padding: 24px 16px; }
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  /* ── SLIDER CARD ── */
+  .slider-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 20px;
+  }
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 20px;
+  }
+  .slider-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+  }
+  .slider-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 38px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .slider-value .currency {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-right: 2px;
+  }
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+    margin-bottom: 12px;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 3px solid var(--black);
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 3px solid var(--black);
+  }
+  .slider-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  /* ── ROAS SELECTOR ── */
+  .roas-selector { margin-top: 20px; }
+  .roas-selector .roas-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .roas-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .roas-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .roas-btn:active { transform: scale(0.97); }
+  .roas-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+  }
+  .roas-btn .roas-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 24px;
+    color: var(--text);
+    line-height: 1;
+  }
+  .roas-btn.active .roas-num { color: var(--accent); }
+  .roas-btn .roas-tag {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+  .roas-btn.active .roas-tag { color: var(--accent); opacity: 0.7; }
+
+  /* ── RESULTADO ── */
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .result-row:last-child { border-bottom: none; }
+  .result-row .result-key {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  .result-row .result-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    color: var(--text);
+  }
+  .result-row.highlight .result-val {
+    color: var(--accent);
+    font-size: 30px;
+  }
+  .result-row.highlight .result-key {
+    color: var(--text);
+    font-size: 13px;
+  }
+
+  /* ── VEREDICTO ── */
+  .verdict {
+    background: var(--accent-dim);
+    border: 1px solid rgba(232,255,42,0.2);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+    text-align: center;
+  }
+  .verdict-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: clamp(16px, 4vw, 20px);
+    line-height: 1.3;
+    color: var(--text);
+  }
+  .verdict-text strong { color: var(--accent); }
+
+  /* ── CAMPAÑAS ROWS ── */
+  .campaigns { margin-top: 4px; }
+  .camp-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .camp-row:last-child { border-bottom: none; }
+  .camp-left {
+    min-width: 110px;
+  }
+  .camp-roas-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 20px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .camp-name {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+  .camp-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .camp-bar {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+  .camp-meta {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: right;
+    min-width: 72px;
+    line-height: 1.4;
+  }
+
+  /* ── RECORDS GRID ── */
+  .records-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .record-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .record-card.gold {
+    border-color: rgba(232,255,42,0.4);
+    background: linear-gradient(135deg, #181818 60%, rgba(232,255,42,0.06));
+  }
+  .record-card.gold::after {
+    content: '🏆';
+    position: absolute;
+    top: 10px; right: 12px;
+    font-size: 16px;
+    opacity: 0.6;
+  }
+  .record-evento {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .record-roas {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(32px, 7vw, 44px);
+    color: var(--accent);
+    line-height: 1;
+  }
+  .record-roas span {
+    font-size: 16px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .record-detail {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+  .record-detail strong { color: var(--text); }
+
+  /* ── TOTALS BAR ── */
+  .totals-bar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    text-align: center;
+  }
+  .total-item .tv {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(20px, 4vw, 26px);
+    color: var(--accent);
+    line-height: 1;
+  }
+  .total-item .tk {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 3px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    padding: 24px 16px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+  .footer p {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .footer .brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: var(--accent);
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 rgba(232,255,42,0); }
+    50% { box-shadow: 0 0 20px rgba(232,255,42,0.15); }
+  }
+  .result-card { animation: pulse-glow 3s ease-in-out infinite; }
+
+  @keyframes flash {
+    0% { opacity: 0.4; }
+    100% { opacity: 1; }
+  }
+  .flash { animation: flash 0.25s ease-out; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-tag">Insano Clothing · Ads ROI</div>
+  <h1>Metes <span id="hdr-inv">$50k</span>,<br>sacas <span id="hdr-ret">$300k</span></h1>
+  <div class="header-sub">Números reales. Nov 2025 — Jun 2026.</div>
+</div>
+
+<!-- PROOF BANNER: ACUMULADO TOTAL -->
+<div class="proof-banner">
+  <div class="proof-label">📊 Histórico Total · Nov 2025 – Jun 2026</div>
+  <div class="proof-stats">
+    <div class="proof-stat">
+      <div class="val">$44.2k</div>
+      <div class="lbl">Gastado en ads</div>
+    </div>
+    <div class="proof-stat">
+      <div class="val">$629k</div>
+      <div class="lbl">Ingresos totales</div>
+    </div>
+    <div class="proof-stat">
+      <div class="val">14.26x</div>
+      <div class="lbl">ROAS promedio</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDER -->
+<div class="section">
+  <div class="section-label">¿Cuánto quieres invertir?</div>
+  <div class="slider-card">
+    <div class="slider-header">
+      <div class="slider-label">Presupuesto</div>
+      <div class="slider-value">
+        <span class="currency">$</span><span id="slider-display">50,000</span>
+      </div>
+    </div>
+
+    <input type="range" id="budget-slider"
+      min="10000" max="300000" step="5000" value="50000"
+      oninput="update()">
+
+    <div class="slider-ticks">
+      <span>$10k</span>
+      <span>$75k</span>
+      <span>$150k</span>
+      <span>$225k</span>
+      <span>$300k</span>
+    </div>
+
+    <div class="roas-selector">
+      <div class="roas-label">Escenario ROAS</div>
+      <div class="roas-buttons">
+        <div class="roas-btn" data-roas="4" onclick="setRoas(4, this)">
+          <div class="roas-num">4x</div>
+          <div class="roas-tag">Conservador</div>
+        </div>
+        <div class="roas-btn active" data-roas="6" onclick="setRoas(6, this)">
+          <div class="roas-num">6x</div>
+          <div class="roas-tag">Always-On</div>
+        </div>
+        <div class="roas-btn" data-roas="14" onclick="setRoas(14, this)">
+          <div class="roas-num">14x</div>
+          <div class="roas-tag">Histórico real</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="result-card" id="result-card">
+    <div class="result-row">
+      <div class="result-key">Inversión en ads</div>
+      <div class="result-val" id="res-inv">$50,000</div>
+    </div>
+    <div class="result-row">
+      <div class="result-key">ROAS aplicado</div>
+      <div class="result-val" id="res-roas">6x</div>
+    </div>
+    <div class="result-row highlight">
+      <div class="result-key">🔥 Ingresos generados</div>
+      <div class="result-val" id="res-ret">$300,000</div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-text" id="verdict-text">
+      Por cada <strong>$1</strong> que metes, salen <strong>$6</strong>.<br>
+      Eso no es gasto — <strong>es la maquinaria.</strong>
+    </div>
+  </div>
+</div>
+
+<!-- RÉCORDS POR EVENTO -->
+<div class="section" style="padding-top:0">
+  <div class="section-label">Récord por evento — Los picos que nadie discute</div>
+  <div class="records-grid">
+
+    <div class="record-card gold">
+      <div class="record-evento">Buen Fin 2025</div>
+      <div class="record-roas">46.74<span>x</span></div>
+      <div class="record-detail">
+        <strong>$2,986</strong> invertidos<br>
+        <strong>$139,554</strong> en ventas<br>
+        64 compras
+      </div>
+    </div>
+
+    <div class="record-card gold">
+      <div class="record-evento">14 de Febrero 2026</div>
+      <div class="record-roas">42.48<span>x</span></div>
+      <div class="record-detail">
+        <strong>$2,189</strong> invertidos<br>
+        <strong>$92,964</strong> en ventas<br>
+        11 compras
+      </div>
+    </div>
+
+    <div class="record-card">
+      <div class="record-evento">Buen Fin Copia</div>
+      <div class="record-roas">24.04<span>x</span></div>
+      <div class="record-detail">
+        <strong>$3,835</strong> invertidos<br>
+        <strong>$92,200</strong> en ventas<br>
+        54 compras
+      </div>
+    </div>
+
+    <div class="record-card">
+      <div class="record-evento">VentasAbril – Copia</div>
+      <div class="record-roas">17.15<span>x</span></div>
+      <div class="record-detail">
+        <strong>$1,091</strong> invertidos<br>
+        <strong>$18,713</strong> en ventas<br>
+        5 compras
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- HOT SALE DETALLE -->
+<div class="section" style="padding-top:0">
+  <div class="section-label">Hot Sale 2026 — Campañas activas</div>
+  <div class="slider-card campaigns">
+
+    <div class="camp-row">
+      <div class="camp-left">
+        <div class="camp-roas-badge">13.15x</div>
+        <div class="camp-name">PRO_LAL</div>
+      </div>
+      <div class="camp-bar-wrap">
+        <div class="camp-bar" style="width:100%"></div>
+      </div>
+      <div class="camp-meta">$5,328<br>→ $70,049</div>
+    </div>
+
+    <div class="camp-row">
+      <div class="camp-left">
+        <div class="camp-roas-badge">12.29x</div>
+        <div class="camp-name">Prosp. Stone</div>
+      </div>
+      <div class="camp-bar-wrap">
+        <div class="camp-bar" style="width:93%"></div>
+      </div>
+      <div class="camp-meta">$765<br>→ $9,397</div>
+    </div>
+
+    <div class="camp-row">
+      <div class="camp-left">
+        <div class="camp-roas-badge">10.68x</div>
+        <div class="camp-name">VentasAbril AO</div>
+      </div>
+      <div class="camp-bar-wrap">
+        <div class="camp-bar" style="width:81%"></div>
+      </div>
+      <div class="camp-meta">$1,901<br>→ $20,298</div>
+    </div>
+
+    <div class="camp-row">
+      <div class="camp-left">
+        <div class="camp-roas-badge">10.25x</div>
+        <div class="camp-name">RE_HOT_CATALOG VC</div>
+      </div>
+      <div class="camp-bar-wrap">
+        <div class="camp-bar" style="width:78%"></div>
+      </div>
+      <div class="camp-meta">$2,570<br>→ $26,353</div>
+    </div>
+
+    <div class="camp-row">
+      <div class="camp-left">
+        <div class="camp-roas-badge">10.16x</div>
+        <div class="camp-name">RE_HOT_CATALOG ATC</div>
+      </div>
+      <div class="camp-bar-wrap">
+        <div class="camp-bar" style="width:77%"></div>
+      </div>
+      <div class="camp-meta">$4,782<br>→ $48,560</div>
+    </div>
+
+    <div class="camp-row">
+      <div class="camp-left">
+        <div class="camp-roas-badge">9.48x</div>
+        <div class="camp-name">PRO_INTERESES</div>
+      </div>
+      <div class="camp-bar-wrap">
+        <div class="camp-bar" style="width:72%"></div>
+      </div>
+      <div class="camp-meta">$9,194<br>→ $87,187</div>
+    </div>
+
+    <div class="camp-row">
+      <div class="camp-left">
+        <div class="camp-roas-badge">5.13x</div>
+        <div class="camp-name">HotSale</div>
+      </div>
+      <div class="camp-bar-wrap">
+        <div class="camp-bar" style="width:39%"></div>
+      </div>
+      <div class="camp-meta">$1,994<br>→ $10,231</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOTALES ACUMULADOS -->
+<div class="section" style="padding-top:0">
+  <div class="section-label">El cuadro completo · Nov 2025 – Jun 2026</div>
+  <div class="totals-bar">
+    <div class="total-item">
+      <div class="tv">$44.2k</div>
+      <div class="tk">Gastado total</div>
+    </div>
+    <div class="total-item">
+      <div class="tv">$629k</div>
+      <div class="tk">Ventas generadas</div>
+    </div>
+    <div class="total-item">
+      <div class="tv">282</div>
+      <div class="tk">Compras totales</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="brand">INSANO CLOTHING</div>
+  <p>Datos reales extraídos de Meta Ads Manager · Nov 2025 – Jun 2026.<br>
+  Proyecciones basadas en ROAS histórico de campañas activas.<br>
+  Ganancia neta estimada descontando costo de producto (~40%) + inversión.</p>
+</div>
+
+<script>
+  let currentRoas = 6;
+
+  function fmt(n) {
+    return '$' + Math.round(n).toLocaleString('es-MX');
+  }
+
+  function setRoas(val, el) {
+    currentRoas = val;
+    document.querySelectorAll('.roas-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    update();
+  }
+
+  function update() {
+    const budget = parseInt(document.getElementById('budget-slider').value);
+    const revenue = budget * currentRoas;
+
+    document.getElementById('slider-display').textContent = budget.toLocaleString('es-MX');
+    document.getElementById('res-inv').textContent = fmt(budget);
+    document.getElementById('res-roas').textContent = currentRoas + 'x';
+    document.getElementById('res-ret').textContent = fmt(revenue);
+
+    const bk = (budget/1000).toFixed(0) + 'k';
+    const rk = (revenue/1000).toFixed(0) + 'k';
+    document.getElementById('hdr-inv').textContent = '$' + bk;
+    document.getElementById('hdr-ret').textContent = '$' + rk;
+
+    let msg = '';
+    if (currentRoas === 4) {
+      msg = `Por cada <strong>$1</strong> que metes, salen <strong>$4</strong>.<br>Escenario conservador — <strong>igual jala.</strong>`;
+    } else if (currentRoas === 6) {
+      msg = `Por cada <strong>$1</strong> que metes, salen <strong>$6</strong>.<br>Eso no es gasto — <strong>es la maquinaria.</strong>`;
+    } else {
+      msg = `El promedio histórico real es <strong>14x</strong>.<br>$44k invertidos → <strong>$629k generados.</strong>`;
+    }
+    document.getElementById('verdict-text').innerHTML = msg;
+
+    const card = document.getElementById('result-card');
+    card.classList.remove('flash');
+    void card.offsetWidth;
+    card.classList.add('flash');
+  }
+
+  update();
+</script>
+</body>
+</html>
