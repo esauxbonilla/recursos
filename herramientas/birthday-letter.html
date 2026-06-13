@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Carta 🎂</title>
+
+<!-- PRINTED CARD TEXT (reference only):
+     "¿Qué carajo voy a estar escribiéndote una carta a mano hermano JAJAJAJ — escanea el QR" -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ─────────────── RESET ─────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #0a0a0a;
+  color: #f0f0f0;
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─────────────── PAGES ─────────────── */
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 48px 24px 60px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.55s ease;
+  pointer-events: none;
+}
+.page.active {
+  opacity: 1;
+  pointer-events: all;
+}
+#page2 {
+  justify-content: flex-start;
+  padding-top: 56px;
+  display: none;
+}
+#page2.active { display: flex; }
+
+/* ─────────────── PAGE 1 ─────────────── */
+.photo-slot {
+  width: 300px;
+  height: 300px;
+  border-radius: 16px;
+  border: 2px dashed rgba(255,215,0,.35);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  color: rgba(255,215,0,.35);
+  font-size: 13px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-bottom: 36px;
+  flex-shrink: 0;
+}
+.photo-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+}
+.photo-slot-icon { font-size: 36px; opacity: .5; }
+
+.intro-text {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.7;
+  text-align: center;
+  color: #ddd;
+  margin-bottom: 52px;
+  max-width: 380px;
+}
+
+/* ─────────────── BUTTONS ─────────────── */
+.btn-gold {
+  background: #FFD700;
+  color: #0a0a0a;
+  border: none;
+  padding: 15px 36px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  letter-spacing: .01em;
+  box-shadow: 0 4px 24px rgba(255,215,0,.3);
+  transition: transform .15s, box-shadow .15s;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 32px rgba(255,215,0,.45); }
+.btn-gold:active { transform: scale(.97); }
+
+/* ─────────────── TRICK BUTTON ─────────────── */
+#trickBtn {
+  position: relative;
+  z-index: 50;
+}
+#trickBtn.floating {
+  position: fixed;
+  margin: 0;
+  transition: none;
+}
+#trickBtn.ready-now {
+  background: #fff;
+  color: #0a0a0a;
+  animation: pulse 0.8s ease-in-out 2;
+}
+@keyframes pulse {
+  0%,100% { box-shadow: 0 4px 24px rgba(255,255,255,.3); }
+  50%      { box-shadow: 0 4px 48px rgba(255,255,255,.7); }
+}
+
+/* "apúrale" floating bubble */
+#apuraleText {
+  position: fixed;
+  background: #181818;
+  border: 1px solid rgba(255,215,0,.3);
+  color: rgba(255,215,0,.9);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 20px;
+  pointer-events: none;
+  z-index: 51;
+  opacity: 0;
+  transition: opacity .35s;
+  white-space: nowrap;
+}
+#apuraleText.visible { opacity: 1; }
+
+/* ─────────────── PAGE 2 — LETTER ─────────────── */
+.letter-greeting {
+  font-size: 30px;
+  font-weight: 700;
+  color: #FFD700;
+  align-self: flex-start;
+  margin-bottom: 24px;
+  letter-spacing: -.01em;
+}
+
+.letter-p {
+  font-size: 16px;
+  line-height: 1.85;
+  color: #ccc;
+  margin-bottom: 24px;
+  align-self: stretch;
+  font-weight: 400;
+}
+
+.letter-closing {
+  font-size: 20px;
+  font-weight: 600;
+  color: #f0f0f0;
+  align-self: stretch;
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+
+.img-slot {
+  width: 100%;
+  min-height: 180px;
+  border: 2px dashed rgba(255,215,0,.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  color: rgba(255,215,0,.25);
+  font-size: 12px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin: 16px 0 24px;
+  overflow: hidden;
+}
+.img-slot img { width: 100%; height: auto; border-radius: 10px; }
+.img-slot-icon { font-size: 28px; opacity: .4; }
+
+/* Continue btn container */
+.continue-wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 8px 0 24px;
+}
+
+/* Hidden content */
+#hiddenContent {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+#hiddenContent.revealed {
+  display: flex;
+  animation: revealIn .6s ease both;
+}
+@keyframes revealIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─────────────── SHOVEL ─────────────── */
+.shovel-wrap {
+  text-align: center;
+  margin: 24px 0 16px;
+}
+.shovel {
+  display: inline-block;
+  font-size: 72px;
+  animation: shovelWobble 1.4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+@keyframes shovelWobble {
+  0%,100% { transform: rotate(-12deg) translateY(0); }
+  25%      { transform: rotate(12deg)  translateY(-6px); }
+  50%      { transform: rotate(-8deg)  translateY(0); }
+  75%      { transform: rotate(8deg)   translateY(-4px); }
+}
+
+.footer-note {
+  font-size: 11px;
+  color: #2a2a2a;
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 48px;
+  line-height: 1.6;
+}
+
+/* ─────────────── PAYWALL MODAL ─────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s;
+  overflow-y: auto;
+}
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-card {
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 20px;
+  padding: 40px 28px 32px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 40px 100px rgba(0,0,0,.9), 0 0 0 1px rgba(255,215,0,.06);
+  position: relative;
+}
+
+.modal-badge {
+  display: inline-block;
+  background: rgba(255,215,0,.1);
+  border: 1px solid rgba(255,215,0,.25);
+  color: #FFD700;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 18px;
+}
+
+.modal-lock { font-size: 36px; margin-bottom: 10px; }
+
+.modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -.02em;
+  margin-bottom: 10px;
+}
+
+.modal-subtitle {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.modal-price-block {
+  background: #0d0d0d;
+  border: 1px solid #1e1e1e;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+.modal-price {
+  font-size: 40px;
+  font-weight: 700;
+  color: #FFD700;
+  letter-spacing: -.02em;
+  line-height: 1;
+}
+.modal-period {
+  font-size: 13px;
+  color: #444;
+  margin-top: 4px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.modal-features {
+  list-style: none;
+  margin-bottom: 24px;
+  text-align: left;
+}
+.modal-features li {
+  font-size: 13px;
+  color: #666;
+  padding: 9px 0;
+  border-bottom: 1px solid #161616;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.modal-features li:last-child { border-bottom: none; }
+.modal-features li::before {
+  content: '✓';
+  color: #FFD700;
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.btn-paywall {
+  background: #FFD700;
+  color: #0a0a0a;
+  border: none;
+  width: 100%;
+  padding: 17px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+  box-shadow: 0 4px 24px rgba(255,215,0,.25);
+  letter-spacing: .01em;
+}
+.btn-paywall:hover { transform: translateY(-2px); box-shadow: 0 6px 32px rgba(255,215,0,.4); }
+.btn-paywall:active { transform: scale(.98); }
+
+.modal-terms {
+  font-size: 10px;
+  color: #2a2a2a;
+  margin-top: 14px;
+  line-height: 1.6;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ PAGE 1 — INTRO ═══════════════════ -->
+<div id="page1" class="page active">
+
+  <!-- INSERT DARWIN MILLONARIO PHOTO HERE -->
+  <div class="photo-slot">
+    <span class="photo-slot-icon">📸</span>
+    <span>foto aquí</span>
+  </div>
+
+  <p class="intro-text">
+    Probablemente deje a muchos niños de África sin agua gracias a esta carta, pero el verdadero crimen sería no hacerlo 😂
+  </p>
+
+  <button id="trickBtn" class="btn-gold">Continuar →</button>
+</div>
+
+<!-- floating "apúrale" bubble -->
+<div id="apuraleText">apúrale, no tengo todo tu tiempo 🙄</div>
+
+
+<!-- ═══════════════════ PAGE 2 — LETTER ═══════════════════ -->
+<div id="page2" class="page">
+
+  <h1 class="letter-greeting">Brother,</h1>
+
+  <!-- ─── PARAGRAPH 1: Write your first paragraph here ─── -->
+  <p class="letter-p">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate.
+  </p>
+
+  <!-- "Continuar leyendo" button -->
+  <div class="continue-wrap">
+    <button id="continueBtn" class="btn-gold">Continuar leyendo...</button>
+  </div>
+
+  <!-- ─── CONTENT UNLOCKED AFTER PAYWALL ─── -->
+  <div id="hiddenContent">
+
+    <!-- INSERT IMAGE 1 HERE: replace the div with <img src="tu-imagen.jpg"> -->
+    <div class="img-slot">
+      <span class="img-slot-icon">🖼️</span>
+      <span>imagen 1</span>
+    </div>
+
+    <!-- ─── PARAGRAPH 2 ─── -->
+    <p class="letter-p">
+      Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem.
+    </p>
+
+    <!-- INSERT IMAGE 2 HERE: replace the div with <img src="tu-imagen.jpg"> -->
+    <div class="img-slot">
+      <span class="img-slot-icon">🖼️</span>
+      <span>imagen 2</span>
+    </div>
+
+    <!-- ─── PARAGRAPH 3 ─── -->
+    <p class="letter-p">
+      At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum.
+    </p>
+
+    <!-- INSERT IMAGE 3 HERE: replace the div with <img src="tu-imagen.jpg"> -->
+    <div class="img-slot">
+      <span class="img-slot-icon">🖼️</span>
+      <span>imagen 3</span>
+    </div>
+
+    <!-- ─── PARAGRAPH 4 — CLOSING (hardcoded, no tocar) ─── -->
+    <p class="letter-closing">
+      Ya ponte a chambear, hermano. 🪠
+    </p>
+
+    <!-- Shovel — Plants vs Zombies vibes -->
+    <div class="shovel-wrap">
+      <span class="shovel">🪠</span>
+    </div>
+
+    <p class="footer-note">
+      © carta fabricada con amor, servidores de Amazon<br>y una cantidad irresponsable de energía eléctrica
+    </p>
+
+  </div><!-- /hiddenContent -->
+</div><!-- /page2 -->
+
+
+<!-- ═══════════════════ PAYWALL MODAL ═══════════════════ -->
+<div id="paywallModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-badge">Members Only</div>
+    <div class="modal-lock">🔒</div>
+    <h2 class="modal-title">Contenido Premium</h2>
+    <p class="modal-subtitle">
+      Para continuar leyendo es necesario que te conviertas en miembro Plus VIP
+    </p>
+    <div class="modal-price-block">
+      <div class="modal-price">$67.69 <span style="font-size:20px;color:#555">USD</span></div>
+      <div class="modal-period">por mes · facturado mensualmente</div>
+    </div>
+    <ul class="modal-features">
+      <li>Acceso ilimitado a cartas de cumpleaños</li>
+      <li>Lectura sin interrupciones ni paywalls</li>
+      <li>Soporte emocional prioritario 24/7</li>
+      <li>Insignia Plus VIP en tu perfil</li>
+      <li>5% de descuento en terapia psicológica</li>
+    </ul>
+    <button class="btn-paywall" id="paywallBtn">Sí, quiero ser Plus VIP 💳</button>
+    <p class="modal-terms">
+      Al suscribirte aceptas los términos, la política de privacidad, el fin de tus ahorros,
+      la devaluación continua del peso y que esto fue idea tuya.
+    </p>
+  </div>
+</div>
+
+
+<script>
+/* ═══════════════════ PAGE 1 — TRICK BUTTON ═══════════════════ */
+const trickBtn    = document.getElementById('trickBtn');
+const apuraleEl   = document.getElementById('apuraleText');
+const page1       = document.getElementById('page1');
+const page2       = document.getElementById('page2');
+let   clickCount  = 0;
+
+function safePos() {
+  const bw = trickBtn.offsetWidth  || 150;
+  const bh = trickBtn.offsetHeight || 50;
+  const pad = 16;
+  return {
+    x: pad + Math.random() * (window.innerWidth  - bw - pad * 2),
+    y: pad + Math.random() * (window.innerHeight - bh - pad * 2),
+  };
+}
+
+function teleport() {
+  const pos = safePos();
+  trickBtn.classList.add('floating');
+  trickBtn.style.left = pos.x + 'px';
+  trickBtn.style.top  = pos.y + 'px';
+  return pos;
+}
+
+function placeApurale(btnPos) {
+  const bh = trickBtn.offsetHeight || 50;
+  const bw = trickBtn.offsetWidth  || 150;
+  // try to place below; if off-screen, place above
+  let top = btnPos.y + bh + 10;
+  if (top + 40 > window.innerHeight) top = btnPos.y - 44;
+  apuraleEl.style.left = Math.min(btnPos.x, window.innerWidth - 260) + 'px';
+  apuraleEl.style.top  = top + 'px';
+}
+
+trickBtn.addEventListener('click', function () {
+  clickCount++;
+
+  if (clickCount <= 2) {
+    teleport();
+
+  } else if (clickCount === 3) {
+    const pos = teleport();
+    placeApurale(pos);
+    apuraleEl.classList.add('visible');
+
+  } else if (clickCount === 4) {
+    const pos = teleport();
+    placeApurale(pos);
+    trickBtn.textContent = 'ok va, dale 😒';
+    trickBtn.classList.add('ready-now');
+
+  } else {
+    // ─── Transition to Page 2 ───
+    apuraleEl.classList.remove('visible');
+    page1.style.opacity = '0';
+    page1.style.pointerEvents = 'none';
+
+    setTimeout(() => {
+      trickBtn.style.display = 'none';
+      page1.style.display    = 'none';
+      page2.style.display    = 'flex';
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { page2.classList.add('active'); });
+      });
+    }, 450);
+  }
+});
+
+
+/* ═══════════════════ PAGE 2 — PAYWALL ═══════════════════ */
+const continueBtn   = document.getElementById('continueBtn');
+const paywallModal  = document.getElementById('paywallModal');
+const paywallBtn    = document.getElementById('paywallBtn');
+const hiddenContent = document.getElementById('hiddenContent');
+
+continueBtn.addEventListener('click', () => {
+  paywallModal.classList.add('open');
+});
+
+paywallBtn.addEventListener('click', () => {
+  paywallModal.classList.remove('open');
+  continueBtn.closest('.continue-wrap').style.display = 'none';
+  hiddenContent.classList.add('revealed');
+});
+
+// close modal tapping outside card
+paywallModal.addEventListener('click', (e) => {
+  if (e.target === paywallModal) paywallModal.classList.remove('open');
+});
+</script>
+</body>
+</html>
